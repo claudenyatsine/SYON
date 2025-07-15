@@ -84,8 +84,8 @@ export default function LandingPage() {
       <main>
         {/* Hero Section */}
         <section className="snap-section relative flex min-h-screen items-center justify-center overflow-hidden py-20 md:py-24">
-           <div className="absolute inset-0 h-[70vh] w-full bg-cover bg-center" style={{ backgroundImage: "url('https://placehold.co/1200x800.png')" }} data-ai-hint="modern classroom" />
-           <div className="absolute inset-0 h-[70vh] bg-background/60 dark:bg-background/80" />
+           <div className="absolute inset-0 h-full w-full bg-cover bg-center" style={{ backgroundImage: "url('https://placehold.co/1200x800.png')", height: '97%' }} data-ai-hint="modern classroom" />
+           <div className="absolute inset-0 bg-background/60 dark:bg-background/80" style={{ height: '97%' }}/>
            <div className="relative z-10 flex min-h-screen w-full items-center">
                 <div className="container mx-auto px-4 md:px-6">
                     <div className="grid items-center gap-8 md:grid-cols-2">
