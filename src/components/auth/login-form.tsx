@@ -18,7 +18,7 @@ export function LoginForm() {
 
   return (
     <form onSubmit={handleSubmit}>
-      <Card className="border-border/60 shadow-sm">
+      <Card className="border-none shadow-none">
         <CardContent className="space-y-4 pt-6">
           <div className="space-y-2">
             <Label htmlFor="email">Email</Label>
@@ -40,7 +40,7 @@ export function LoginForm() {
               // A more robust solution would use a global state for the modal
               e.preventDefault();
               // In a real app, you'd trigger the sign-up modal here
-              alert("Please go back to the landing page and click 'Get Started' to sign up.");
+              alert("Please close this and click 'Get Started' to sign up.");
             }}>
               Sign up
             </Link>

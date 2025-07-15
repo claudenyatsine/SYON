@@ -6,6 +6,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { SignUpForm } from '@/components/auth/signup-form';
+import { LoginForm } from '@/components/auth/login-form';
 import { BrainCircuit, BookOpen, Users } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -51,7 +52,7 @@ const testimonials = [
 
 export default function LandingPage() {
   return (
-    <Dialog>
+    <div>
       <div className="bg-background text-foreground">
         <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-sm">
           <div className="container mx-auto flex h-16 items-center justify-between px-4 md:px-6">
@@ -60,9 +61,23 @@ export default function LandingPage() {
               <span className="font-headline text-xl font-bold tracking-tight">TutorHub</span>
             </Link>
             <nav className="flex items-center gap-4">
-              <Link href="/login" passHref>
-                <Button variant="ghost">Sign In</Button>
-              </Link>
+               <Dialog>
+                <DialogTrigger asChild>
+                   <Button variant="ghost">Sign In</Button>
+                </DialogTrigger>
+                <DialogContent className="max-w-sm">
+                    <DialogHeader className="flex flex-col items-center text-center">
+                        <Icons.logo className="h-12 w-12 text-primary" />
+                        <DialogTitle className="font-headline text-3xl font-bold tracking-tighter text-foreground mt-4">
+                            Welcome back
+                        </DialogTitle>
+                    <DialogDescription className="mt-2">
+                       Sign in to continue your learning journey.
+                    </DialogDescription>
+                    </DialogHeader>
+                    <LoginForm />
+                </DialogContent>
+               </Dialog>
             </nav>
           </div>
         </header>
@@ -79,14 +94,28 @@ export default function LandingPage() {
                   <p className="max-w-xl text-lg text-muted-foreground">
                     TutorHub is your all-in-one platform for academic success, combining AI-powered tutoring with a vibrant community and curated resources.
                   </p>
-                  <div className="flex flex-col gap-4 sm:flex-row sm:justify-center md:justify-start">
-                     <DialogTrigger asChild>
-                      <Button size="lg" className="font-bold">Get Started for Free</Button>
-                    </DialogTrigger>
-                     <Link href="#" passHref>
-                      <Button size="lg" variant="outline">Learn More</Button>
-                    </Link>
-                  </div>
+                  <Dialog>
+                    <div className="flex flex-col gap-4 sm:flex-row sm:justify-center md:justify-start">
+                      <DialogTrigger asChild>
+                        <Button size="lg" className="font-bold">Get Started for Free</Button>
+                      </DialogTrigger>
+                      <Link href="#" passHref>
+                        <Button size="lg" variant="outline">Learn More</Button>
+                      </Link>
+                    </div>
+                    <DialogContent className="max-w-sm">
+                      <DialogHeader className="flex flex-col items-center text-center">
+                          <Icons.logo className="h-12 w-12 text-primary" />
+                          <DialogTitle className="font-headline text-3xl font-bold tracking-tighter text-foreground mt-4">
+                            Create your account
+                          </DialogTitle>
+                        <DialogDescription className="mt-2">
+                          Get started on your learning journey.
+                        </DialogDescription>
+                      </DialogHeader>
+                      <SignUpForm />
+                    </DialogContent>
+                  </Dialog>
                 </div>
                  <Image
                     src="https://placehold.co/600x400.png"
@@ -149,21 +178,35 @@ export default function LandingPage() {
                   </div>
                </div>
           </section>
-
-          {/* CTA Section */}
-          <section className="py-20">
-              <div className="container mx-auto px-4 md:px-6">
-                  <div className="rounded-lg bg-primary p-12 text-center text-primary-foreground">
-                       <h2 className="font-headline text-3xl font-bold tracking-tight">Ready to Start Learning?</h2>
-                       <p className="mt-4 text-lg text-primary-foreground/90">Join thousands of students achieving their academic goals.</p>
-                       <div className="mt-8">
-                           <DialogTrigger asChild>
-                              <Button size="lg" variant="secondary" className="font-bold">Sign Up Now</Button>
-                          </DialogTrigger>
-                       </div>
-                  </div>
-              </div>
-          </section>
+          
+          <Dialog>
+            {/* CTA Section */}
+            <section className="py-20">
+                <div className="container mx-auto px-4 md:px-6">
+                    <div className="rounded-lg bg-primary p-12 text-center text-primary-foreground">
+                        <h2 className="font-headline text-3xl font-bold tracking-tight">Ready to Start Learning?</h2>
+                        <p className="mt-4 text-lg text-primary-foreground/90">Join thousands of students achieving their academic goals.</p>
+                        <div className="mt-8">
+                            <DialogTrigger asChild>
+                                <Button size="lg" variant="secondary" className="font-bold">Sign Up Now</Button>
+                            </DialogTrigger>
+                        </div>
+                    </div>
+                </div>
+            </section>
+             <DialogContent className="max-w-sm">
+                <DialogHeader className="flex flex-col items-center text-center">
+                    <Icons.logo className="h-12 w-12 text-primary" />
+                    <DialogTitle className="font-headline text-3xl font-bold tracking-tighter text-foreground mt-4">
+                      Create your account
+                    </DialogTitle>
+                  <DialogDescription className="mt-2">
+                    Get started on your learning journey.
+                  </DialogDescription>
+                </DialogHeader>
+                <SignUpForm />
+              </DialogContent>
+          </Dialog>
         </main>
 
         <footer className="border-t bg-secondary">
@@ -178,19 +221,6 @@ export default function LandingPage() {
             </div>
         </footer>
       </div>
-
-      <DialogContent className="max-w-sm">
-        <DialogHeader className="flex flex-col items-center text-center">
-            <Icons.logo className="h-12 w-12 text-primary" />
-            <DialogTitle className="font-headline text-3xl font-bold tracking-tighter text-foreground mt-4">
-              Create your account
-            </DialogTitle>
-          <DialogDescription className="mt-2">
-            Get started on your learning journey.
-          </DialogDescription>
-        </DialogHeader>
-        <SignUpForm />
-      </DialogContent>
-    </Dialog>
+    </div>
   );
 }
