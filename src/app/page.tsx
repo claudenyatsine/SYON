@@ -63,9 +63,6 @@ export default function LandingPage() {
               <Link href="/login" passHref>
                 <Button variant="ghost">Sign In</Button>
               </Link>
-              <DialogTrigger asChild>
-                <Button className="font-bold">Get Started</Button>
-              </DialogTrigger>
             </nav>
           </div>
         </header>
