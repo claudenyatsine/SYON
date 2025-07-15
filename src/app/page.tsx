@@ -83,49 +83,46 @@ export default function LandingPage() {
 
       <main>
         {/* Hero Section */}
-        <section className="snap-section flex items-center min-h-screen py-20 md:py-24">
-          <div className="container mx-auto px-4 md:px-6">
-            <div className="grid items-center gap-8 md:grid-cols-2">
-              <div className="space-y-6 text-center md:text-left">
-                <h1 className="font-headline text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl">
-                  Unlock Your Learning Potential
-                </h1>
-                <p className="max-w-xl text-lg text-muted-foreground">
-                  TutorHub is your all-in-one platform for academic success, combining AI-powered tutoring with a vibrant community and curated resources.
-                </p>
-                <Dialog>
-                  <div className="flex flex-col gap-4 sm:flex-row sm:justify-center md:justify-start">
-                    <DialogTrigger asChild>
-                      <Button size="lg" className="font-bold">Get Started for Free</Button>
-                    </DialogTrigger>
-                    <Link href="#" passHref>
-                      <Button size="lg" variant="outline">Learn More</Button>
-                    </Link>
-                  </div>
-                  <DialogContent className="max-w-sm">
-                    <DialogHeader className="flex flex-col items-center text-center">
-                        <Icons.logo className="h-12 w-12 text-primary" />
-                        <DialogTitle className="font-headline text-3xl font-bold tracking-tighter text-foreground mt-4">
-                          Create your account
-                        </DialogTitle>
-                      <DialogDescription className="mt-2">
-                        Get started on your learning journey.
-                      </DialogDescription>
-                    </DialogHeader>
-                    <SignUpForm />
-                  </DialogContent>
-                </Dialog>
-              </div>
-               <Image
-                  src="https://placehold.co/600x400.png"
-                  alt="Student learning online"
-                  width={600}
-                  height={400}
-                  className="rounded-lg shadow-xl"
-                  data-ai-hint="student online learning"
-                />
+        <section className="snap-section relative flex min-h-screen items-center justify-center overflow-hidden py-20 md:py-24">
+           <div className="absolute inset-0 h-[70vh] w-full bg-cover bg-center" style={{ backgroundImage: "url('https://placehold.co/1200x800.png')" }} data-ai-hint="modern classroom" />
+           <div className="absolute inset-0 h-[70vh] bg-background/60 dark:bg-background/80" />
+           <div className="relative z-10 flex min-h-screen w-full items-center">
+                <div className="container mx-auto px-4 md:px-6">
+                    <div className="grid items-center gap-8 md:grid-cols-2">
+                    <div className="space-y-6 text-center md:text-left">
+                        <h1 className="font-headline text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl text-foreground">
+                        Unlock Your Learning Potential
+                        </h1>
+                        <p className="max-w-xl text-lg text-foreground/80">
+                        TutorHub is your all-in-one platform for academic success, combining AI-powered tutoring with a vibrant community and curated resources.
+                        </p>
+                        <Dialog>
+                        <div className="flex flex-col gap-4 sm:flex-row sm:justify-center md:justify-start">
+                            <DialogTrigger asChild>
+                            <Button size="lg" className="font-bold">Get Started for Free</Button>
+                            </DialogTrigger>
+                            <Link href="#" passHref>
+                            <Button size="lg" variant="outline">Learn More</Button>
+                            </Link>
+                        </div>
+                        <DialogContent className="max-w-sm">
+                            <DialogHeader className="flex flex-col items-center text-center">
+                                <Icons.logo className="h-12 w-12 text-primary" />
+                                <DialogTitle className="font-headline text-3xl font-bold tracking-tighter text-foreground mt-4">
+                                Create your account
+                                </DialogTitle>
+                            <DialogDescription className="mt-2">
+                                Get started on your learning journey.
+                            </DialogDescription>
+                            </DialogHeader>
+                            <SignUpForm />
+                        </DialogContent>
+                        </Dialog>
+                    </div>
+                    <div className="hidden md:block" />
+                    </div>
+                </div>
             </div>
-          </div>
         </section>
 
         {/* Features Section */}
