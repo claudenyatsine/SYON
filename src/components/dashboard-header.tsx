@@ -1,6 +1,6 @@
 'use client';
 
-import { Bell, Search, User } from 'lucide-react';
+import { Bell, Search, User, Moon, Sun } from 'lucide-react';
 import { Button } from './ui/button';
 import {
   DropdownMenu,
@@ -12,8 +12,11 @@ import {
 } from './ui/dropdown-menu';
 import { Input } from './ui/input';
 import { SidebarTrigger } from './ui/sidebar';
+import { useTheme } from 'next-themes';
 
 export function DashboardHeader() {
+  const { setTheme, theme } = useTheme()
+
   return (
     <header className="sticky top-0 z-10 flex h-16 items-center gap-4 border-b bg-background/80 px-4 backdrop-blur-sm sm:px-6 lg:px-8">
       <SidebarTrigger className="md:hidden" />
@@ -24,6 +27,11 @@ export function DashboardHeader() {
           className="w-full rounded-full bg-secondary pl-10 h-10"
         />
       </div>
+       <Button variant="ghost" size="icon" className="rounded-full" onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}>
+        <Sun className="h-5 w-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+        <Moon className="absolute h-5 w-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+        <span className="sr-only">Toggle theme</span>
+      </Button>
       <Button variant="ghost" size="icon" className="rounded-full">
         <Bell className="h-5 w-5" />
         <span className="sr-only">Notifications</span>
