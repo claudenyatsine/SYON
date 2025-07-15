@@ -84,7 +84,7 @@ export default function LandingPage() {
 
         <main>
           {/* Hero Section */}
-          <section className="py-20 md:py-32">
+          <section className="flex items-center min-h-[calc(100vh-4rem)] py-20 md:py-24">
             <div className="container mx-auto px-4 md:px-6">
               <div className="grid items-center gap-8 md:grid-cols-2">
                 <div className="space-y-6 text-center md:text-left">
