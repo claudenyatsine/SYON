@@ -5,6 +5,7 @@ import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import Link from 'next/link';
 
 export function LoginForm() {
   const router = useRouter();
@@ -34,9 +35,9 @@ export function LoginForm() {
           </Button>
           <p className="text-xs text-muted-foreground">
             Don&apos;t have an account?{' '}
-            <a href="#" className="font-medium text-primary hover:underline">
+            <Link href="#" className="font-medium text-primary hover:underline">
               Sign up
-            </a>
+            </Link>
           </p>
         </CardFooter>
       </Card>

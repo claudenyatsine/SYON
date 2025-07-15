@@ -9,7 +9,6 @@ import {
   SidebarMenuItem,
   SidebarMenuButton,
   SidebarFooter,
-  SidebarGroup,
 } from '@/components/ui/sidebar';
 import { Icons } from '@/components/icons';
 import {
@@ -21,7 +20,6 @@ import {
   Video,
   Settings,
   LogOut,
-  Home,
 } from 'lucide-react';
 import { DashboardHeader } from '@/components/dashboard-header';
 
