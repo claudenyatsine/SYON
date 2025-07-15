@@ -7,19 +7,23 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 
-export function LoginForm() {
+export function SignUpForm() {
   const router = useRouter();
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    // Mock login logic
+    // Mock sign-up logic
     router.push('/dashboard');
   };
 
   return (
     <form onSubmit={handleSubmit}>
-      <Card className="border-border/60 shadow-sm">
+      <Card className="border-none shadow-none">
         <CardContent className="space-y-4 pt-6">
+          <div className="space-y-2">
+            <Label htmlFor="fullname">Full Name</Label>
+            <Input id="fullname" type="text" placeholder="John Doe" required />
+          </div>
           <div className="space-y-2">
             <Label htmlFor="email">Email</Label>
             <Input id="email" type="email" placeholder="name@example.com" required />
@@ -31,18 +35,12 @@ export function LoginForm() {
         </CardContent>
         <CardFooter className="flex flex-col gap-4">
           <Button type="submit" className="w-full font-bold">
-            Sign In
+            Create Account
           </Button>
           <p className="text-xs text-muted-foreground">
-            Don&apos;t have an account?{' '}
-            <Link href="/" className="font-medium text-primary hover:underline" onClick={(e) => {
-              // This is a bit of a hack to prevent page navigation
-              // A more robust solution would use a global state for the modal
-              e.preventDefault();
-              // In a real app, you'd trigger the sign-up modal here
-              alert("Please go back to the landing page and click 'Get Started' to sign up.");
-            }}>
-              Sign up
+            Already have an account?{' '}
+            <Link href="/login" className="font-medium text-primary hover:underline">
+              Sign In
             </Link>
           </p>
         </CardFooter>
