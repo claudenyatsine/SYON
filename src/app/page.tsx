@@ -4,7 +4,7 @@ import { Icons } from '@/components/icons';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { SignUpForm } from '@/components/auth/signup-form';
 import { BrainCircuit, BookOpen, Users } from 'lucide-react';
 import Link from 'next/link';
@@ -183,15 +183,15 @@ export default function LandingPage() {
       </div>
 
       <DialogContent className="max-w-sm">
-        <div className="flex flex-col items-center text-center">
+        <DialogHeader className="flex flex-col items-center text-center">
             <Icons.logo className="h-12 w-12 text-primary" />
-            <h1 className="font-headline text-3xl font-bold tracking-tighter text-foreground mt-4">
+            <DialogTitle className="font-headline text-3xl font-bold tracking-tighter text-foreground mt-4">
               Create your account
-            </h1>
-          <p className="mt-2 text-muted-foreground">
+            </DialogTitle>
+          <DialogDescription className="mt-2">
             Get started on your learning journey.
-          </p>
-        </div>
+          </DialogDescription>
+        </DialogHeader>
         <SignUpForm />
       </DialogContent>
     </Dialog>
