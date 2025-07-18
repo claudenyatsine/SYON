@@ -2,31 +2,36 @@
 
 import { Icons } from '@/components/icons';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent, CardTitle } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { SignUpForm } from '@/components/auth/signup-form';
 import { LoginForm } from '@/components/auth/login-form';
-import { BrainCircuit, BookOpen, Users } from 'lucide-react';
+import { BrainCircuit, BookOpen, Users, FolderKanban, ClipboardCheck, GraduationCap, Presentation, MessageSquare, Bell, Library, Target, UsersRound, FileCog, Link2, Smartphone, Trophy, Bot, CircleUser } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel';
+import Autoplay from 'embla-carousel-autoplay';
+import './carousel.css';
+import React from 'react';
 
 const features = [
-  {
-    icon: BrainCircuit,
-    title: 'AI-Powered Tutoring',
-    description: 'Get personalized help from our AI tutor, available 24/7 to answer your questions.',
-  },
-  {
-    icon: BookOpen,
-    title: 'Curated Resources',
-    description: 'Access a vast library of videos, articles, and practice problems for every subject.',
-  },
-  {
-    icon: Users,
-    title: 'Community Forums',
-    description: 'Connect with peers, ask questions, and collaborate on projects in our active forums.',
-  },
+    { icon: FolderKanban, title: 'Course Management', description: 'Course creation and organization by subjects/grade levels, syllabus and curriculum mapping, learning modules with structured content, prerequisite settings and course sequencing.' },
+    { icon: ClipboardCheck, title: 'Assessment System', description: 'Assignment creation and submission portal, exam/quiz builder with various question types, automated grading for objective questions, rubric-based grading for subjective work, plagiarism detection integration.' },
+    { icon: GraduationCap, title: 'Gradebook & Analytics', description: 'Comprehensive grade tracking, weighted grading systems, progress reports and transcripts, performance analytics and visualizations, comparative analytics (class averages, percentiles).' },
+    { icon: Presentation, title: 'Live Classroom', description: 'Virtual classroom with video/audio streaming, interactive whiteboard and screen sharing, breakout rooms for group work, attendance tracking during live sessions, session recording and playback.' },
+    { icon: Users, title: 'Collaboration Tools', description: 'Discussion forums and class boards, group project spaces, peer review systems, shared document editing, virtual study groups.' },
+    { icon: MessageSquare, title: 'Messaging System', description: 'Direct messaging between users, class announcements broadcast, group chats for courses/teams, file sharing in conversations, read receipts and typing indicators.' },
+    { icon: Bell, title: 'Notification Center', description: 'Real-time alerts for new grades, assignment deadline reminders, class schedule notifications, announcement broadcasts, customizable notification preferences.' },
+    { icon: Library, title: 'Learning Resources', description: 'Digital library of study materials, multimedia content hosting (videos, podcasts), interactive learning objects, external resource linking, version control for materials.' },
+    { icon: Target, title: 'Personalized Learning', description: 'Adaptive learning paths, skill gap analysis, recommended resources, learning style assessments, customizable dashboard widgets.' },
+    { icon: UsersRound, title: 'User Management', description: 'Role-based access control (students, teachers, admins), batch enrollment tools, parent/guardian accounts, user activity logging, account approval workflows.' },
+    { icon: FileCog, title: 'Reporting & Compliance', description: 'Institutional reporting, accreditation documentation, audit trails, data export capabilities, custom report builder.' },
+    { icon: Link2, title: 'Integration Capabilities', description: 'Single Sign-On (SSO) support, API for third-party integrations, LTI compatibility for educational tools, calendar synchronization, cloud storage integration.' },
+    { icon: Smartphone, title: 'Accessibility & Mobile', description: 'Responsive design for all devices, dedicated mobile app, screen reader compatibility, keyboard navigation, adjustable text sizes/contrast.' },
+    { icon: Trophy, title: 'Gamification', description: 'Badges and achievements, leaderboards, experience points (XP) system, learning challenges, reward systems.' },
+    { icon: Bot, title: 'AI Enhancements', description: 'Smart tutoring system, automated feedback generation, writing/style suggestions, predictive performance analytics, chatbot for student support.' },
+    { icon: CircleUser, title: 'Parent Portal', description: 'Child progress monitoring, communication with teachers, attendance tracking, event calendars, fee payment integration.' }
 ];
 
 const testimonials = [
@@ -51,6 +56,10 @@ const testimonials = [
 ]
 
 export default function LandingPage() {
+  const plugin = React.useRef(
+    Autoplay({ delay: 6000, stopOnInteraction: true })
+  )
+
   return (
     <div className="bg-background text-foreground snap-container">
       <header className="fixed top-0 z-50 w-full bg-background/80 backdrop-blur-sm">
@@ -135,23 +144,39 @@ export default function LandingPage() {
         </section>
 
         {/* Features Section */}
-        <section id="features" className="snap-section flex flex-col justify-center bg-secondary py-20 md:py-24">
+        <section id="features" className="snap-section flex flex-col justify-center bg-secondary py-20 md:py-24 overflow-hidden">
           <div className="container mx-auto px-4 md:px-6">
             <div className="mx-auto max-w-3xl text-center">
               <h2 className="font-headline text-3xl font-bold tracking-tight">Why Choose TutorHub?</h2>
-              <p className="mt-4 text-lg text-muted-foreground">Everything you need to excel in your studies, all in one place.</p>
+              <p className="mt-4 text-lg text-muted-foreground">Explore our unique system features</p>
             </div>
-            <div className="mt-12 grid gap-8 md:grid-cols-3">
-              {features.map((feature) => (
-                <Card key={feature.title}>
-                  <CardContent className="flex flex-col items-center p-8 text-center">
-                    <feature.icon className="mb-4 h-12 w-12 text-primary" />
-                    <h3 className="font-headline text-xl font-semibold">{feature.title}</h3>
-                    <p className="mt-2 text-muted-foreground">{feature.description}</p>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
+             <Carousel
+                plugins={[plugin.current]}
+                className="w-full mt-12"
+                onMouseEnter={plugin.current.stop}
+                onMouseLeave={plugin.current.reset}
+                opts={{
+                    align: 'center',
+                    loop: true,
+                }}
+              >
+              <CarouselContent className="-ml-4">
+                  {features.map((feature, index) => (
+                      <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3 p-4">
+                          <div className="p-1 h-full">
+                              <Card className="flex flex-col h-full items-center justify-center p-6 text-center feature-card">
+                                  <div className="glowing-border"></div>
+                                  <CardContent className="flex flex-col items-center p-0">
+                                      <feature.icon className="mb-4 h-12 w-12 text-accent" />
+                                      <CardTitle className="font-headline text-xl font-semibold mb-2">{feature.title}</CardTitle>
+                                      <p className="text-sm text-muted-foreground">{feature.description}</p>
+                                  </CardContent>
+                              </Card>
+                          </div>
+                      </CarouselItem>
+                  ))}
+              </CarouselContent>
+            </Carousel>
           </div>
         </section>
 

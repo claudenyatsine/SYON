@@ -28,6 +28,7 @@ type CarouselContextProps = {
   scrollNext: () => void
   canScrollPrev: boolean
   canScrollNext: boolean
+  mainApi: ReturnType<typeof useEmblaCarousel>[1]
 } & CarouselProps
 
 const CarouselContext = React.createContext<CarouselContextProps | null>(null)
@@ -67,6 +68,12 @@ const Carousel = React.forwardRef<
     )
     const [canScrollPrev, setCanScrollPrev] = React.useState(false)
     const [canScrollNext, setCanScrollNext] = React.useState(false)
+    const [slidesInView, setSlidesInView] = React.useState<number[]>([])
+
+     const updateSlidesInView = React.useCallback((api: CarouselApi) => {
+      if (!api) return
+      setSlidesInView(api.slidesInView())
+    }, [])
 
     const onSelect = React.useCallback((api: CarouselApi) => {
       if (!api) {
@@ -75,7 +82,8 @@ const Carousel = React.forwardRef<
 
       setCanScrollPrev(api.canScrollPrev())
       setCanScrollNext(api.canScrollNext())
-    }, [])
+      updateSlidesInView(api);
+    }, [updateSlidesInView])
 
     const scrollPrev = React.useCallback(() => {
       api?.scrollPrev()
@@ -132,17 +140,22 @@ const Carousel = React.forwardRef<
           scrollNext,
           canScrollPrev,
           canScrollNext,
+          mainApi: api
         }}
       >
         <div
           ref={ref}
           onKeyDownCapture={handleKeyDown}
-          className={cn("relative", className)}
+          className={cn("relative embla", className)}
           role="region"
           aria-roledescription="carousel"
           {...props}
         >
-          {children}
+          {React.Children.map(children, (child) => 
+            React.isValidElement(child) 
+              ? React.cloneElement(child as React.ReactElement, { slidesInView })
+              : child
+          )}
         </div>
       </CarouselContext.Provider>
     )
@@ -152,21 +165,32 @@ Carousel.displayName = "Carousel"
 
 const CarouselContent = React.forwardRef<
   HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => {
+  React.HTMLAttributes<HTMLDivElement> & { slidesInView?: number[] }
+>(({ className, slidesInView, ...props }, ref) => {
   const { carouselRef, orientation } = useCarousel()
 
   return (
-    <div ref={carouselRef} className="overflow-hidden">
+    <div ref={carouselRef} className="overflow-hidden embla__viewport">
       <div
         ref={ref}
         className={cn(
-          "flex",
+          "flex embla__container",
           orientation === "horizontal" ? "-ml-4" : "-mt-4 flex-col",
           className
         )}
         {...props}
-      />
+      >
+        {React.Children.map(props.children, (child, index) =>
+          React.isValidElement(child)
+            ? React.cloneElement(child as React.ReactElement, {
+                className: cn(
+                  child.props.className,
+                  slidesInView?.includes(index) ? 'is-active' : ''
+                )
+              })
+            : child
+        )}
+      </div>
     </div>
   )
 })
@@ -184,7 +208,7 @@ const CarouselItem = React.forwardRef<
       role="group"
       aria-roledescription="slide"
       className={cn(
-        "min-w-0 shrink-0 grow-0 basis-full",
+        "min-w-0 shrink-0 grow-0 basis-full embla__slide",
         orientation === "horizontal" ? "pl-4" : "pt-4",
         className
       )}
