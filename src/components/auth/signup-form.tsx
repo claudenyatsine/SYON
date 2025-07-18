@@ -1,11 +1,23 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
-import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '../ui/form';
+import { Input } from '../ui/input';
+import { useToast } from '@/hooks/use-toast';
+import { sendWelcomeEmail } from '@/ai/flows/send-welcome-email';
+import { useState } from 'react';
 
 function GoogleIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
@@ -19,20 +31,65 @@ function GoogleIcon(props: React.SVGProps<SVGSVGElement>) {
   );
 }
 
-export function SignUpForm() {
-  const router = useRouter();
+const formSchema = z
+  .object({
+    fullname: z.string().min(2, { message: 'Full name must be at least 2 characters.' }),
+    email: z.string().email({ message: 'Please enter a valid email address.' }),
+    password: z.string().min(8, { message: 'Password must be at least 8 characters.' }),
+    confirmPassword: z.string(),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords don't match.",
+    path: ['confirmPassword'],
+  });
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    // Mock sign-up logic
-    router.push('/dashboard');
-  };
+export function SignUpForm() {
+  const { toast } = useToast();
+  const [loading, setLoading] = useState(false);
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      fullname: '',
+      email: '',
+      password: '',
+      confirmPassword: '',
+    },
+  });
+
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    setLoading(true);
+    try {
+      await sendWelcomeEmail({
+        fullname: values.fullname,
+        email: values.email,
+      });
+
+      toast({
+        title: 'Registration Successful!',
+        description: 'Please check your email to verify your account.',
+      });
+       // In a real app you would redirect or close the modal here.
+       // For now, we'll just reset the form.
+      form.reset();
+
+    } catch (error) {
+      console.error('Failed to send welcome email:', error);
+      toast({
+        variant: 'destructive',
+        title: 'Registration Failed',
+        description: 'Something went wrong. Please try again.',
+      });
+    } finally {
+      setLoading(false);
+    }
+  }
 
   return (
-    <form onSubmit={handleSubmit}>
-      <Card className="border-none shadow-none">
-        <CardContent className="space-y-4 pt-6">
-           <Button variant="outline" className="w-full">
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)}>
+        <Card className="border-none shadow-none">
+          <CardContent className="space-y-4 pt-6">
+            <Button variant="outline" className="w-full">
               <GoogleIcon className="mr-2 h-4 w-4" />
               Continue with Google
             </Button>
@@ -46,31 +103,72 @@ export function SignUpForm() {
                 </span>
               </div>
             </div>
-          <div className="space-y-2">
-            <Label htmlFor="fullname">Full Name</Label>
-            <Input id="fullname" type="text" placeholder="John Doe" required />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
-            <Input id="email" type="email" placeholder="name@example.com" required />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="password">Password</Label>
-            <Input id="password" type="password" required />
-          </div>
-        </CardContent>
-        <CardFooter className="flex flex-col gap-4">
-          <Button type="submit" className="w-full font-bold">
-            Create Account
-          </Button>
-          <p className="text-xs text-muted-foreground">
-            Already have an account?{' '}
-            <Link href="/login" className="font-medium text-primary hover:underline">
-              Sign In
-            </Link>
-          </p>
-        </CardFooter>
-      </Card>
-    </form>
+            <FormField
+              control={form.control}
+              name="fullname"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Full Name</FormLabel>
+                  <FormControl>
+                    <Input placeholder="John Doe" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Email</FormLabel>
+                  <FormControl>
+                    <Input placeholder="name@example.com" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Password</FormLabel>
+                  <FormControl>
+                    <Input type="password" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+             <FormField
+              control={form.control}
+              name="confirmPassword"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Confirm Password</FormLabel>
+                  <FormControl>
+                    <Input type="password" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </CardContent>
+          <CardFooter className="flex flex-col gap-4">
+            <Button type="submit" className="w-full font-bold" disabled={loading}>
+              {loading ? "Creating Account..." : "Create Account"}
+            </Button>
+            <p className="text-xs text-muted-foreground">
+              Already have an account?{' '}
+              <Link href="/login" className="font-medium text-primary hover:underline">
+                Sign In
+              </Link>
+            </p>
+          </CardFooter>
+        </Card>
+      </form>
+    </Form>
   );
 }
