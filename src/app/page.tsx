@@ -145,8 +145,8 @@ export default function LandingPage() {
         </section>
 
         {/* Features Section */}
-        <section id="features" className="snap-section flex flex-col justify-center bg-secondary py-20 md:py-24 overflow-hidden">
-             <Carousel
+        <section id="features" className="snap-section flex flex-col justify-center bg-secondary py-20 md:py-24 overflow-hidden relative">
+            <Carousel
                 plugins={[plugin.current]}
                 className="w-full"
                 onMouseEnter={plugin.current.stop}
@@ -178,8 +178,8 @@ export default function LandingPage() {
                     ))}
                 </CarouselContent>
               </div>
-              <CarouselPrevious className="left-[15px] sm:left-4" />
-              <CarouselNext className="right-[15px] sm:right-4" />
+              <CarouselPrevious className="absolute left-[15px] top-[calc(50%_+_20px)] -translate-y-1/2" />
+              <CarouselNext className="absolute right-[15px] top-[calc(50%_+_20px)] -translate-y-1/2" />
             </Carousel>
         </section>
 
