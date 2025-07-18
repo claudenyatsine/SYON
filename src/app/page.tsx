@@ -41,13 +41,13 @@ const testimonials = [
         name: 'Sarah L.',
         avatar: 'https://placehold.co/100x100.png',
         title: '11th Grade Student',
-        quote: "TutorHub's AI assistant helped me finally understand calculus. The personalized resources are a game-changer for my study habits!"
+        quote: "LearnetIQ's AI assistant helped me finally understand calculus. The personalized resources are a game-changer for my study habits!"
     },
     {
         name: 'David C.',
         avatar: 'https://placehold.co/100x100.png',
         title: 'Parent',
-        quote: "I've seen a remarkable improvement in my son's grades since he started using TutorHub. The platform is intuitive and engaging."
+        quote: "I've seen a remarkable improvement in my son's grades since he started using LearnetIQ. The platform is intuitive and engaging."
     },
      {
         name: 'Emily R.',
@@ -68,7 +68,7 @@ export default function LandingPage() {
         <div className="container mx-auto flex h-16 items-center justify-between px-4 md:px-6">
           <Link href="/" className="flex items-center gap-2">
             <Icons.logo className="h-8 w-8 text-primary" />
-            <span className="font-headline text-xl font-bold tracking-tight">TutorHub</span>
+            <span className="font-headline text-xl font-bold tracking-tight">Learnet<span className="text-primary">IQ</span></span>
           </Link>
           <nav className="hidden items-center gap-4 md:flex">
              <Link href="#features" passHref>
@@ -109,7 +109,7 @@ export default function LandingPage() {
               <div className="flex flex-col gap-4 p-4">
                 <Link href="/" className="flex items-center gap-2 mb-4">
                   <Icons.logo className="h-8 w-8 text-primary" />
-                  <span className="font-headline text-xl font-bold tracking-tight">TutorHub</span>
+                  <span className="font-headline text-xl font-bold tracking-tight">Learnet<span className="text-primary">IQ</span></span>
                 </Link>
                 <Link href="#features" passHref>
                   <Button variant="ghost" className="w-full justify-start">Features</Button>
@@ -156,7 +156,7 @@ export default function LandingPage() {
                         Unlock Your Learning Potential
                         </h1>
                         <p className="max-w-xl text-lg text-foreground/80">
-                        TutorHub is your all-in-one platform for academic success, combining AI-powered tutoring with a vibrant community and curated resources.
+                        LearnetIQ is your all-in-one platform for academic success, combining AI-powered tutoring with a vibrant community and curated resources.
                         </p>
                         <Dialog>
                         <div className="flex flex-col gap-4 sm:flex-row sm:justify-center md:justify-start">
@@ -201,7 +201,7 @@ export default function LandingPage() {
               >
               <div className="container mx-auto px-4 md:px-6">
                 <div className="mx-auto max-w-3xl text-center">
-                  <h2 className="font-headline text-3xl font-bold tracking-tight">Why Choose TutorHub?</h2>
+                  <h2 className="font-headline text-3xl font-bold tracking-tight">Why Choose Learnet<span className="text-primary">IQ</span>?</h2>
                   <p className="mt-4 text-lg text-muted-foreground">Explore our unique system features</p>
                 </div>
                 <CarouselContent className="mt-12">
@@ -288,7 +288,7 @@ export default function LandingPage() {
       <footer className="border-t bg-secondary snap-section flex flex-col justify-center">
           <div className="container mx-auto flex flex-col items-center justify-between gap-4 px-4 py-6 md:px-6 md:flex-row">
               <div className="text-sm text-muted-foreground">
-                &copy; {new Date().getFullYear()} TutorHub. All rights reserved.
+                &copy; {new Date().getFullYear()} LearnetIQ. All rights reserved.
               </div>
               <div className="flex gap-4">
                   <Link href="#" className="text-sm text-muted-foreground hover:text-primary">Privacy Policy</Link>

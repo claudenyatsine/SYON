@@ -10,7 +10,7 @@ export default function LoginPage() {
          <Link href="/" className="flex flex-col items-center gap-4">
             <Icons.logo className="h-12 w-12 text-primary" />
             <h1 className="font-headline text-4xl font-bold tracking-tighter text-foreground">
-              TutorHub
+              Learnet<span className="text-primary">IQ</span>
             </h1>
           </Link>
           <p className="mt-2 text-muted-foreground">

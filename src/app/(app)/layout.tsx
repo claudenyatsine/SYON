@@ -43,7 +43,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           <SidebarHeader>
             <div className="flex items-center gap-2">
               <Icons.logo className="h-8 w-8 text-primary" />
-              <span className="font-headline text-xl font-bold tracking-tight">TutorHub</span>
+              <span className="font-headline text-xl font-bold tracking-tight">Learnet<span className="text-primary">IQ</span></span>
             </div>
           </SidebarHeader>
           <SidebarContent>

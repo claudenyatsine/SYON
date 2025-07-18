@@ -61,7 +61,7 @@ const prompt = ai.definePrompt({
   
   Generate a friendly and welcoming email for them. The email should include a clear "call to action" button for them to verify their account. The verification link should be a placeholder, like "#".
   
-  Use the sendEmail tool to send this email. The subject should be "Welcome to TutorHub! Please Verify Your Account".`,
+  Use the sendEmail tool to send this email. The subject should be "Welcome to LearnetIQ! Please Verify Your Account".`,
 });
 
 const sendWelcomeEmailFlow = ai.defineFlow(
