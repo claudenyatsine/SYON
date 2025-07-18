@@ -177,8 +177,8 @@ export default function LandingPage() {
                       </CarouselItem>
                   ))}
               </CarouselContent>
-              <CarouselPrevious className="left-2 sm:left-4" />
-              <CarouselNext className="right-2 sm:right-4" />
+              <CarouselPrevious className="left-[15px]" />
+              <CarouselNext className="right-[15px]" />
             </Carousel>
           </div>
         </section>
