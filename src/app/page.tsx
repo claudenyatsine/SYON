@@ -221,8 +221,8 @@ export default function LandingPage() {
                     ))}
                 </CarouselContent>
               </div>
-              <CarouselPrevious className="absolute left-[15px] top-[calc(50%_+_20px)] -translate-y-1/2" />
-              <CarouselNext className="absolute right-[15px] top-[calc(50%_+_20px)] -translate-y-1/2" />
+              <CarouselPrevious className="absolute left-[15px] top-[calc(50%_+_20px)] -translate-y-1/2 hidden md:flex" />
+              <CarouselNext className="absolute right-[15px] top-[calc(50%_+_20px)] -translate-y-1/2 hidden md:flex" />
             </Carousel>
         </section>
 
