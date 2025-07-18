@@ -57,7 +57,7 @@ const testimonials = [
 
 export default function LandingPage() {
   const plugin = React.useRef(
-    Autoplay({ delay: 6000, stopOnInteraction: true })
+    Autoplay({ delay: 6000, stopOnInteraction: true, direction: 'backward' })
   )
 
   return (
