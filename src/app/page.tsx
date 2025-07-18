@@ -6,9 +6,10 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardTitle } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { SignUpForm } from '@/components/auth/signup-form';
 import { LoginForm } from '@/components/auth/login-form';
-import { BrainCircuit, BookOpen, Users, FolderKanban, ClipboardCheck, GraduationCap, Presentation, MessageSquare, Bell, Library, Target, UsersRound, FileCog, Link2, Smartphone, Trophy, Bot, CircleUser } from 'lucide-react';
+import { BrainCircuit, BookOpen, Users, FolderKanban, ClipboardCheck, GraduationCap, Presentation, MessageSquare, Bell, Library, Target, UsersRound, FileCog, Link2, Smartphone, Trophy, Bot, CircleUser, Menu } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
@@ -97,6 +98,48 @@ export default function LandingPage() {
               </DialogContent>
              </Dialog>
           </nav>
+          <Sheet>
+            <SheetTrigger asChild>
+              <Button variant="ghost" size="icon" className="md:hidden">
+                <Menu className="h-6 w-6" />
+                <span className="sr-only">Toggle navigation menu</span>
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="left">
+              <div className="flex flex-col gap-4 p-4">
+                <Link href="/" className="flex items-center gap-2 mb-4">
+                  <Icons.logo className="h-8 w-8 text-primary" />
+                  <span className="font-headline text-xl font-bold tracking-tight">TutorHub</span>
+                </Link>
+                <Link href="#features" passHref>
+                  <Button variant="ghost" className="w-full justify-start">Features</Button>
+                </Link>
+                <Link href="/progress" passHref>
+                    <Button variant="ghost" className="w-full justify-start">Statistics</Button>
+                </Link>
+                <Link href="#testimonials" passHref>
+                  <Button variant="ghost" className="w-full justify-start">Testimonials</Button>
+                </Link>
+                 <Dialog>
+                  <DialogTrigger asChild>
+                     <Button variant="ghost" className="w-full justify-start">Sign In</Button>
+                  </DialogTrigger>
+                  <DialogContent className="max-w-sm">
+                      <DialogHeader className="flex flex-col items-center text-center">
+                          <Icons.logo className="h-12 w-12 text-primary" />
+                          <DialogTitle className="font-headline text-3xl font-bold tracking-tighter text-foreground mt-4">
+                              Welcome back
+                          </DialogTitle>
+                      <DialogDescription className="mt-2">
+                         Sign in to continue your learning journey.
+                      </DialogDescription>
+                      </DialogHeader>
+                      <LoginForm />
+                  </DialogContent>
+                 </Dialog>
+              </div>
+            </SheetContent>
+          </Sheet>
         </div>
       </header>
 
