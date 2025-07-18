@@ -59,7 +59,16 @@ export default function LandingPage() {
             <Icons.logo className="h-8 w-8 text-primary" />
             <span className="font-headline text-xl font-bold tracking-tight">TutorHub</span>
           </Link>
-          <nav className="flex items-center gap-4">
+          <nav className="hidden items-center gap-4 md:flex">
+             <Link href="#features" passHref>
+                <Button variant="ghost">Features</Button>
+            </Link>
+             <Link href="/progress" passHref>
+                <Button variant="ghost">Statistics</Button>
+            </Link>
+            <Link href="#testimonials" passHref>
+                <Button variant="ghost">Testimonials</Button>
+            </Link>
              <Dialog>
               <DialogTrigger asChild>
                  <Button variant="ghost">Sign In</Button>
@@ -126,7 +135,7 @@ export default function LandingPage() {
         </section>
 
         {/* Features Section */}
-        <section className="snap-section flex flex-col justify-center bg-secondary py-20 md:py-24">
+        <section id="features" className="snap-section flex flex-col justify-center bg-secondary py-20 md:py-24">
           <div className="container mx-auto px-4 md:px-6">
             <div className="mx-auto max-w-3xl text-center">
               <h2 className="font-headline text-3xl font-bold tracking-tight">Why Choose TutorHub?</h2>
@@ -147,7 +156,7 @@ export default function LandingPage() {
         </section>
 
         {/* Testimonials Section */}
-        <section className="snap-section flex flex-col justify-center py-20 md:py-24">
+        <section id="testimonials" className="snap-section flex flex-col justify-center py-20 md:py-24">
              <div className="container mx-auto px-4 md:px-6">
                  <div className="mx-auto max-w-3xl text-center">
                     <h2 className="font-headline text-3xl font-bold tracking-tight">Loved by Students and Parents</h2>
