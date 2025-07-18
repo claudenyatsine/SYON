@@ -148,7 +148,7 @@ export default function LandingPage() {
         <section id="features" className="snap-section flex flex-col justify-center bg-secondary py-20 md:py-24 overflow-hidden relative">
             <Carousel
                 plugins={[plugin.current]}
-                className="w-full"
+                className="w-full mt-[-288px]"
                 onMouseEnter={plugin.current.stop}
                 onMouseLeave={plugin.current.reset}
                 opts={{
