@@ -22,8 +22,20 @@ import {
   LogOut,
 } from 'lucide-react';
 import { DashboardHeader } from '@/components/dashboard-header';
+import { usePathname } from 'next/navigation';
+
+const menuItems = [
+  { href: '/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
+  { href: '/resources', icon: BookOpen, label: 'Resources' },
+  { href: '/forums', icon: Users, label: 'Forums' },
+  { href: '/messages', icon: MessageSquare, label: 'Messages' },
+  { href: '/progress', icon: BarChart3, label: 'Progress' },
+  { href: '/live-classes', icon: Video, label: 'Live Classes' },
+];
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
+  const pathname = usePathname();
+
   return (
     <SidebarProvider>
       <div className="flex min-h-screen">
@@ -36,42 +48,18 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           </SidebarHeader>
           <SidebarContent>
             <SidebarMenu>
-              <SidebarMenuItem>
-                <SidebarMenuButton href="/dashboard" tooltip="Dashboard" isActive>
-                  <LayoutDashboard />
-                  Dashboard
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-              <SidebarMenuItem>
-                <SidebarMenuButton href="/resources" tooltip="Resources">
-                  <BookOpen />
-                  Resources
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-              <SidebarMenuItem>
-                <SidebarMenuButton href="/forums" tooltip="Forums">
-                  <Users />
-                  Forums
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-              <SidebarMenuItem>
-                <SidebarMenuButton href="/messages" tooltip="Messages">
-                  <MessageSquare />
-                  Messages
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-              <SidebarMenuItem>
-                <SidebarMenuButton href="/progress" tooltip="Progress">
-                  <BarChart3 />
-                  Progress
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-              <SidebarMenuItem>
-                <SidebarMenuButton href="/live-classes" tooltip="Live Classes">
-                  <Video />
-                  Live Classes
-                </SidebarMenuButton>
-              </SidebarMenuItem>
+              {menuItems.map((item) => (
+                <SidebarMenuItem key={item.href}>
+                  <SidebarMenuButton
+                    href={item.href}
+                    tooltip={item.label}
+                    isActive={pathname === item.href || (item.href !== '/dashboard' && pathname.startsWith(item.href))}
+                  >
+                    <item.icon />
+                    {item.label}
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
             </SidebarMenu>
           </SidebarContent>
           <SidebarFooter>
