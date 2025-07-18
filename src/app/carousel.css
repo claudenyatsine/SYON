@@ -1,13 +1,12 @@
 .embla__slide {
   transition: filter 0.3s ease-in-out, transform 0.3s ease-in-out;
   filter: blur(2px);
-  transform: scale(0.9);
+  transform: scale(0.8);
 }
 
 .embla__slide.is-active {
   filter: blur(0);
   transform: scale(1);
-  animation: zoom-in 6s ease-in-out forwards;
 }
 
 .feature-card {
@@ -41,15 +40,6 @@
   100% {
     opacity: 0;
     box-shadow: 0 0 10px 0px #33b5e5, 0 0 20px 0px #33b5e5, inset 0 0 10px 0px #33b5e5;
-  }
-}
-
-@keyframes zoom-in {
-  from {
-    transform: scale(1);
-  }
-  to {
-    transform: scale(1.05);
   }
 }
 

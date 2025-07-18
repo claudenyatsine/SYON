@@ -28,7 +28,6 @@ type CarouselContextProps = {
   scrollNext: () => void
   canScrollPrev: boolean
   canScrollNext: boolean
-  mainApi: ReturnType<typeof useEmblaCarousel>[1]
 } & CarouselProps
 
 const CarouselContext = React.createContext<CarouselContextProps | null>(null)
@@ -68,13 +67,7 @@ const Carousel = React.forwardRef<
     )
     const [canScrollPrev, setCanScrollPrev] = React.useState(false)
     const [canScrollNext, setCanScrollNext] = React.useState(false)
-    const [slidesInView, setSlidesInView] = React.useState<number[]>([])
-
-     const updateSlidesInView = React.useCallback((api: CarouselApi) => {
-      if (!api) return
-      setSlidesInView(api.slidesInView())
-    }, [])
-
+    
     const onSelect = React.useCallback((api: CarouselApi) => {
       if (!api) {
         return
@@ -82,8 +75,7 @@ const Carousel = React.forwardRef<
 
       setCanScrollPrev(api.canScrollPrev())
       setCanScrollNext(api.canScrollNext())
-      updateSlidesInView(api);
-    }, [updateSlidesInView])
+    }, [])
 
     const scrollPrev = React.useCallback(() => {
       api?.scrollPrev()
@@ -134,28 +126,23 @@ const Carousel = React.forwardRef<
           carouselRef,
           api: api,
           opts,
-          orientation:
-            orientation || (opts?.axis === "y" ? "vertical" : "horizontal"),
           scrollPrev,
           scrollNext,
           canScrollPrev,
           canScrollNext,
-          mainApi: api
+          orientation:
+            orientation || (opts?.axis === "y" ? "vertical" : "horizontal"),
         }}
       >
         <div
           ref={ref}
           onKeyDownCapture={handleKeyDown}
-          className={cn("relative embla", className)}
+          className={cn("relative", className)}
           role="region"
           aria-roledescription="carousel"
           {...props}
         >
-          {React.Children.map(children, (child) => 
-            React.isValidElement(child) 
-              ? React.cloneElement(child as React.ReactElement, { slidesInView })
-              : child
-          )}
+          {children}
         </div>
       </CarouselContext.Provider>
     )
@@ -165,17 +152,34 @@ Carousel.displayName = "Carousel"
 
 const CarouselContent = React.forwardRef<
   HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement> & { slidesInView?: number[] }
->(({ className, slidesInView, ...props }, ref) => {
-  const { carouselRef, orientation } = useCarousel()
+  React.HTMLAttributes<HTMLDivElement>
+>(({ className, ...props }, ref) => {
+  const { carouselRef, orientation, api } = useCarousel()
+  const [slidesInView, setSlidesInView] = React.useState<number[]>([])
+
+  React.useEffect(() => {
+    const onSelect = () => {
+      setSlidesInView(api?.slidesInView() || []);
+    };
+
+    if (api) {
+      onSelect();
+      api.on('select', onSelect);
+      api.on('reInit', onSelect);
+    }
+    return () => {
+      api?.off('select', onSelect);
+    };
+  }, [api]);
+
 
   return (
-    <div ref={carouselRef} className="overflow-hidden embla__viewport">
+    <div ref={carouselRef} className="overflow-hidden">
       <div
         ref={ref}
         className={cn(
-          "flex embla__container",
-          orientation === "horizontal" ? "-ml-4" : "-mt-4 flex-col",
+          "flex",
+          orientation === "horizontal" ? "" : "flex-col",
           className
         )}
         {...props}
@@ -185,7 +189,7 @@ const CarouselContent = React.forwardRef<
             ? React.cloneElement(child as React.ReactElement, {
                 className: cn(
                   child.props.className,
-                  slidesInView?.includes(index) ? 'is-active' : ''
+                  slidesInView.includes(index) ? 'is-active' : ''
                 )
               })
             : child
@@ -208,7 +212,7 @@ const CarouselItem = React.forwardRef<
       role="group"
       aria-roledescription="slide"
       className={cn(
-        "min-w-0 shrink-0 grow-0 basis-full embla__slide",
+        "min-w-0 shrink-0 grow-0 basis-full",
         orientation === "horizontal" ? "pl-4" : "pt-4",
         className
       )}

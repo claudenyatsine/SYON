@@ -1,3 +1,4 @@
+
 'use client';
 
 import { Icons } from '@/components/icons';
@@ -160,9 +161,9 @@ export default function LandingPage() {
                     loop: true,
                 }}
               >
-              <CarouselContent className="-ml-4">
+              <CarouselContent>
                   {features.map((feature, index) => (
-                      <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3 p-4">
+                      <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3">
                           <div className="p-1 h-full">
                               <Card className="flex flex-col h-full items-center justify-center p-6 text-center feature-card">
                                   <div className="glowing-border"></div>
@@ -253,3 +254,5 @@ export default function LandingPage() {
     </div>
   );
 }
+
+    
