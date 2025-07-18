@@ -1,7 +1,12 @@
+
+'use client';
+
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import Image from 'next/image';
 import { Badge } from '@/components/ui/badge';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
+import { FileText, Film } from 'lucide-react';
 
 const resources = [
   {
@@ -54,6 +59,24 @@ const resources = [
   },
 ];
 
+const mediaTypes = ['Video', 'Video Series', 'Audio', 'Voice Note'];
+const documentTypes = ['Book', 'Worksheet', 'PDF', 'Docs', 'Excel', 'Interactive Tutorial'];
+
+const groupedResources = resources.reduce((acc, resource) => {
+  if (!acc[resource.subject]) {
+    acc[resource.subject] = { media: [], documents: [] };
+  }
+
+  if (mediaTypes.includes(resource.type)) {
+    acc[resource.subject].media.push(resource);
+  } else if (documentTypes.includes(resource.type)) {
+    acc[resource.subject].documents.push(resource);
+  }
+  
+  return acc;
+}, {} as Record<string, { media: typeof resources; documents: typeof resources }>);
+
+
 export default function ResourcesPage() {
   return (
     <div className="space-y-8">
@@ -61,33 +84,70 @@ export default function ResourcesPage() {
         <h1 className="font-headline text-3xl font-bold tracking-tight">Course Resources</h1>
         <p className="text-muted-foreground">Curated learning materials to help you succeed.</p>
       </div>
-      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {resources.map((resource) => (
-          <Card key={resource.title} className="flex flex-col overflow-hidden">
-            <CardHeader>
-              <Image
+      <Accordion type="multiple" defaultValue={Object.keys(groupedResources)} className="w-full space-y-6">
+        {Object.entries(groupedResources).map(([subject, categories]) => (
+          <AccordionItem key={subject} value={subject} className="border-none">
+             <Card>
+                <AccordionTrigger className="p-6 hover:no-underline">
+                    <h2 className="font-headline text-2xl font-bold">{subject}</h2>
+                </AccordionTrigger>
+                <AccordionContent className="p-6 pt-0">
+                    {categories.media.length > 0 && (
+                        <div className="mb-8">
+                            <div className="flex items-center gap-2 mb-4">
+                                <Film className="h-5 w-5 text-primary" />
+                                <h3 className="font-headline text-xl font-semibold">Media</h3>
+                            </div>
+                            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                                {categories.media.map((resource) => (
+                                    <ResourceCard key={resource.title} resource={resource} />
+                                ))}
+                            </div>
+                        </div>
+                    )}
+                    {categories.documents.length > 0 && (
+                         <div>
+                            <div className="flex items-center gap-2 mb-4">
+                                <FileText className="h-5 w-5 text-primary" />
+                                <h3 className="font-headline text-xl font-semibold">Documents & Articles</h3>
+                            </div>
+                            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                                {categories.documents.map((resource) => (
+                                    <ResourceCard key={resource.title} resource={resource} />
+                                ))}
+                            </div>
+                        </div>
+                    )}
+                </AccordionContent>
+             </Card>
+          </AccordionItem>
+        ))}
+      </Accordion>
+    </div>
+  );
+}
+
+function ResourceCard({ resource }: { resource: typeof resources[0] }) {
+    return (
+        <Card className="flex flex-col overflow-hidden">
+            <CardHeader className="p-0">
+                <Image
                 src={resource.image}
                 alt={resource.title}
                 width={600}
                 height={400}
                 className="aspect-video w-full object-cover"
                 data-ai-hint={resource.aiHint}
-              />
+                />
             </CardHeader>
-            <CardContent className="flex-grow space-y-2">
-              <div className="flex items-center gap-2">
-                <Badge variant="secondary">{resource.subject}</Badge>
+            <CardContent className="flex-grow space-y-2 p-4">
                 <Badge variant="outline">{resource.type}</Badge>
-              </div>
-              <CardTitle className="text-lg">{resource.title}</CardTitle>
-              <CardDescription>{resource.description}</CardDescription>
+                <CardTitle className="text-lg">{resource.title}</CardTitle>
+                <CardDescription>{resource.description}</CardDescription>
             </CardContent>
-            <CardFooter>
-              <Button className="w-full font-bold">View Resource</Button>
+            <CardFooter className="p-4 pt-0">
+                <Button className="w-full font-bold">View Resource</Button>
             </CardFooter>
-          </Card>
-        ))}
-      </div>
-    </div>
-  );
+        </Card>
+    )
 }
