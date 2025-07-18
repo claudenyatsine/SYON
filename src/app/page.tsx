@@ -11,7 +11,7 @@ import { LoginForm } from '@/components/auth/login-form';
 import { BrainCircuit, BookOpen, Users, FolderKanban, ClipboardCheck, GraduationCap, Presentation, MessageSquare, Bell, Library, Target, UsersRound, FileCog, Link2, Smartphone, Trophy, Bot, CircleUser } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel';
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import Autoplay from 'embla-carousel-autoplay';
 import './carousel.css';
 import React from 'react';
@@ -177,6 +177,8 @@ export default function LandingPage() {
                       </CarouselItem>
                   ))}
               </CarouselContent>
+              <CarouselPrevious className="left-10" />
+              <CarouselNext className="right-10" />
             </Carousel>
           </div>
         </section>
