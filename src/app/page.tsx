@@ -146,14 +146,9 @@ export default function LandingPage() {
 
         {/* Features Section */}
         <section id="features" className="snap-section flex flex-col justify-center bg-secondary py-20 md:py-24 overflow-hidden">
-          <div className="container mx-auto px-4 md:px-6">
-            <div className="mx-auto max-w-3xl text-center">
-              <h2 className="font-headline text-3xl font-bold tracking-tight">Why Choose TutorHub?</h2>
-              <p className="mt-4 text-lg text-muted-foreground">Explore our unique system features</p>
-            </div>
              <Carousel
                 plugins={[plugin.current]}
-                className="w-full mt-12"
+                className="w-full"
                 onMouseEnter={plugin.current.stop}
                 onMouseLeave={plugin.current.reset}
                 opts={{
@@ -161,26 +156,31 @@ export default function LandingPage() {
                     loop: true,
                 }}
               >
-              <CarouselContent>
-                  {features.map((feature, index) => (
-                      <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3">
-                          <div className="p-1 h-full">
-                              <Card className="flex flex-col h-full items-center justify-center p-6 text-center feature-card">
-                                  <div className="glowing-border"></div>
-                                  <CardContent className="flex flex-col items-center p-0">
-                                      <feature.icon className="mb-4 h-12 w-12 text-accent" />
-                                      <CardTitle className="font-headline text-xl font-semibold mb-2">{feature.title}</CardTitle>
-                                      <p className="text-sm text-muted-foreground">{feature.description}</p>
-                                  </CardContent>
-                              </Card>
-                          </div>
-                      </CarouselItem>
-                  ))}
-              </CarouselContent>
-              <CarouselPrevious className="left-[15px]" />
-              <CarouselNext className="right-[15px]" />
+              <div className="container mx-auto px-4 md:px-6">
+                <div className="mx-auto max-w-3xl text-center">
+                  <h2 className="font-headline text-3xl font-bold tracking-tight">Why Choose TutorHub?</h2>
+                  <p className="mt-4 text-lg text-muted-foreground">Explore our unique system features</p>
+                </div>
+                <CarouselContent className="mt-12">
+                    {features.map((feature, index) => (
+                        <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3">
+                            <div className="p-1 h-full">
+                                <Card className="flex flex-col h-full items-center justify-center p-6 text-center feature-card">
+                                    <div className="glowing-border"></div>
+                                    <CardContent className="flex flex-col items-center p-0">
+                                        <feature.icon className="mb-4 h-12 w-12 text-accent" />
+                                        <CardTitle className="font-headline text-xl font-semibold mb-2">{feature.title}</CardTitle>
+                                        <p className="text-sm text-muted-foreground">{feature.description}</p>
+                                    </CardContent>
+                                </Card>
+                            </div>
+                        </CarouselItem>
+                    ))}
+                </CarouselContent>
+              </div>
+              <CarouselPrevious className="left-[15px] sm:left-4" />
+              <CarouselNext className="right-[15px] sm:right-4" />
             </Carousel>
-          </div>
         </section>
 
         {/* Testimonials Section */}
