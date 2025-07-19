@@ -210,7 +210,7 @@ export default function LandingPage() {
         {/* Features Section */}
         <section id="features" className="snap-section flex flex-col justify-center bg-secondary py-20 md:py-24 overflow-hidden relative">
             <div className="container mx-auto px-4 md:px-6">
-                <div className="mx-auto max-w-3xl text-center mt-[-3in]">
+                <div className="mx-auto max-w-3xl text-center">
                   <h2 className="font-headline text-3xl font-bold tracking-tight">Why Choose Learnet<span className="text-primary">IQ</span>?</h2>
                   <p className="mt-4 text-lg text-muted-foreground">Explore our unique system features</p>
                 </div>
@@ -226,7 +226,7 @@ export default function LandingPage() {
               >
                 <CarouselContent>
                     {features.map((feature, index) => (
-                        <CarouselItem key={index} className="md:basis-1/4 lg:basis-1/6 embla__slide">
+                        <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3 embla__slide">
                             <div className="p-1 h-full">
                                 <Card className="flex flex-col items-center justify-center p-6 text-center feature-card aspect-[3/4]">
                                     <div className="glowing-border"></div>
@@ -379,8 +379,8 @@ export default function LandingPage() {
         
         <Dialog>
           {/* CTA Section */}
-          <section className="snap-section flex flex-col justify-center bg-secondary py-20">
-              <div className="container mx-auto px-4 md:px-6">
+          <section className="snap-section flex flex-col bg-secondary">
+              <div className="container mx-auto flex h-full flex-col justify-center px-4 md:px-6">
                   <div className="rounded-lg bg-primary p-12 text-primary-foreground">
                     <div className="text-center">
                       <h2 className="font-headline text-3xl font-bold tracking-tight">Ready to Start Learning?</h2>
@@ -391,17 +391,17 @@ export default function LandingPage() {
                           </DialogTrigger>
                       </div>
                     </div>
-                    <div className="mt-12 border-t border-primary-foreground/20 pt-8 text-center text-sm text-primary-foreground/80">
-                      <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
-                          <p>&copy; {new Date().getFullYear()} LearnetIQ. All rights reserved.</p>
-                          <div className="flex gap-4">
-                              <Link href="#" className="hover:underline">Privacy Policy</Link>
-                              <Link href="#" className="hover:underline">Terms of Service</Link>
-                          </div>
-                      </div>
-                    </div>
                   </div>
               </div>
+               <div className="mt-auto border-t border-border bg-background py-4 text-sm text-muted-foreground">
+                  <div className="container mx-auto flex flex-col items-center justify-between gap-4 px-4 sm:flex-row md:px-6">
+                      <p>&copy; {new Date().getFullYear()} LearnetIQ. All rights reserved.</p>
+                      <div className="flex gap-4">
+                          <Link href="#" className="hover:underline">Privacy Policy</Link>
+                          <Link href="#" className="hover:underline">Terms of Service</Link>
+                      </div>
+                  </div>
+                </div>
           </section>
            <DialogContent className="max-w-sm">
               <DialogHeader className="flex flex-col items-center text-center">
