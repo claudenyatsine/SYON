@@ -166,7 +166,7 @@ export default function LandingPage() {
       <main>
         {/* Hero Section */}
         <section className="snap-section relative flex min-h-screen items-center justify-center overflow-hidden py-20 md:py-24">
-           <Image src="https://placehold.co/1200x800.png" alt="Hero background" layout="fill" objectFit="cover" className="z-0" data-ai-hint="modern classroom" />
+           <Image src="/hero-background.jpg" alt="Hero background" layout="fill" objectFit="cover" className="z-0" data-ai-hint="modern classroom" />
            <div className="absolute inset-0 bg-background/60 dark:bg-background/80" />
            <div className="relative z-10 flex min-h-screen w-full items-center">
                 <div className="container mx-auto px-4 md:px-6">
@@ -209,9 +209,14 @@ export default function LandingPage() {
 
         {/* Features Section */}
         <section id="features" className="snap-section flex flex-col justify-center bg-secondary py-20 md:py-24 overflow-hidden relative">
+            <div className="container mx-auto px-4 md:px-6">
+                <div className="mx-auto max-w-3xl text-center mt-[-3in]">
+                  <h2 className="font-headline text-3xl font-bold tracking-tight">Why Choose Learnet<span className="text-primary">IQ</span>?</h2>
+                  <p className="mt-4 text-lg text-muted-foreground">Explore our unique system features</p>
+                </div>
             <Carousel
                 plugins={[plugin.current]}
-                className="w-full mt-[-96px]"
+                className="w-full"
                 onMouseEnter={plugin.current.stop}
                 onMouseLeave={plugin.current.reset}
                 opts={{
@@ -219,16 +224,11 @@ export default function LandingPage() {
                     loop: true,
                 }}
               >
-              <div className="container mx-auto px-4 md:px-6">
-                <div className="mx-auto max-w-3xl text-center">
-                  <h2 className="font-headline text-3xl font-bold tracking-tight">Why Choose Learnet<span className="text-primary">IQ</span>?</h2>
-                  <p className="mt-4 text-lg text-muted-foreground">Explore our unique system features</p>
-                </div>
                 <CarouselContent className="mt-12">
                     {features.map((feature, index) => (
-                        <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3">
+                        <CarouselItem key={index} className="md:basis-1/4 lg:basis-1/6 embla__slide">
                             <div className="p-1 h-full">
-                                <Card className="flex flex-col h-full items-center justify-center p-6 text-center feature-card">
+                                <Card className="flex flex-col items-center justify-center p-6 text-center feature-card aspect-[3/4]">
                                     <div className="glowing-border"></div>
                                     <CardContent className="flex flex-col items-center p-0">
                                         <feature.icon className="mb-4 h-12 w-12 text-accent" />
@@ -240,10 +240,10 @@ export default function LandingPage() {
                         </CarouselItem>
                     ))}
                 </CarouselContent>
-              </div>
               <CarouselPrevious className="absolute left-[15px] top-[calc(50%_+_20px)] -translate-y-1/2 hidden md:flex" />
               <CarouselNext className="absolute right-[15px] top-[calc(50%_+_20px)] -translate-y-1/2 hidden md:flex" />
             </Carousel>
+            </div>
         </section>
         
         {/* Statistics Section */}
@@ -407,7 +407,7 @@ export default function LandingPage() {
         </Dialog>
       </main>
 
-      <footer className="border-t bg-secondary snap-section flex flex-col justify-center">
+      <footer className="border-t bg-secondary">
           <div className="container mx-auto flex flex-col items-center justify-between gap-4 px-4 py-6 md:px-6 md:flex-row">
               <div className="text-sm text-muted-foreground">
                 &copy; {new Date().getFullYear()} LearnetIQ. All rights reserved.
