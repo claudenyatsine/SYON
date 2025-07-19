@@ -30,8 +30,8 @@ const mockPosts = [
   },
 ];
 
-export default function SubjectForumPage({ params }: { params: { subject: string } }) {
-  const subjectName = params.subject.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+export default function SubjectForumPage({ params: { subject } }: { params: { subject: string } }) {
+  const subjectName = subject.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
 
   return (
     <div className="space-y-8">
