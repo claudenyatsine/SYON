@@ -230,7 +230,7 @@ export default function LandingPage() {
               >
                 <CarouselContent>
                     {features.map((feature, index) => (
-                        <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/4 embla__slide">
+                        <CarouselItem key={index} className="md:basis-1/3 lg:basis-1/5 embla__slide">
                             <div className="p-1 h-full">
                                 <Card className="flex flex-col items-center justify-center p-6 text-center feature-card aspect-[3/4]">
                                     <div className="glowing-border"></div>
@@ -359,7 +359,7 @@ export default function LandingPage() {
                     <h2 className="font-headline text-3xl font-bold tracking-tight">Loved by Students and Parents</h2>
                     <p className="mt-4 text-lg text-muted-foreground">Don&apos;t just take our word for it. Here&apos;s what people are saying.</p>
                 </div>
-                <div className="mt-12 grid gap-8 md:grid-cols-3">
+                <div className="mt-12 grid gap-8 md:grid-cols-1 lg:grid-cols-3">
                     {testimonials.map((testimonial) => (
                         <Card key={testimonial.name} className="flex flex-col">
                             <CardContent className="p-6 flex-grow">
@@ -385,14 +385,23 @@ export default function LandingPage() {
           {/* CTA Section */}
           <section className="flex flex-col bg-secondary">
             <div className="container mx-auto flex h-full flex-col justify-center px-4 md:px-6">
-              <div className="flex h-full min-h-[50vh] flex-col rounded-lg bg-primary p-12 text-primary-foreground text-center">
-                <div className="m-auto flex-grow flex flex-col justify-center">
+              <div className="flex h-full min-h-[50vh] flex-col rounded-lg bg-primary p-12 text-primary-foreground">
+                <div className="m-auto flex flex-col justify-center text-center">
                     <h2 className="font-headline text-3xl font-bold tracking-tight">Ready to Start Learning?</h2>
                     <p className="mt-4 text-lg text-primary-foreground/90">Join thousands of students achieving their academic goals.</p>
                     <div className="mt-8">
                       <DialogTrigger asChild>
                         <Button size="lg" variant="secondary" className="font-bold">Sign Up Now</Button>
                       </DialogTrigger>
+                    </div>
+                </div>
+                 <div className="mt-auto pt-8 text-sm text-primary-foreground/80">
+                    <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
+                    <p>&copy; {new Date().getFullYear()} LearnetIQ. All rights reserved.</p>
+                    <div className="flex gap-4">
+                        <Link href="#" className="hover:underline">Privacy Policy</Link>
+                        <Link href="#" className="hover:underline">Terms of Service</Link>
+                    </div>
                     </div>
                 </div>
               </div>
@@ -412,15 +421,6 @@ export default function LandingPage() {
             </DialogContent>
         </Dialog>
       </main>
-      <footer className="border-t border-border bg-background py-4 text-sm text-muted-foreground">
-        <div className="container mx-auto flex flex-col items-center justify-between gap-4 px-4 sm:flex-row md:px-6">
-          <p>&copy; {new Date().getFullYear()} LearnetIQ. All rights reserved.</p>
-          <div className="flex gap-4">
-            <Link href="#" className="hover:underline">Privacy Policy</Link>
-            <Link href="#" className="hover:underline">Terms of Service</Link>
-          </div>
-        </div>
-      </footer>
     </div>
   );
 }
