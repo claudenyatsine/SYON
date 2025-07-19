@@ -163,7 +163,7 @@ export default function LandingPage() {
         </div>
       </header>
 
-      <main className="pb-20">
+      <main>
         {/* Hero Section */}
         <section className="snap-section relative flex min-h-screen items-center justify-center overflow-hidden py-20 md:py-24">
            <Image src="https://placehold.co/1920x1080.png" alt="Hero background" layout="fill" objectFit="cover" className="z-0" data-ai-hint="modern classroom" />
@@ -216,7 +216,7 @@ export default function LandingPage() {
                 </div>
             <Carousel
                 plugins={[plugin.current]}
-                className="w-full"
+                className="w-full mt-12"
                 onMouseEnter={plugin.current.stop}
                 onMouseLeave={plugin.current.reset}
                 opts={{
@@ -224,7 +224,7 @@ export default function LandingPage() {
                     loop: true,
                 }}
               >
-                <CarouselContent className="mt-12">
+                <CarouselContent>
                     {features.map((feature, index) => (
                         <CarouselItem key={index} className="md:basis-1/4 lg:basis-1/6 embla__slide">
                             <div className="p-1 h-full">
@@ -407,20 +407,18 @@ export default function LandingPage() {
               <SignUpForm />
             </DialogContent>
         </Dialog>
+        <footer className="border-t bg-background/95 backdrop-blur-sm">
+          <div className="container mx-auto flex h-16 items-center justify-between px-4 md:px-6">
+              <div className="text-sm text-muted-foreground">
+                  &copy; {new Date().getFullYear()} LearnetIQ. All rights reserved.
+              </div>
+              <div className="flex gap-4">
+                  <Link href="#" className="text-sm text-muted-foreground hover:text-foreground">Privacy Policy</Link>
+                  <Link href="#" className="text-sm text-muted-foreground hover:text-foreground">Terms of Service</Link>
+              </div>
+          </div>
+        </footer>
       </main>
-
-      <footer className="fixed bottom-0 z-50 w-full border-t bg-background/95 backdrop-blur-sm">
-        <div className="container mx-auto flex h-16 items-center justify-between px-4 md:px-6">
-            <div className="text-sm text-muted-foreground">
-                &copy; {new Date().getFullYear()} LearnetIQ. All rights reserved.
-            </div>
-            <div className="flex gap-4">
-                <Link href="#" className="text-sm text-muted-foreground hover:text-foreground">Privacy Policy</Link>
-                <Link href="#" className="text-sm text-muted-foreground hover:text-foreground">Terms of Service</Link>
-            </div>
-        </div>
-      </footer>
-
     </div>
   );
 }
