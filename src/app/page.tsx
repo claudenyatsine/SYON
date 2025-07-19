@@ -379,9 +379,10 @@ export default function LandingPage() {
         
         <Dialog>
           {/* CTA Section */}
-          <section className="snap-section flex flex-col justify-center py-20">
+          <section className="snap-section flex flex-col justify-center bg-secondary py-20">
               <div className="container mx-auto px-4 md:px-6">
-                  <div className="rounded-lg bg-primary p-12 text-center text-primary-foreground">
+                  <div className="rounded-lg bg-primary p-12 text-primary-foreground">
+                    <div className="text-center">
                       <h2 className="font-headline text-3xl font-bold tracking-tight">Ready to Start Learning?</h2>
                       <p className="mt-4 text-lg text-primary-foreground/90">Join thousands of students achieving their academic goals.</p>
                       <div className="mt-8">
@@ -389,6 +390,16 @@ export default function LandingPage() {
                               <Button size="lg" variant="secondary" className="font-bold">Sign Up Now</Button>
                           </DialogTrigger>
                       </div>
+                    </div>
+                    <div className="mt-12 border-t border-primary-foreground/20 pt-6 flex flex-col items-center justify-between gap-4 md:flex-row">
+                      <div className="text-sm text-primary-foreground/80">
+                        &copy; {new Date().getFullYear()} LearnetIQ. All rights reserved.
+                      </div>
+                      <div className="flex gap-4">
+                          <Link href="#" className="text-sm text-primary-foreground/80 hover:text-primary-foreground">Privacy Policy</Link>
+                          <Link href="#" className="text-sm text-primary-foreground/80 hover:text-primary-foreground">Terms of Service</Link>
+                      </div>
+                    </div>
                   </div>
               </div>
           </section>
@@ -407,17 +418,6 @@ export default function LandingPage() {
         </Dialog>
       </main>
 
-      <footer className="border-t bg-secondary">
-          <div className="container mx-auto flex flex-col items-center justify-between gap-4 px-4 py-6 md:px-6 md:flex-row">
-              <div className="text-sm text-muted-foreground">
-                &copy; {new Date().getFullYear()} LearnetIQ. All rights reserved.
-              </div>
-              <div className="flex gap-4">
-                  <Link href="#" className="text-sm text-muted-foreground hover:text-primary">Privacy Policy</Link>
-                  <Link href="#" className="text-sm text-muted-foreground hover:text-primary">Terms of Service</Link>
-              </div>
-          </div>
-      </footer>
     </div>
   );
 }
