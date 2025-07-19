@@ -92,7 +92,7 @@ export default function LandingPage() {
             <Icons.logo className="h-8 w-8 text-primary" />
             <span className="font-headline text-xl font-bold tracking-tight">Learnet<span className="text-primary">IQ</span></span>
           </Link>
-          <div className="hidden md:flex">
+          <div className="hidden items-center gap-2 md:flex">
              <Link href="#features" passHref>
                 <Button variant="ghost">Features</Button>
             </Link>
@@ -102,8 +102,6 @@ export default function LandingPage() {
             <Link href="#testimonials" passHref>
                 <Button variant="ghost">Testimonials</Button>
             </Link>
-          </div>
-           <div className="hidden md:flex">
              <Dialog>
               <DialogTrigger asChild>
                  <Button variant="ghost">Sign In</Button>
