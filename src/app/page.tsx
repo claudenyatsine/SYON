@@ -380,28 +380,26 @@ export default function LandingPage() {
         <Dialog>
           {/* CTA Section */}
           <section className="snap-section flex flex-col bg-secondary">
-              <div className="container mx-auto flex h-full flex-col justify-center px-4 md:px-6">
-                  <div className="rounded-lg bg-primary p-12 text-primary-foreground">
-                    <div className="text-center">
-                      <h2 className="font-headline text-3xl font-bold tracking-tight">Ready to Start Learning?</h2>
-                      <p className="mt-4 text-lg text-primary-foreground/90">Join thousands of students achieving their academic goals.</p>
-                      <div className="mt-8">
-                          <DialogTrigger asChild>
-                              <Button size="lg" variant="secondary" className="font-bold">Sign Up Now</Button>
-                          </DialogTrigger>
-                      </div>
-                    </div>
-                  </div>
-              </div>
-               <div className="mt-auto border-t border-border bg-background py-4 text-sm text-muted-foreground">
-                  <div className="container mx-auto flex flex-col items-center justify-between gap-4 px-4 sm:flex-row md:px-6">
-                      <p>&copy; {new Date().getFullYear()} LearnetIQ. All rights reserved.</p>
-                      <div className="flex gap-4">
-                          <Link href="#" className="hover:underline">Privacy Policy</Link>
-                          <Link href="#" className="hover:underline">Terms of Service</Link>
-                      </div>
+            <div className="container mx-auto flex h-full flex-col justify-center px-4 md:px-6">
+                <div className="rounded-lg bg-primary p-12 text-primary-foreground text-center">
+                  <h2 className="font-headline text-3xl font-bold tracking-tight">Ready to Start Learning?</h2>
+                  <p className="mt-4 text-lg text-primary-foreground/90">Join thousands of students achieving their academic goals.</p>
+                  <div className="mt-8">
+                    <DialogTrigger asChild>
+                      <Button size="lg" variant="secondary" className="font-bold">Sign Up Now</Button>
+                    </DialogTrigger>
                   </div>
                 </div>
+              <div className="mt-auto border-t border-border bg-background py-4 text-sm text-muted-foreground">
+                <div className="container mx-auto flex flex-col items-center justify-between gap-4 px-4 sm:flex-row md:px-6">
+                  <p>&copy; {new Date().getFullYear()} LearnetIQ. All rights reserved.</p>
+                  <div className="flex gap-4">
+                    <Link href="#" className="hover:underline">Privacy Policy</Link>
+                    <Link href="#" className="hover:underline">Terms of Service</Link>
+                  </div>
+                </div>
+              </div>
+            </div>
           </section>
            <DialogContent className="max-w-sm">
               <DialogHeader className="flex flex-col items-center text-center">
