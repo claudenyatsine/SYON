@@ -1,4 +1,3 @@
-
 'use client';
 
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -79,7 +78,7 @@ const groupedResources = resources.reduce((acc, resource) => {
 
 export default function ResourcesPage() {
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 md:space-y-8">
       <div>
         <h1 className="font-headline text-3xl font-bold tracking-tight">Course Resources</h1>
         <p className="text-muted-foreground">Curated learning materials to help you succeed.</p>
@@ -88,17 +87,17 @@ export default function ResourcesPage() {
         {Object.entries(groupedResources).map(([subject, categories]) => (
           <AccordionItem key={subject} value={subject} className="border-none">
              <Card>
-                <AccordionTrigger className="p-6 hover:no-underline">
+                <AccordionTrigger className="p-4 md:p-6 hover:no-underline">
                     <h2 className="font-headline text-2xl font-bold">{subject}</h2>
                 </AccordionTrigger>
-                <AccordionContent className="p-6 pt-0">
+                <AccordionContent className="p-4 md:p-6 pt-0">
                     {categories.media.length > 0 && (
                         <div className="mb-8">
                             <div className="flex items-center gap-2 mb-4">
                                 <Film className="h-5 w-5 text-primary" />
                                 <h3 className="font-headline text-xl font-semibold">Media</h3>
                             </div>
-                            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3">
                                 {categories.media.map((resource) => (
                                     <ResourceCard key={resource.title} resource={resource} />
                                 ))}
@@ -111,7 +110,7 @@ export default function ResourcesPage() {
                                 <FileText className="h-5 w-5 text-primary" />
                                 <h3 className="font-headline text-xl font-semibold">Documents & Articles</h3>
                             </div>
-                            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3">
                                 {categories.documents.map((resource) => (
                                     <ResourceCard key={resource.title} resource={resource} />
                                 ))}

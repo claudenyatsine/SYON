@@ -54,12 +54,12 @@ const liveClasses = [
 
 export default function LiveClassesPage() {
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 md:space-y-8">
       <div>
         <h1 className="font-headline text-3xl font-bold tracking-tight">Live Classes</h1>
         <p className="text-muted-foreground">Join live, interactive classes with expert tutors.</p>
       </div>
-      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-3">
         {liveClasses.map((cls) => (
           <Card key={cls.title} className="flex flex-col overflow-hidden">
             <CardHeader className="relative p-0">
@@ -73,7 +73,7 @@ export default function LiveClassesPage() {
               />
               <Badge className="absolute top-3 right-3" variant={cls.status === 'Upcoming' ? 'default' : 'secondary'}>{cls.status}</Badge>
             </CardHeader>
-            <CardContent className="flex-grow space-y-3 pt-4">
+            <CardContent className="flex-grow space-y-3 p-4">
               <Badge variant="secondary">{cls.subject}</Badge>
               <CardTitle className="text-lg">{cls.title}</CardTitle>
               <div className="flex items-center gap-2 text-sm text-muted-foreground">
@@ -92,7 +92,7 @@ export default function LiveClassesPage() {
                 <span>{cls.time}</span>
               </div>
             </CardContent>
-            <CardFooter>
+            <CardFooter className="p-4 pt-0">
               <Button className="w-full font-bold" disabled={cls.status !== 'Upcoming'}>
                 {cls.status === 'Upcoming' ? 'Join Class' : 'View Recording'}
               </Button>

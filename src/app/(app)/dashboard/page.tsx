@@ -27,11 +27,11 @@ import {
 } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Book, BrainCircuit, Rocket, Atom, Calculator, Landmark } from 'lucide-react';
+import { Atom, Book, BrainCircuit, Calculator, Landmark, Rocket } from 'lucide-react';
+import Image from 'next/image';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-import Image from 'next/image';
 
 const subjects = [
   { name: 'Mathematics', icon: Calculator, color: 'text-blue-500' },
@@ -80,13 +80,13 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 md:space-y-8">
       <div>
         <h1 className="font-headline text-3xl font-bold tracking-tight">Welcome, Alex!</h1>
         <p className="text-muted-foreground">Here&apos;s your personalized learning dashboard.</p>
       </div>
 
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-4 sm:grid-cols-2 md:gap-6 lg:grid-cols-4">
         {subjects.map((subject) => (
           <Card key={subject.name} className="flex flex-col">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
@@ -106,7 +106,7 @@ export default function DashboardPage() {
         ))}
       </div>
 
-      <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-6 md:gap-8 lg:grid-cols-3">
         <Card className="lg:col-span-2">
           <CardHeader>
             <div className="flex items-center gap-2">

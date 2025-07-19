@@ -40,13 +40,13 @@ const subjectPerformanceData = [
 
 export default function ProgressPage() {
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 md:space-y-8">
       <div>
         <h1 className="font-headline text-3xl font-bold tracking-tight">Your Progress</h1>
         <p className="text-muted-foreground">Track your performance and see how far you&apos;ve come.</p>
       </div>
 
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-4 sm:grid-cols-2 md:gap-6 lg:grid-cols-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium">Courses Completed</CardTitle>
@@ -89,7 +89,7 @@ export default function ProgressPage() {
         </Card>
       </div>
       
-      <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
+      <div className="grid grid-cols-1 gap-6 md:gap-8 lg:grid-cols-2">
         <Card>
             <CardHeader>
                 <CardTitle className="font-headline">Overall Progress</CardTitle>

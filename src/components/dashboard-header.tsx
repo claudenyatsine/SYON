@@ -18,13 +18,13 @@ export function DashboardHeader() {
   const { setTheme, theme } = useTheme()
 
   return (
-    <header className="sticky top-0 z-10 flex h-16 items-center gap-4 border-b bg-background/80 px-4 backdrop-blur-sm sm:px-6 lg:px-8">
+    <header className="sticky top-0 z-30 flex h-16 items-center gap-2 sm:gap-4 border-b bg-background/80 px-4 backdrop-blur-sm sm:px-6 lg:px-8">
       <SidebarTrigger className="md:hidden" />
       <div className="relative flex-1">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
         <Input
           placeholder="Search courses, resources..."
-          className="w-full rounded-full bg-secondary pl-10 h-10"
+          className="w-full rounded-full bg-secondary pl-10 h-9 sm:h-10"
         />
       </div>
        <Button variant="ghost" size="icon" className="rounded-full" onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}>
