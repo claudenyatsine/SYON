@@ -37,7 +37,7 @@ async function ForumSummary({ subject, forumPosts }: { subject: string; forumPos
   return <p className="text-sm text-muted-foreground">{summary.summary}</p>;
 }
 
-export default async function ForumsPage() {
+export default async function ForumsPage({ searchParams }: { searchParams: { [key: string]: string | string[] | undefined } }) {
   return (
     <div className="space-y-8">
       <div>
@@ -48,7 +48,7 @@ export default async function ForumsPage() {
         {forums.map((forum) => (
           <Card key={forum.subject}>
             <CardHeader>
-              <div className="flex items-start justify-between gap-4">
+              <div className="flex flex-col items-start gap-4 sm:flex-row sm:justify-between">
                 <div>
                   <div className="flex items-center gap-3">
                     <forum.icon className="h-6 w-6 text-primary" />
@@ -57,7 +57,7 @@ export default async function ForumsPage() {
                   <CardDescription className="mt-2">{forum.description}</CardDescription>
                 </div>
                  <Link href={`/forums/${forum.subject.toLowerCase().replace(/\s/g, '-')}`} passHref>
-                    <Button>Enter Forum</Button>
+                    <Button className="mt-4 sm:mt-0">Enter Forum</Button>
                 </Link>
               </div>
             </CardHeader>
