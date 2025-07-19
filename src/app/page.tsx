@@ -391,6 +391,15 @@ export default function LandingPage() {
                           </DialogTrigger>
                       </div>
                     </div>
+                    <div className="mt-12 border-t border-primary-foreground/20 pt-8 text-center text-sm text-primary-foreground/80">
+                      <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
+                          <p>&copy; {new Date().getFullYear()} LearnetIQ. All rights reserved.</p>
+                          <div className="flex gap-4">
+                              <Link href="#" className="hover:underline">Privacy Policy</Link>
+                              <Link href="#" className="hover:underline">Terms of Service</Link>
+                          </div>
+                      </div>
+                    </div>
                   </div>
               </div>
           </section>
@@ -407,17 +416,6 @@ export default function LandingPage() {
               <SignUpForm />
             </DialogContent>
         </Dialog>
-        <footer className="border-t bg-background/95 backdrop-blur-sm">
-          <div className="container mx-auto flex h-16 items-center justify-between px-4 md:px-6">
-              <div className="text-sm text-muted-foreground">
-                  &copy; {new Date().getFullYear()} LearnetIQ. All rights reserved.
-              </div>
-              <div className="flex gap-4">
-                  <Link href="#" className="text-sm text-muted-foreground hover:text-foreground">Privacy Policy</Link>
-                  <Link href="#" className="text-sm text-muted-foreground hover:text-foreground">Terms of Service</Link>
-              </div>
-          </div>
-        </footer>
       </main>
     </div>
   );
