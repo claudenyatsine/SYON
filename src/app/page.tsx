@@ -17,6 +17,7 @@ import Autoplay from 'embla-carousel-autoplay';
 import './carousel.css';
 import React from 'react';
 import { Bar, BarChart, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis, CartesianGrid, Legend } from 'recharts';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 
 const features = [
@@ -81,16 +82,17 @@ export default function LandingPage() {
   const plugin = React.useRef(
     Autoplay({ delay: 6000, stopOnInteraction: true, direction: 'backward' })
   )
+  const isMobile = useIsMobile();
 
   return (
-    <div className="bg-background text-foreground snap-container">
+    <div className="bg-background text-foreground">
       <header className="fixed top-0 z-50 w-full bg-background/80 backdrop-blur-sm">
         <div className="container mx-auto flex h-16 items-center justify-between px-4 md:px-6">
           <Link href="/" className="flex items-center gap-2">
             <Icons.logo className="h-8 w-8 text-primary" />
             <span className="font-headline text-xl font-bold tracking-tight">Learnet<span className="text-primary">IQ</span></span>
           </Link>
-          <nav className="hidden items-center gap-4 md:flex">
+          <div className="hidden md:flex">
              <Link href="#features" passHref>
                 <Button variant="ghost">Features</Button>
             </Link>
@@ -100,6 +102,8 @@ export default function LandingPage() {
             <Link href="#testimonials" passHref>
                 <Button variant="ghost">Testimonials</Button>
             </Link>
+          </div>
+           <div className="hidden md:flex">
              <Dialog>
               <DialogTrigger asChild>
                  <Button variant="ghost">Sign In</Button>
@@ -117,7 +121,7 @@ export default function LandingPage() {
                   <LoginForm />
               </DialogContent>
              </Dialog>
-          </nav>
+           </div>
           <Sheet>
             <SheetTrigger asChild>
               <Button variant="ghost" size="icon" className="md:hidden">
@@ -165,7 +169,7 @@ export default function LandingPage() {
 
       <main>
         {/* Hero Section */}
-        <section className="snap-section relative flex min-h-screen items-center justify-center overflow-hidden py-20 md:py-24">
+        <section className="relative flex min-h-screen items-center justify-center overflow-hidden py-20 md:py-24">
            <Image src="https://placehold.co/1920x1080.png" alt="Hero background" layout="fill" objectFit="cover" className="z-0" data-ai-hint="modern classroom" />
            <div className="absolute inset-0 bg-background/60 dark:bg-background/80" />
            <div className="relative z-10 flex min-h-screen w-full items-center">
@@ -208,14 +212,14 @@ export default function LandingPage() {
         </section>
 
         {/* Features Section */}
-        <section id="features" className="snap-section flex flex-col justify-center bg-secondary py-20 md:py-24 overflow-hidden relative">
+        <section id="features" className="flex flex-col justify-center bg-secondary py-20 md:py-24 overflow-hidden relative">
             <div className="container mx-auto px-4 md:px-6">
                 <div className="mx-auto max-w-3xl text-center">
                   <h2 className="font-headline text-3xl font-bold tracking-tight">Why Choose Learnet<span className="text-primary">IQ</span>?</h2>
                   <p className="mt-4 text-lg text-muted-foreground">Explore our unique system features</p>
                 </div>
             <Carousel
-                plugins={[plugin.current]}
+                plugins={isMobile ? [plugin.current] : []}
                 className="w-full mt-12"
                 onMouseEnter={plugin.current.stop}
                 onMouseLeave={plugin.current.reset}
@@ -226,7 +230,7 @@ export default function LandingPage() {
               >
                 <CarouselContent>
                     {features.map((feature, index) => (
-                        <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3 embla__slide">
+                        <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/4 embla__slide">
                             <div className="p-1 h-full">
                                 <Card className="flex flex-col items-center justify-center p-6 text-center feature-card aspect-[3/4]">
                                     <div className="glowing-border"></div>
@@ -247,7 +251,7 @@ export default function LandingPage() {
         </section>
         
         {/* Statistics Section */}
-        <section id="statistics" className="snap-section flex flex-col justify-center py-20 md:py-24">
+        <section id="statistics" className="flex flex-col justify-center py-20 md:py-24">
           <div className="container mx-auto px-4 md:px-6">
             <div className="mx-auto max-w-3xl text-center">
               <h2 className="font-headline text-3xl font-bold tracking-tight">Platform Statistics</h2>
@@ -349,7 +353,7 @@ export default function LandingPage() {
         </section>
 
         {/* Testimonials Section */}
-        <section id="testimonials" className="snap-section flex flex-col justify-center py-20 md:py-24">
+        <section id="testimonials" className="flex flex-col justify-center py-20 md:py-24">
              <div className="container mx-auto px-4 md:px-6">
                  <div className="mx-auto max-w-3xl text-center">
                     <h2 className="font-headline text-3xl font-bold tracking-tight">Loved by Students and Parents</h2>
@@ -379,24 +383,17 @@ export default function LandingPage() {
         
         <Dialog>
           {/* CTA Section */}
-          <section className="snap-section flex flex-col bg-secondary">
+          <section className="flex flex-col bg-secondary">
             <div className="container mx-auto flex h-full flex-col justify-center px-4 md:px-6">
-                <div className="rounded-lg bg-primary p-12 text-primary-foreground text-center">
-                  <h2 className="font-headline text-3xl font-bold tracking-tight">Ready to Start Learning?</h2>
-                  <p className="mt-4 text-lg text-primary-foreground/90">Join thousands of students achieving their academic goals.</p>
-                  <div className="mt-8">
-                    <DialogTrigger asChild>
-                      <Button size="lg" variant="secondary" className="font-bold">Sign Up Now</Button>
-                    </DialogTrigger>
-                  </div>
-                </div>
-              <div className="mt-auto border-t border-border bg-background py-4 text-sm text-muted-foreground">
-                <div className="container mx-auto flex flex-col items-center justify-between gap-4 px-4 sm:flex-row md:px-6">
-                  <p>&copy; {new Date().getFullYear()} LearnetIQ. All rights reserved.</p>
-                  <div className="flex gap-4">
-                    <Link href="#" className="hover:underline">Privacy Policy</Link>
-                    <Link href="#" className="hover:underline">Terms of Service</Link>
-                  </div>
+              <div className="flex h-full min-h-[50vh] flex-col rounded-lg bg-primary p-12 text-primary-foreground text-center">
+                <div className="m-auto flex-grow flex flex-col justify-center">
+                    <h2 className="font-headline text-3xl font-bold tracking-tight">Ready to Start Learning?</h2>
+                    <p className="mt-4 text-lg text-primary-foreground/90">Join thousands of students achieving their academic goals.</p>
+                    <div className="mt-8">
+                      <DialogTrigger asChild>
+                        <Button size="lg" variant="secondary" className="font-bold">Sign Up Now</Button>
+                      </DialogTrigger>
+                    </div>
                 </div>
               </div>
             </div>
@@ -415,6 +412,15 @@ export default function LandingPage() {
             </DialogContent>
         </Dialog>
       </main>
+      <footer className="border-t border-border bg-background py-4 text-sm text-muted-foreground">
+        <div className="container mx-auto flex flex-col items-center justify-between gap-4 px-4 sm:flex-row md:px-6">
+          <p>&copy; {new Date().getFullYear()} LearnetIQ. All rights reserved.</p>
+          <div className="flex gap-4">
+            <Link href="#" className="hover:underline">Privacy Policy</Link>
+            <Link href="#" className="hover:underline">Terms of Service</Link>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }
