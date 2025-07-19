@@ -163,10 +163,10 @@ export default function LandingPage() {
         </div>
       </header>
 
-      <main>
+      <main className="pb-20">
         {/* Hero Section */}
         <section className="snap-section relative flex min-h-screen items-center justify-center overflow-hidden py-20 md:py-24">
-           <Image src="/hero-background.jpg" alt="Hero background" layout="fill" objectFit="cover" className="z-0" data-ai-hint="modern classroom" />
+           <Image src="https://placehold.co/1920x1080.png" alt="Hero background" layout="fill" objectFit="cover" className="z-0" data-ai-hint="modern classroom" />
            <div className="absolute inset-0 bg-background/60 dark:bg-background/80" />
            <div className="relative z-10 flex min-h-screen w-full items-center">
                 <div className="container mx-auto px-4 md:px-6">
@@ -391,15 +391,6 @@ export default function LandingPage() {
                           </DialogTrigger>
                       </div>
                     </div>
-                    <div className="mt-12 border-t border-primary-foreground/20 pt-6 flex flex-col items-center justify-between gap-4 md:flex-row">
-                      <div className="text-sm text-primary-foreground/80">
-                        &copy; {new Date().getFullYear()} LearnetIQ. All rights reserved.
-                      </div>
-                      <div className="flex gap-4">
-                          <Link href="#" className="text-sm text-primary-foreground/80 hover:text-primary-foreground">Privacy Policy</Link>
-                          <Link href="#" className="text-sm text-primary-foreground/80 hover:text-primary-foreground">Terms of Service</Link>
-                      </div>
-                    </div>
                   </div>
               </div>
           </section>
@@ -417,6 +408,18 @@ export default function LandingPage() {
             </DialogContent>
         </Dialog>
       </main>
+
+      <footer className="fixed bottom-0 z-50 w-full border-t bg-background/95 backdrop-blur-sm">
+        <div className="container mx-auto flex h-16 items-center justify-between px-4 md:px-6">
+            <div className="text-sm text-muted-foreground">
+                &copy; {new Date().getFullYear()} LearnetIQ. All rights reserved.
+            </div>
+            <div className="flex gap-4">
+                <Link href="#" className="text-sm text-muted-foreground hover:text-foreground">Privacy Policy</Link>
+                <Link href="#" className="text-sm text-muted-foreground hover:text-foreground">Terms of Service</Link>
+            </div>
+        </div>
+      </footer>
 
     </div>
   );
