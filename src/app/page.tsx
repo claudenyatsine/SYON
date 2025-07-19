@@ -85,7 +85,7 @@ export default function LandingPage() {
   const isMobile = useIsMobile();
 
   return (
-    <div className="bg-background text-foreground">
+    <div className="bg-background text-foreground snap-container">
       <header className="fixed top-0 z-50 w-full bg-background/80 backdrop-blur-sm">
         <div className="container mx-auto flex h-16 items-center justify-between px-4 md:px-6">
           <Link href="/" className="flex items-center gap-2">
@@ -167,7 +167,7 @@ export default function LandingPage() {
 
       <main>
         {/* Hero Section */}
-        <section className="relative flex min-h-screen items-center justify-center overflow-hidden py-20 md:py-24">
+        <section className="relative flex min-h-screen items-center justify-center overflow-hidden py-20 md:py-24 snap-section">
            <Image src="https://placehold.co/1920x1080.png" alt="Hero background" layout="fill" objectFit="cover" className="z-0" data-ai-hint="modern classroom" />
            <div className="absolute inset-0 bg-background/60 dark:bg-background/80" />
            <div className="relative z-10 flex min-h-screen w-full items-center">
@@ -210,7 +210,7 @@ export default function LandingPage() {
         </section>
 
         {/* Features Section */}
-        <section id="features" className="flex flex-col justify-center bg-secondary py-20 md:py-24 overflow-hidden relative">
+        <section id="features" className="flex flex-col justify-center bg-secondary py-20 md:py-24 overflow-hidden relative snap-section">
             <div className="container mx-auto px-4 md:px-6">
                 <div className="mx-auto max-w-3xl text-center">
                   <h2 className="font-headline text-3xl font-bold tracking-tight">Why Choose Learnet<span className="text-primary">IQ</span>?</h2>
@@ -249,7 +249,7 @@ export default function LandingPage() {
         </section>
         
         {/* Statistics Section */}
-        <section id="statistics" className="flex flex-col justify-center py-20 md:py-24">
+        <section id="statistics" className="flex min-h-screen flex-col justify-center py-20 md:py-24 snap-section">
           <div className="container mx-auto px-4 md:px-6">
             <div className="mx-auto max-w-3xl text-center">
               <h2 className="font-headline text-3xl font-bold tracking-tight">Platform Statistics</h2>
@@ -351,7 +351,7 @@ export default function LandingPage() {
         </section>
 
         {/* Testimonials Section */}
-        <section id="testimonials" className="flex flex-col justify-center py-20 md:py-24">
+        <section id="testimonials" className="flex min-h-screen flex-col justify-center py-20 md:py-24 snap-section">
              <div className="container mx-auto px-4 md:px-6">
                  <div className="mx-auto max-w-3xl text-center">
                     <h2 className="font-headline text-3xl font-bold tracking-tight">Loved by Students and Parents</h2>
@@ -381,7 +381,7 @@ export default function LandingPage() {
         
         <Dialog>
           {/* CTA Section */}
-          <section className="flex flex-col bg-secondary">
+          <section className="flex flex-col bg-secondary snap-section">
             <div className="container mx-auto flex h-full flex-col justify-center px-4 md:px-6">
               <div className="flex h-full min-h-[50vh] flex-col rounded-lg bg-primary p-12 text-primary-foreground">
                 <div className="m-auto flex flex-col justify-center text-center">
