@@ -3,19 +3,21 @@
 
 import { Icons } from '@/components/icons';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardTitle, CardHeader, CardDescription } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { SignUpForm } from '@/components/auth/signup-form';
 import { LoginForm } from '@/components/auth/login-form';
-import { BrainCircuit, BookOpen, Users, FolderKanban, ClipboardCheck, GraduationCap, Presentation, MessageSquare, Bell, Library, Target, UsersRound, FileCog, Link2, Smartphone, Trophy, Bot, CircleUser, Menu } from 'lucide-react';
+import { BrainCircuit, BookOpen, Users, FolderKanban, ClipboardCheck, GraduationCap, Presentation, MessageSquare, Bell, Library, Target, UsersRound, FileCog, Link2, Smartphone, Trophy, Bot, CircleUser, Menu, ArrowUp, BookCheck, Clock } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import Autoplay from 'embla-carousel-autoplay';
 import './carousel.css';
 import React from 'react';
+import { Bar, BarChart, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis, CartesianGrid, Legend } from 'recharts';
+
 
 const features = [
     { icon: FolderKanban, title: 'Course Management', description: 'Course creation and organization by subjects/grade levels, syllabus and curriculum mapping, learning modules with structured content, prerequisite settings and course sequencing.' },
@@ -57,6 +59,24 @@ const testimonials = [
     }
 ]
 
+const overallProgressData = [
+  { month: 'Jan', progress: 20 },
+  { month: 'Feb', progress: 35 },
+  { month: 'Mar', progress: 45 },
+  { month: 'Apr', progress: 60 },
+  { month: 'May', progress: 70 },
+  { month: 'Jun', progress: 85 },
+];
+
+const subjectPerformanceData = [
+  { subject: 'Math', score: 92 },
+  { subject: 'Physics', score: 85 },
+  { subject: 'History', score: 78 },
+  { subject: 'English', score: 88 },
+  { subject: 'Chemistry', score: 95 },
+];
+
+
 export default function LandingPage() {
   const plugin = React.useRef(
     Autoplay({ delay: 6000, stopOnInteraction: true, direction: 'backward' })
@@ -74,7 +94,7 @@ export default function LandingPage() {
              <Link href="#features" passHref>
                 <Button variant="ghost">Features</Button>
             </Link>
-             <Link href="/progress" passHref>
+             <Link href="#statistics" passHref>
                 <Button variant="ghost">Statistics</Button>
             </Link>
             <Link href="#testimonials" passHref>
@@ -114,7 +134,7 @@ export default function LandingPage() {
                 <Link href="#features" passHref>
                   <Button variant="ghost" className="w-full justify-start">Features</Button>
                 </Link>
-                <Link href="/progress" passHref>
+                <Link href="#statistics" passHref>
                     <Button variant="ghost" className="w-full justify-start">Statistics</Button>
                 </Link>
                 <Link href="#testimonials" passHref>
@@ -146,8 +166,8 @@ export default function LandingPage() {
       <main>
         {/* Hero Section */}
         <section className="snap-section relative flex min-h-screen items-center justify-center overflow-hidden py-20 md:py-24">
-           <div className="absolute inset-0 h-full w-full bg-cover bg-center" style={{ backgroundImage: "url('https://placehold.co/1200x800.png')", height: '97%' }} data-ai-hint="modern classroom" />
-           <div className="absolute inset-0 bg-background/60 dark:bg-background/80" style={{ height: '97%' }}/>
+           <Image src="https://placehold.co/1200x800.png" alt="Hero background" layout="fill" objectFit="cover" className="z-0" data-ai-hint="modern classroom" />
+           <div className="absolute inset-0 bg-background/60 dark:bg-background/80" />
            <div className="relative z-10 flex min-h-screen w-full items-center">
                 <div className="container mx-auto px-4 md:px-6">
                     <div className="grid items-center gap-8 md:grid-cols-2">
@@ -224,6 +244,108 @@ export default function LandingPage() {
               <CarouselPrevious className="absolute left-[15px] top-[calc(50%_+_20px)] -translate-y-1/2 hidden md:flex" />
               <CarouselNext className="absolute right-[15px] top-[calc(50%_+_20px)] -translate-y-1/2 hidden md:flex" />
             </Carousel>
+        </section>
+        
+        {/* Statistics Section */}
+        <section id="statistics" className="snap-section flex flex-col justify-center py-20 md:py-24">
+          <div className="container mx-auto px-4 md:px-6">
+            <div className="mx-auto max-w-3xl text-center">
+              <h2 className="font-headline text-3xl font-bold tracking-tight">Platform Statistics</h2>
+              <p className="mt-4 text-lg text-muted-foreground">See the impact LearnetIQ is having on students everywhere.</p>
+            </div>
+            <div className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between pb-2">
+                  <CardTitle className="text-sm font-medium">Active Students</CardTitle>
+                  <Users className="h-5 w-5 text-primary" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold">10,000+</div>
+                  <p className="text-xs text-muted-foreground">+15% from last month</p>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between pb-2">
+                  <CardTitle className="text-sm font-medium">Courses Available</CardTitle>
+                  <BookOpen className="h-5 w-5 text-green-500" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold">500+</div>
+                  <p className="text-xs text-muted-foreground">Across all subjects</p>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between pb-2">
+                  <CardTitle className="text-sm font-medium">Completion Rate</CardTitle>
+                  <GraduationCap className="h-5 w-5 text-yellow-500" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold">92%</div>
+                  <p className="text-xs text-muted-foreground">Average course completion</p>
+                </CardContent>
+              </Card>
+              <Card className="bg-primary text-primary-foreground">
+                <CardHeader className="flex flex-row items-center justify-between pb-2">
+                  <CardTitle className="text-sm font-medium text-primary-foreground/80">Grade Improvement</CardTitle>
+                  <ArrowUp className="h-5 w-5 text-primary-foreground" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold">+25%</div>
+                  <p className="text-xs text-primary-foreground/80">Average student score increase</p>
+                </CardContent>
+              </Card>
+            </div>
+             <div className="mt-8 grid grid-cols-1 gap-8 lg:grid-cols-2">
+                <Card>
+                    <CardHeader>
+                        <CardTitle className="font-headline">Student Growth</CardTitle>
+                        <CardDescription>Platform user engagement over time.</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                        <ResponsiveContainer width="100%" height={300}>
+                            <LineChart data={overallProgressData}>
+                                <CartesianGrid strokeDasharray="3 3" />
+                                <XAxis dataKey="month" />
+                                <YAxis />
+                                <Tooltip
+                                contentStyle={{
+                                    background: "hsl(var(--background))",
+                                    border: "1px solid hsl(var(--border))",
+                                    borderRadius: "var(--radius)"
+                                }}
+                                />
+                                <Legend />
+                                <Line type="monotone" dataKey="progress" name="New Students" stroke="hsl(var(--primary))" strokeWidth={2} activeDot={{ r: 8 }} />
+                            </LineChart>
+                        </ResponsiveContainer>
+                    </CardContent>
+                </Card>
+                <Card>
+                    <CardHeader>
+                        <CardTitle className="font-headline">Popular Subjects</CardTitle>
+                        <CardDescription>Distribution of student enrollment.</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                        <ResponsiveContainer width="100%" height={300}>
+                            <BarChart data={subjectPerformanceData}>
+                                <CartesianGrid strokeDasharray="3 3" />
+                                <XAxis dataKey="subject" />
+                                <YAxis />
+                                <Tooltip
+                                contentStyle={{
+                                    background: "hsl(var(--background))",
+                                    border: "1px solid hsl(var(--border))",
+                                    borderRadius: "var(--radius)"
+                                }}
+                                />
+                                <Legend />
+                                <Bar dataKey="score" name="Enrollment" fill="hsl(var(--accent))" radius={[4, 4, 0, 0]} />
+                            </BarChart>
+                        </ResponsiveContainer>
+                    </CardContent>
+                </Card>
+            </div>
+          </div>
         </section>
 
         {/* Testimonials Section */}
