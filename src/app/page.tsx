@@ -397,7 +397,7 @@ export default function LandingPage() {
                 </div>
 
                 <div className="mt-16 bg-foreground text-background">
-                    <div className="container mx-auto px-4 py-16 md:px-6">
+                    <div className="container mx-auto px-4 py-6 md:px-6">
                         <div className="grid gap-12 md:grid-cols-2">
                             <div>
                             <h2 className="font-headline text-3xl font-bold tracking-tight">Ready to Start Learning?</h2>
