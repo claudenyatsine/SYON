@@ -179,7 +179,7 @@ export default function LiveClassroomPage() {
         {/* Main Content */}
         <main className={cn(
           "flex flex-col gap-6 min-h-0", 
-          "lg:col-span-9"
+          isFullScreen ? "lg:col-span-12" : "lg:col-span-9"
         )}>
             <div className="relative rounded-lg overflow-hidden flex-grow bg-card p-2 flex flex-col">
               <div className="relative flex-grow rounded-md overflow-hidden bg-black/80">
