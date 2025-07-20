@@ -80,12 +80,14 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                 </SidebarMenuButton>
               </SidebarMenuItem>
                <SidebarMenuItem className="hidden md:block">
-                  <SidebarTrigger asChild>
-                    <SidebarMenuButton tooltip="Collapse">
+                 <SidebarMenuButton tooltip="Collapse">
+                    <SidebarTrigger asChild>
+                      <>
                         <PanelLeft />
                         Collapse
-                    </SidebarMenuButton>
-                  </SidebarTrigger>
+                      </>
+                    </SidebarTrigger>
+                  </SidebarMenuButton>
               </SidebarMenuItem>
             </SidebarMenu>
           </SidebarFooter>
