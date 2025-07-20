@@ -67,7 +67,7 @@ const meetingInsights = [
 export default function LiveClassroomPage() {
   const params = useParams();
   const { toast } = useToast();
-  const classId = params.classId;
+  const classId = params?.classId;
   const className = (classId as string)?.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
 
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -179,7 +179,7 @@ export default function LiveClassroomPage() {
         {/* Main Content */}
         <main className={cn(
           "flex flex-col gap-6 min-h-0", 
-          isFullScreen ? 'lg:col-span-12' : 'lg:col-span-9'
+          "lg:col-span-9"
         )}>
             <div className="relative rounded-lg overflow-hidden flex-grow bg-card p-2 flex flex-col">
               <div className="relative flex-grow rounded-md overflow-hidden bg-black/80">
@@ -274,43 +274,37 @@ export default function LiveClassroomPage() {
               </div>
 
                {isFullScreen && (
-                  <div className="absolute bottom-20 left-1/2 -translate-x-1/2 w-full max-w-6xl px-4">
-                     <div className="grid grid-cols-12 gap-4">
-                        <div className="col-span-8">
-                          <div className="grid grid-cols-5 gap-4">
-                            {participants.map((p) => (
-                                <Card key={p.name} className="relative aspect-video overflow-hidden bg-black/30 backdrop-blur-sm border-white/20">
-                                    <Image src={p.avatar} alt={p.name} fill objectFit="cover" />
-                                    <div className="absolute inset-0 bg-black/30" />
-                                    <p className="absolute bottom-2 left-2 text-white text-xs font-medium">{p.name}</p>
-                                    {p.isPinned && <Pin className="absolute top-2 right-2 h-4 w-4 text-white" />}
-                                    {p.isHandRaised && <Hand className="absolute top-2 right-2 h-4 w-4 text-yellow-400" />}
-                                </Card>
-                            ))}
-                          </div>
-                        </div>
-                         <div className="col-span-4">
-                            <Card className="bg-black/30 backdrop-blur-sm border-white/20 text-white h-full">
-                                <CardHeader className="pb-2">
-                                    <CardTitle className="text-base">Class Insights</CardTitle>
-                                </CardHeader>
-                                <CardContent className="space-y-2 text-sm">
-                                  {meetingInsights.slice(0,1).map(insight => (
-                                    <div key={insight.title} className="flex items-center gap-2 p-2 rounded-lg">
-                                        <div className="bg-primary/20 text-primary p-2 rounded-full">
-                                          <Calendar className="h-4 w-4"/>
-                                        </div>
-                                        <div className="flex-1">
-                                            <p className="font-semibold text-white">{insight.title}</p>
-                                            <p className="text-xs text-white/70">{insight.duration}</p>
-                                        </div>
-                                        <Progress value={(insight.accomplished / insight.total) * 100} className="w-16 h-1" />
-                                    </div>
-                                  ))}
-                                </CardContent>
+                  <div className="absolute bottom-20 left-1/2 -translate-x-1/2 w-full max-w-6xl px-4 grid grid-cols-1 gap-4">
+                      <div className="grid grid-cols-5 gap-4">
+                        {participants.map((p) => (
+                            <Card key={p.name} className="relative aspect-video overflow-hidden bg-black/30 backdrop-blur-sm border-white/20">
+                                <Image src={p.avatar} alt={p.name} fill objectFit="cover" />
+                                <div className="absolute inset-0 bg-black/30" />
+                                <p className="absolute bottom-2 left-2 text-white text-xs font-medium">{p.name}</p>
+                                {p.isPinned && <Pin className="absolute top-2 right-2 h-4 w-4 text-white" />}
+                                {p.isHandRaised && <Hand className="absolute top-2 right-2 h-4 w-4 text-yellow-400" />}
                             </Card>
-                         </div>
-                     </div>
+                        ))}
+                      </div>
+                      <Card className="bg-black/30 backdrop-blur-sm border-white/20 text-white h-full">
+                          <CardHeader className="pb-2">
+                              <CardTitle className="text-base">Class Insights</CardTitle>
+                          </CardHeader>
+                          <CardContent className="space-y-2 text-sm">
+                            {meetingInsights.slice(0,1).map(insight => (
+                              <div key={insight.title} className="flex items-center gap-2 p-2 rounded-lg">
+                                  <div className="bg-primary/20 text-primary p-2 rounded-full">
+                                    <Calendar className="h-4 w-4"/>
+                                  </div>
+                                  <div className="flex-1">
+                                      <p className="font-semibold text-white">{insight.title}</p>
+                                      <p className="text-xs text-white/70">{insight.duration}</p>
+                                  </div>
+                                  <Progress value={(insight.accomplished / insight.total) * 100} className="w-16 h-1" />
+                              </div>
+                            ))}
+                          </CardContent>
+                      </Card>
                   </div>
               )}
             </div>
@@ -370,7 +364,7 @@ export default function LiveClassroomPage() {
           "flex-col gap-6 min-h-0", 
           isFullScreen 
             ? "absolute top-0 right-0 h-full w-full max-w-sm p-4 flex bg-black/30 backdrop-blur-sm"
-            : "lg:col-span-3 hidden lg:flex"
+            : "lg:col-span-3 flex"
         )}>
           <Card className={cn(
             "flex-1 flex-col min-h-0 flex",
@@ -411,8 +405,7 @@ export default function LiveClassroomPage() {
           </Card>
 
            <Card className={cn(
-             "bg-gradient-to-br from-primary via-primary/80 to-accent p-6 rounded-lg text-primary-foreground relative overflow-hidden",
-             isFullScreen && "flex-shrink-0"
+             "bg-gradient-to-br from-primary via-primary/80 to-accent p-6 rounded-lg text-primary-foreground relative overflow-hidden flex-shrink-0"
            )}>
                 <div className="relative z-10">
                     <CardTitle className="text-lg text-white">Upgrade to Pro</CardTitle>
