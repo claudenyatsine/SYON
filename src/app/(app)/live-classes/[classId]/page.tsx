@@ -20,6 +20,7 @@ import {
   Expand,
   Hand,
   Headphones,
+  ImageIcon,
   Maximize,
   Mic,
   MicOff,
@@ -176,7 +177,7 @@ export default function LiveClassroomPage() {
       <div ref={fullScreenRef} className="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-6 min-h-0 bg-background">
         
         {/* Main Content */}
-        <main className={cn("lg:col-span-8 flex flex-col gap-6 min-h-0", isFullScreen ? 'lg:col-span-12' : 'lg:col-span-11')}>
+        <main className={cn("flex flex-col gap-6 min-h-0", isFullScreen ? 'lg:col-span-12' : 'lg:col-span-9')}>
             <div className="relative rounded-lg overflow-hidden flex-grow bg-card p-2 flex flex-col">
               <div className="relative flex-grow rounded-md overflow-hidden bg-black/80">
                 <video ref={videoRef} className="h-full w-full object-cover" autoPlay muted playsInline />
@@ -321,7 +322,7 @@ export default function LiveClassroomPage() {
         </main>
         
         {/* Right Sidebar */}
-        <aside className={cn("lg:col-span-3 flex flex-col gap-6 min-h-0", isFullScreen ? 'hidden' : 'lg:col-span-1')}>
+        <aside className={cn("lg:col-span-3 flex flex-col gap-6 min-h-0")}>
           <Card className="flex-1 flex-col min-h-0 hidden lg:flex">
              <CardHeader>
                 <CardTitle>Chat Room</CardTitle>
