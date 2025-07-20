@@ -239,7 +239,7 @@ export default function LiveClassroomPage() {
                                 <Volume2 className="h-4 w-4"/>
                            </Button>
                         </PopoverTrigger>
-                        <PopoverContent className="w-auto p-2 mb-2">
+                        <PopoverContent className="w-auto p-2" side="top" align="center">
                             <Slider
                                 defaultValue={[80]}
                                 max={100}
