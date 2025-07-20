@@ -25,6 +25,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from '../ui/select';
+import { signInWithGoogle } from '@/lib/firebase';
+import { useRouter } from 'next/navigation';
+
 
 function GoogleIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
@@ -53,6 +56,7 @@ const formSchema = z
 
 export function SignUpForm() {
   const { toast } = useToast();
+  const router = useRouter();
   const [loading, setLoading] = useState(false);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -93,12 +97,31 @@ export function SignUpForm() {
     }
   }
 
+  const handleGoogleSignUp = async () => {
+    const user = await signInWithGoogle();
+    if (user) {
+      toast({
+        title: "Account Created Successfully",
+        description: `Welcome, ${user.displayName}!`,
+      });
+      // In a real app, you might want to send a welcome email here too.
+      // For now, just redirect.
+      router.push('/dashboard');
+    } else {
+       toast({
+        variant: 'destructive',
+        title: "Sign Up Failed",
+        description: "Could not create account with Google. Please try again.",
+      });
+    }
+  }
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)}>
         <Card className="border-none shadow-none">
           <CardContent className="space-y-4 pt-6">
-            <Button variant="outline" className="w-full">
+            <Button variant="outline" className="w-full" type="button" onClick={handleGoogleSignUp}>
               <GoogleIcon className="mr-2 h-4 w-4" />
               Continue with Google
             </Button>

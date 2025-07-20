@@ -13,6 +13,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { signInWithGoogle } from '@/lib/firebase';
+import { useToast } from '@/hooks/use-toast';
 
 function GoogleIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
@@ -28,6 +30,7 @@ function GoogleIcon(props: React.SVGProps<SVGSVGElement>) {
 
 export function LoginForm() {
   const router = useRouter();
+  const { toast } = useToast();
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -35,11 +38,28 @@ export function LoginForm() {
     router.push('/dashboard');
   };
 
+  const handleGoogleSignIn = async () => {
+    const user = await signInWithGoogle();
+    if (user) {
+      toast({
+        title: "Signed In Successfully",
+        description: `Welcome back, ${user.displayName}!`,
+      });
+      router.push('/dashboard');
+    } else {
+       toast({
+        variant: 'destructive',
+        title: "Sign In Failed",
+        description: "Could not sign in with Google. Please try again.",
+      });
+    }
+  }
+
   return (
     <form onSubmit={handleSubmit}>
       <Card className="border-none shadow-none">
         <CardContent className="space-y-4 pt-6">
-           <Button variant="outline" className="w-full">
+           <Button variant="outline" className="w-full" type="button" onClick={handleGoogleSignIn}>
               <GoogleIcon className="mr-2 h-4 w-4" />
               Continue with Google
             </Button>
