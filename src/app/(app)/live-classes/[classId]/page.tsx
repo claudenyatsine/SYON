@@ -85,10 +85,11 @@ export default function LiveClassroomPage() {
   }, [volume]);
 
   useEffect(() => {
+    let stream: MediaStream | null = null;
     const getCameraPermission = async () => {
       if (typeof window !== 'undefined' && navigator.mediaDevices) {
         try {
-          const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+          stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
           setHasCameraPermission(true);
           if (videoRef.current) {
             videoRef.current.srcObject = stream;
@@ -113,6 +114,12 @@ export default function LiveClassroomPage() {
       }
     };
     getCameraPermission();
+    
+    return () => {
+      if (stream) {
+        stream.getTracks().forEach(track => track.stop());
+      }
+    }
   }, [isCameraOn, isMicOn, toast]);
 
   const handleFullScreenChange = () => {
