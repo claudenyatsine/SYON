@@ -17,7 +17,9 @@ import {
   Bell,
   Calendar,
   ChevronLeft,
+  Download,
   Expand,
+  FileText,
   Hand,
   Headphones,
   ImageIcon,
@@ -32,6 +34,7 @@ import {
   Settings,
   Shield,
   Shrink,
+  Upload,
   Video,
   VideoOff,
   Volume2,
@@ -64,6 +67,12 @@ const meetingInsights = [
     { title: 'Strategic Planning Meeting', duration: '1h', tasks: 8, accomplished: 4, total: 10 },
 ]
 
+const initialResources = [
+    { name: 'Syllabus.pdf', size: '1.2MB' },
+    { name: 'Lecture_Notes_Week_1.docx', size: '3.4MB' },
+    { name: 'Chapter_3_Problems.pdf', size: '850KB' },
+]
+
 export default function LiveClassroomPage() {
   const params = useParams();
   const router = useRouter();
@@ -73,11 +82,14 @@ export default function LiveClassroomPage() {
 
   const videoRef = useRef<HTMLVideoElement>(null);
   const fullScreenRef = useRef<HTMLDivElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [hasCameraPermission, setHasCameraPermission] = useState<boolean | null>(null);
   const [isMicOn, setIsMicOn] = useState(true);
   const [isCameraOn, setIsCameraOn] = useState(true);
   const [isFullScreen, setIsFullScreen] = useState(false);
   const [volume, setVolume] = useState([80]);
+  const [resources, setResources] = useState(initialResources);
+
 
   useEffect(() => {
     if (videoRef.current) {
@@ -171,7 +183,30 @@ export default function LiveClassroomPage() {
   };
 
   const handleEndCall = () => {
+    if (videoRef.current && videoRef.current.srcObject) {
+      const stream = videoRef.current.srcObject as MediaStream;
+      stream.getTracks().forEach(track => track.stop());
+    }
     router.push('/live-classes');
+  };
+
+  const handleUploadClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const newResource = {
+        name: file.name,
+        size: `${(file.size / 1024 / 1024).toFixed(2)}MB`
+      };
+      setResources(prev => [...prev, newResource]);
+      toast({
+        title: 'Upload Successful',
+        description: `${file.name} has been uploaded.`,
+      });
+    }
   };
 
   return (
@@ -416,16 +451,34 @@ export default function LiveClassroomPage() {
              </div>
           </Card>
 
-           <Card className={cn(
-             "bg-gradient-to-br from-primary via-primary/80 to-accent p-6 rounded-lg text-primary-foreground relative overflow-hidden flex-shrink-0", isFullScreen && 'hidden'
-           )}>
-                <div className="relative z-10">
-                    <CardTitle className="text-lg text-white">Upgrade to Pro</CardTitle>
-                    <CardDescription className="text-primary-foreground/80 mt-1">Unlock the full potential of AI Assistant!</CardDescription>
-                    <Button variant="secondary" className="mt-4">Explore Pro Plan</Button>
-                </div>
-                <div className="absolute -right-4 -bottom-4 h-24 w-24 rounded-full bg-white/20" />
-                <div className="absolute -right-8 -bottom-8 h-20 w-20 rounded-full bg-white/20" />
+           <Card className={cn("flex-shrink-0 flex flex-col", isFullScreen && 'hidden')}>
+               <CardHeader>
+                  <CardTitle>Class Resources</CardTitle>
+                  <CardDescription>Upload or download class materials.</CardDescription>
+                </CardHeader>
+                <CardContent className="flex-grow space-y-3">
+                   <input type="file" ref={fileInputRef} onChange={handleFileChange} className="hidden" />
+                   <Button onClick={handleUploadClick} className="w-full">
+                       <Upload className="mr-2 h-4 w-4" />
+                       Upload Resource
+                   </Button>
+                   <div className="space-y-2 pt-2">
+                       {resources.map((resource, index) => (
+                           <div key={index} className="flex items-center justify-between p-2 rounded-md bg-muted/50 text-sm">
+                               <div className="flex items-center gap-2 truncate">
+                                   <FileText className="h-4 w-4 flex-shrink-0" />
+                                   <span className="truncate" title={resource.name}>{resource.name}</span>
+                               </div>
+                               <div className="flex items-center gap-2">
+                                  <span className="text-xs text-muted-foreground">{resource.size}</span>
+                                  <Button variant="ghost" size="icon" className="h-7 w-7">
+                                       <Download className="h-4 w-4" />
+                                   </Button>
+                               </div>
+                           </div>
+                       ))}
+                   </div>
+                </CardContent>
             </Card>
         </aside>
       </div>
