@@ -67,7 +67,7 @@ export default function MessagesPage() {
            <div className="p-4 border-t">
             <Button className="w-full">
               <UserPlus className="mr-2 h-4 w-4" />
-              Add Friend
+              Add Contact
             </Button>
           </div>
         </div>
