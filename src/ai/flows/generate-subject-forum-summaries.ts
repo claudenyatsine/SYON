@@ -11,21 +11,32 @@
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 
-const GenerateSubjectForumSummariesInputSchema = z.object({
+const ForumSchema = z.object({
   subject: z.string().describe('The subject of the forum.'),
-  forumPosts: z
+  posts: z
     .string()
     .describe('Recent forum posts, each post separated by a newline.'),
+});
+
+const GenerateSubjectForumSummariesInputSchema = z.object({
+  forums: z.array(ForumSchema),
 });
 export type GenerateSubjectForumSummariesInput = z.infer<
   typeof GenerateSubjectForumSummariesInputSchema
 >;
 
 const GenerateSubjectForumSummariesOutputSchema = z.object({
-  summary: z
-    .string()
+  summaries: z
+    .record(
+      z.string(),
+      z
+        .string()
+        .describe(
+          'A short summary of the recent forum activity, highlighting common questions and interesting discussions.'
+        )
+    )
     .describe(
-      'A short summary of the recent forum activity, highlighting common questions and interesting discussions.'
+      'A map of subject to its corresponding summary. The key is the subject name.'
     ),
 });
 export type GenerateSubjectForumSummariesOutput = z.infer<
@@ -42,18 +53,22 @@ const prompt = ai.definePrompt({
   name: 'generateSubjectForumSummariesPrompt',
   input: {schema: GenerateSubjectForumSummariesInputSchema},
   output: {schema: GenerateSubjectForumSummariesOutputSchema},
-  prompt: `You are an AI assistant summarizing recent activity on a subject forum.
+  prompt: `You are an AI assistant summarizing recent activity on multiple subject forums.
+  
+  For each of the following forums, please provide a concise summary (no more than 2-3 sentences) of the common questions, interesting discussions, and key topics that have emerged.
 
-  Subject: {{{subject}}}
-
+  {{#each forums}}
+  Subject: {{{this.subject}}}
   Recent Forum Posts:
-  {{#if forumPosts}}
-  {{{forumPosts}}}
+  {{#if this.posts}}
+  {{{this.posts}}}
   {{else}}
   There are no recent forum posts.
   {{/if}}
+  ---
+  {{/each}}
 
-  Please provide a concise summary of the common questions, interesting discussions, and key topics that have emerged. The summary should be no more than 2-3 sentences.
+  Return the output as a JSON object where the keys are the subject names and the values are the summaries.
   `,
 });
 
