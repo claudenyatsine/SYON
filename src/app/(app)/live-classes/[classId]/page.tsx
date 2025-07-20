@@ -286,7 +286,7 @@ export default function LiveClassroomPage() {
                 </Alert>
             )}
 
-             <Card className="hidden">
+             <Card className={cn(isFullScreen && 'hidden')}>
                 <CardHeader>
                     <div className="flex justify-between items-center">
                         <CardTitle>Meeting Insights</CardTitle>
