@@ -28,6 +28,7 @@ import {
   Send,
   Settings,
   Shield,
+  Shrink,
   Video,
   VideoOff,
   Volume2,
@@ -67,9 +68,11 @@ export default function LiveClassroomPage() {
   const className = (classId as string)?.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
 
   const videoRef = useRef<HTMLVideoElement>(null);
+  const fullScreenRef = useRef<HTMLDivElement>(null);
   const [hasCameraPermission, setHasCameraPermission] = useState<boolean | null>(null);
   const [isMicOn, setIsMicOn] = useState(true);
   const [isCameraOn, setIsCameraOn] = useState(true);
+  const [isFullScreen, setIsFullScreen] = useState(false);
 
   useEffect(() => {
     const getCameraPermission = async () => {
@@ -102,6 +105,37 @@ export default function LiveClassroomPage() {
     getCameraPermission();
   }, [isCameraOn, isMicOn, toast]);
 
+  const handleFullScreenChange = () => {
+    setIsFullScreen(!!document.fullscreenElement);
+  };
+
+  useEffect(() => {
+    document.addEventListener('fullscreenchange', handleFullScreenChange);
+    return () => {
+      document.removeEventListener('fullscreenchange', handleFullScreenChange);
+    };
+  }, []);
+  
+  const toggleFullScreen = () => {
+    const elem = fullScreenRef.current;
+    if (!elem) return;
+
+    if (!isFullScreen) {
+      elem.requestFullscreen().catch(err => {
+        toast({
+          variant: 'destructive',
+          title: 'Fullscreen Error',
+          description: `Error attempting to enable full-screen mode: ${err.message}`,
+        });
+      });
+    } else {
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      }
+    }
+  };
+
+
   const toggleCamera = () => {
     if (videoRef.current && videoRef.current.srcObject) {
       const stream = videoRef.current.srcObject as MediaStream;
@@ -120,7 +154,7 @@ export default function LiveClassroomPage() {
 
   return (
     <div className="bg-background text-foreground h-full flex flex-col p-4 md:p-6 lg:p-8">
-      <header className="flex items-center justify-between mb-4">
+      <header className={cn("flex items-center justify-between mb-4", isFullScreen && 'hidden')}>
         <div>
            <Link href="/live-classes" className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-2">
             <ChevronLeft className="h-4 w-4" />
@@ -130,10 +164,10 @@ export default function LiveClassroomPage() {
           <p className="text-muted-foreground text-sm">{className} | <span className="text-green-500">Live Now</span></p>
         </div>
       </header>
-      <div className="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-6 min-h-0">
+      <div ref={fullScreenRef} className="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-6 min-h-0 bg-background">
         
         {/* Left Nav */}
-        <aside className="hidden lg:flex lg:col-span-1 flex-col items-center gap-4 py-4 bg-muted/30 rounded-lg">
+        <aside className={cn("hidden lg:flex lg:col-span-1 flex-col items-center gap-4 py-4 bg-muted/30 rounded-lg", isFullScreen && 'hidden')}>
              <TooltipProvider>
                 <Tooltip>
                     <TooltipTrigger asChild>
@@ -169,7 +203,7 @@ export default function LiveClassroomPage() {
         </aside>
 
         {/* Main Content */}
-        <main className="lg:col-span-8 flex flex-col gap-6 min-h-0">
+        <main className={cn("lg:col-span-8 flex flex-col gap-6 min-h-0", isFullScreen && 'lg:col-span-12')}>
             <div className="relative rounded-lg overflow-hidden flex-grow bg-card p-2 flex flex-col">
               <div className="relative flex-grow rounded-md overflow-hidden bg-black/80">
                 <video ref={videoRef} className="h-full w-full object-cover" autoPlay muted playsInline />
@@ -185,7 +219,9 @@ export default function LiveClassroomPage() {
                     <Badge variant="destructive" className="bg-red-500 text-white animate-pulse">Live</Badge>
                 </div>
                  <div className="absolute top-3 right-3">
-                     <Button variant="ghost" size="icon" className="text-white hover:bg-white/20"><Expand/></Button>
+                     <Button variant="ghost" size="icon" className="text-white hover:bg-white/20" onClick={toggleFullScreen}>
+                        {isFullScreen ? <Shrink/> : <Expand/>}
+                     </Button>
                  </div>
                  <div className="absolute bottom-3 right-3 flex items-center gap-2 bg-black/50 p-1 rounded-md">
                      <Volume2 className="text-white h-4 w-4"/>
@@ -205,7 +241,7 @@ export default function LiveClassroomPage() {
               </div>
             </div>
 
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
+            <div className={cn("grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4", isFullScreen && 'hidden')}>
                 {participants.map((p) => (
                     <Card key={p.name} className="relative aspect-video overflow-hidden">
                         <Image src={p.avatar} alt={p.name} layout="fill" objectFit="cover" />
@@ -217,7 +253,7 @@ export default function LiveClassroomPage() {
                 ))}
             </div>
              {hasCameraPermission === false && (
-                <Alert variant="destructive">
+                <Alert variant="destructive" className={cn(isFullScreen && 'hidden')}>
                   <VideoOff className="h-4 w-4" />
                   <AlertTitle>Camera Access Required</AlertTitle>
                   <AlertDescription>
@@ -256,7 +292,7 @@ export default function LiveClassroomPage() {
         </main>
         
         {/* Right Sidebar */}
-        <aside className="lg:col-span-3 flex flex-col gap-6 min-h-0">
+        <aside className={cn("lg:col-span-3 flex flex-col gap-6 min-h-0", isFullScreen && 'hidden')}>
           <Card className="flex-1 flex flex-col min-h-0">
              <CardHeader>
                 <CardTitle>Chat Room</CardTitle>
@@ -296,3 +332,5 @@ export default function LiveClassroomPage() {
     </div>
   );
 }
+
+    
