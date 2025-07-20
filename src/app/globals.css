@@ -86,13 +86,4 @@ body {
   body {
     @apply bg-background text-foreground;
   }
-  .snap-container {
-    scroll-snap-type: y mandatory;
-    height: 100vh;
-    overflow-y: scroll;
-  }
-  .snap-section {
-    scroll-snap-align: start;
-    min-height: 100vh;
-  }
 }

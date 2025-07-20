@@ -96,7 +96,7 @@ export default function LandingPage() {
   const isMobile = useIsMobile();
 
   return (
-    <div className="bg-background text-foreground snap-container">
+    <div className="bg-background text-foreground">
       <header className="fixed top-0 z-50 w-full bg-background/80 backdrop-blur-sm">
         <div className="container mx-auto flex h-16 items-center justify-between px-4 md:px-6">
           <Link href="/" className="flex items-center gap-2">
@@ -178,7 +178,7 @@ export default function LandingPage() {
 
       <main>
         {/* Hero Section */}
-        <section className="relative flex min-h-screen items-center justify-center overflow-hidden py-20 md:py-24 snap-section">
+        <section className="relative flex min-h-screen items-center justify-center overflow-hidden py-20 md:py-24">
            <Image src="https://placehold.co/1920x1080.png" alt="Hero background" layout="fill" objectFit="cover" className="z-0" data-ai-hint="modern classroom" />
            <div className="absolute inset-0 bg-background/60 dark:bg-background/80" />
            <div className="relative z-10 flex min-h-screen w-full items-center">
@@ -221,7 +221,7 @@ export default function LandingPage() {
         </section>
 
         {/* Features Section */}
-        <section id="features" className="flex flex-col justify-center bg-secondary py-20 md:py-24 snap-section">
+        <section id="features" className="flex flex-col justify-center bg-secondary py-20 md:py-24">
           <div className="container mx-auto px-4 md:px-6">
             <div className="mx-auto max-w-3xl text-center">
               <h2 className="font-headline text-3xl font-bold tracking-tight">Why Choose Learnet<span className="text-primary">IQ</span>?</h2>
@@ -242,7 +242,7 @@ export default function LandingPage() {
         </section>
         
         {/* Statistics Section */}
-        <section id="statistics" className="flex min-h-screen flex-col justify-center py-20 md:py-24 snap-section">
+        <section id="statistics" className="flex flex-col justify-center py-20 md:py-24">
           <div className="container mx-auto px-4 md:px-6">
             <div className="mx-auto max-w-3xl text-center">
               <h2 className="font-headline text-3xl font-bold tracking-tight">Platform Statistics</h2>
@@ -344,7 +344,7 @@ export default function LandingPage() {
         </section>
 
         {/* Testimonials Section */}
-        <section id="testimonials" className="flex min-h-screen flex-col justify-center py-20 md:py-24 snap-section">
+        <section id="testimonials" className="flex flex-col justify-center py-20 md:py-24">
              <div className="container mx-auto px-4 md:px-6">
                  <div className="mx-auto max-w-3xl text-center">
                     <h2 className="font-headline text-3xl font-bold tracking-tight">Loved by Students and Parents</h2>
@@ -373,88 +373,86 @@ export default function LandingPage() {
         </section>
         
         {/* Clients Section */}
-        <section id="clients" className="flex min-h-screen flex-col py-20 md:py-24 snap-section">
-            <div className="container mx-auto flex h-full flex-col px-4 md:px-6">
-                <div className="flex-grow">
-                    <div className="mx-auto max-w-3xl text-center">
+        <section id="clients" className="py-20 md:py-24">
+            <div className="container mx-auto px-4 md:px-6">
+                <div className="mx-auto max-w-3xl text-center">
                     <h2 className="font-headline text-3xl font-bold tracking-tight">Our Clients</h2>
-                    </div>
-                    <div className="mt-12 grid grid-cols-2 place-items-center gap-8 md:grid-cols-4 lg:grid-cols-7">
-                        {clients.map((client) => (
-                            <div key={client.name} className="flex h-24 w-40 items-center justify-center rounded-lg bg-secondary/50 p-4">
-                            <Image src={`https://placehold.co/128x64.png`} alt={client.name} width={128} height={64} data-ai-hint={client.hint} className="object-contain" />
-                            </div>
-                        ))}
-                    </div>
-                    <div className="mt-16 grid gap-12 md:grid-cols-3">
-                        {clientTeams.map((team) => (
-                            <div key={team.title}>
-                                <h3 className="font-headline text-xl font-semibold">{team.title}</h3>
-                                <p className="mt-2 text-muted-foreground">{team.description}</p>
-                            </div>
-                        ))}
-                    </div>
                 </div>
-
-                <div className="mt-16 bg-foreground text-background">
-                    <div className="container mx-auto px-4 py-6 md:px-6">
-                        <div className="grid gap-12 md:grid-cols-2">
-                            <div>
-                            <h2 className="font-headline text-3xl font-bold tracking-tight">Ready to Start Learning?</h2>
-                            <p className="mt-4 text-lg text-background/80">Join thousands of students achieving their academic goals.</p>
-                            <div className="mt-8">
-                                <Dialog>
-                                <DialogTrigger asChild>
-                                    <Button size="lg" variant="secondary" className="font-bold">Sign Up Now</Button>
-                                </DialogTrigger>
-                                <DialogContent className="max-w-sm">
-                                    <DialogHeader className="flex flex-col items-center text-center">
-                                    <Icons.logo className="h-12 w-12 text-primary" />
-                                    <DialogTitle className="font-headline text-3xl font-bold tracking-tighter text-foreground mt-4">
-                                        Create your account
-                                    </DialogTitle>
-                                    <DialogDescription className="mt-2">
-                                        Get started on your learning journey.
-                                    </DialogDescription>
-                                    </DialogHeader>
-                                    <SignUpForm />
-                                </DialogContent>
-                                </Dialog>
-                            </div>
-                            </div>
-                            <div className="grid grid-cols-2 gap-8 text-sm">
-                                <div>
-                                    <h3 className="font-semibold uppercase tracking-wider text-background/90">Product</h3>
-                                    <ul className="mt-4 space-y-2">
-                                        <li><Link href="#" className="hover:underline text-background/70">Features</Link></li>
-                                        <li><Link href="#" className="hover:underline text-background/70">Pricing</Link></li>
-                                        <li><Link href="#" className="hover:underline text-background/70">Testimonials</Link></li>
-                                    </ul>
-                                </div>
-                                <div>
-                                    <h3 className="font-semibold uppercase tracking-wider text-background/90">Company</h3>
-                                    <ul className="mt-4 space-y-2">
-                                        <li><Link href="#" className="hover:underline text-background/70">About Us</Link></li>
-                                        <li><Link href="#" className="hover:underline text-background/70">Careers</Link></li>
-                                        <li><Link href="#" className="hover:underline text-background/70">Contact</Link></li>
-                                    </ul>
-                                </div>
-                            </div>
+                <div className="mt-12 grid grid-cols-2 place-items-center gap-8 md:grid-cols-4 lg:grid-cols-7">
+                    {clients.map((client) => (
+                        <div key={client.name} className="flex h-24 w-40 items-center justify-center rounded-lg bg-secondary/50 p-4">
+                        <Image src={`https://placehold.co/128x64.png`} alt={client.name} width={128} height={64} data-ai-hint={client.hint} className="object-contain" />
                         </div>
-                        <div className="mt-16 text-sm text-background/70">
-                            <div className="flex flex-col items-center justify-between gap-4 border-t border-background/20 pt-8 sm:flex-row">
-                            <p>&copy; {new Date().getFullYear()} LearnetIQ. All rights reserved.</p>
-                            <div className="flex gap-4">
-                                <Link href="#" className="hover:underline">Privacy Policy</Link>
-                                <Link href="#" className="hover:underline">Terms of Service</Link>
-                            </div>
-                            </div>
+                    ))}
+                </div>
+                <div className="mt-16 grid gap-12 md:grid-cols-3">
+                    {clientTeams.map((team) => (
+                        <div key={team.title}>
+                            <h3 className="font-headline text-xl font-semibold">{team.title}</h3>
+                            <p className="mt-2 text-muted-foreground">{team.description}</p>
                         </div>
-                    </div>
+                    ))}
                 </div>
             </div>
         </section>
       </main>
+
+      <footer className="bg-foreground text-background">
+        <div className="container mx-auto px-4 py-16 md:px-6">
+            <div className="grid gap-12 md:grid-cols-2">
+                <div>
+                <h2 className="font-headline text-3xl font-bold tracking-tight">Ready to Start Learning?</h2>
+                <p className="mt-4 text-lg text-background/80">Join thousands of students achieving their academic goals.</p>
+                <div className="mt-8">
+                    <Dialog>
+                    <DialogTrigger asChild>
+                        <Button size="lg" variant="secondary" className="font-bold">Sign Up Now</Button>
+                    </DialogTrigger>
+                    <DialogContent className="max-w-sm">
+                        <DialogHeader className="flex flex-col items-center text-center">
+                        <Icons.logo className="h-12 w-12 text-primary" />
+                        <DialogTitle className="font-headline text-3xl font-bold tracking-tighter text-foreground mt-4">
+                            Create your account
+                        </DialogTitle>
+                        <DialogDescription className="mt-2">
+                            Get started on your learning journey.
+                        </DialogDescription>
+                        </DialogHeader>
+                        <SignUpForm />
+                    </DialogContent>
+                    </Dialog>
+                </div>
+                </div>
+                <div className="grid grid-cols-2 gap-8 text-sm">
+                    <div>
+                        <h3 className="font-semibold uppercase tracking-wider text-background/90">Product</h3>
+                        <ul className="mt-4 space-y-2">
+                            <li><Link href="#" className="hover:underline text-background/70">Features</Link></li>
+                            <li><Link href="#" className="hover:underline text-background/70">Pricing</Link></li>
+                            <li><Link href="#" className="hover:underline text-background/70">Testimonials</Link></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 className="font-semibold uppercase tracking-wider text-background/90">Company</h3>
+                        <ul className="mt-4 space-y-2">
+                            <li><Link href="#" className="hover:underline text-background/70">About Us</Link></li>
+                            <li><Link href="#" className="hover:underline text-background/70">Careers</Link></li>
+                            <li><Link href="#" className="hover:underline text-background/70">Contact</Link></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div className="mt-16 text-sm text-background/70">
+                <div className="flex flex-col items-center justify-between gap-4 border-t border-background/20 pt-8 sm:flex-row">
+                <p>&copy; {new Date().getFullYear()} LearnetIQ. All rights reserved.</p>
+                <div className="flex gap-4">
+                    <Link href="#" className="hover:underline">Privacy Policy</Link>
+                    <Link href="#" className="hover:underline">Terms of Service</Link>
+                </div>
+                </div>
+            </div>
+        </div>
+      </footer>
     </div>
   );
 }
