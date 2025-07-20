@@ -6,8 +6,10 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Progress } from '@/components/ui/progress';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { Slider } from '@/components/ui/slider';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
@@ -73,6 +75,13 @@ export default function LiveClassroomPage() {
   const [isMicOn, setIsMicOn] = useState(true);
   const [isCameraOn, setIsCameraOn] = useState(true);
   const [isFullScreen, setIsFullScreen] = useState(false);
+  const [volume, setVolume] = useState([80]);
+
+  useEffect(() => {
+    if (videoRef.current) {
+        videoRef.current.volume = volume[0] / 100;
+    }
+  }, [volume]);
 
   useEffect(() => {
     const getCameraPermission = async () => {
@@ -224,8 +233,23 @@ export default function LiveClassroomPage() {
                      </Button>
                  </div>
                  <div className="absolute bottom-3 right-3 flex items-center gap-2 bg-black/50 p-1 rounded-md">
-                     <Volume2 className="text-white h-4 w-4"/>
-                     <Progress value={80} className="w-20 h-1.5" />
+                    <Popover>
+                        <PopoverTrigger asChild>
+                           <Button variant="ghost" size="icon" className="text-white h-6 w-6 hover:bg-white/20">
+                                <Volume2 className="h-4 w-4"/>
+                           </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-auto p-2 mb-2">
+                            <Slider
+                                defaultValue={[80]}
+                                max={100}
+                                step={1}
+                                orientation="vertical"
+                                className="h-24"
+                                onValueChange={setVolume}
+                            />
+                        </PopoverContent>
+                    </Popover>
                  </div>
               </div>
               <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center justify-center gap-2">
@@ -332,5 +356,3 @@ export default function LiveClassroomPage() {
     </div>
   );
 }
-
-    
