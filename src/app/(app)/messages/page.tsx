@@ -9,6 +9,7 @@ import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { cn } from '@/lib/utils';
 import { ArrowLeft, Paperclip, SendHorizonal, Search, UserPlus } from 'lucide-react';
 import { useState } from 'react';
+import { Card } from '@/components/ui/card';
 
 const contacts = [
   { name: 'Dr. Evelyn Reed', subject: 'Physics Tutor', avatar: 'https://placehold.co/100x100.png', online: true, type: 'tutor' },
@@ -36,13 +37,13 @@ export default function MessagesPage() {
   });
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex h-full flex-col">
       <div className="mb-4">
         <h1 className="font-headline text-3xl font-bold tracking-tight">Messages</h1>
         <p className="text-muted-foreground">Directly message your tutors and peers.</p>
       </div>
-      <div className="flex-1 grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 rounded-lg border min-h-0">
-        <div className={cn("flex flex-col border-r md:col-span-1", selectedContact ? 'hidden md:flex' : '')}>
+      <div className="grid flex-1 grid-cols-1 gap-6 md:grid-cols-3 lg:grid-cols-4 min-h-0">
+        <Card className={cn("flex flex-col md:col-span-1 overflow-hidden", selectedContact ? 'hidden md:flex' : '')}>
           <div className="p-4 border-b">
              <div className="relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -86,10 +87,10 @@ export default function MessagesPage() {
               Add Contact
             </Button>
           </div>
-        </div>
+        </Card>
         
         {selectedContact && (
-          <div className={cn("flex flex-col md:col-span-2 lg:col-span-3", selectedContact ? 'flex' : 'hidden md:flex')}>
+          <Card className={cn("flex flex-col md:col-span-2 lg:col-span-3 overflow-hidden", selectedContact ? 'flex' : 'hidden md:flex')}>
               <div className="p-4 border-b flex items-center gap-3">
                    <Button variant="ghost" size="icon" className="md:hidden" onClick={() => setSelectedContact(undefined)}>
                      <ArrowLeft className="h-5 w-5" />
@@ -129,7 +130,7 @@ export default function MessagesPage() {
                 </div>
               </div>
             </div>
-          </div>
+          </Card>
         )}
       </div>
     </div>
