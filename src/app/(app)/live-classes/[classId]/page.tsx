@@ -38,7 +38,7 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
@@ -66,6 +66,7 @@ const meetingInsights = [
 
 export default function LiveClassroomPage() {
   const params = useParams();
+  const router = useRouter();
   const { toast } = useToast();
   const classId = params?.classId;
   const className = (classId as string)?.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
@@ -167,6 +168,10 @@ export default function LiveClassroomPage() {
       stream.getAudioTracks().forEach(track => track.enabled = !isMicOn);
       setIsMicOn(!isMicOn);
     }
+  };
+
+  const handleEndCall = () => {
+    router.push('/live-classes');
   };
 
   return (
@@ -275,7 +280,7 @@ export default function LiveClassroomPage() {
                    <Button variant={isCameraOn ? "secondary" : "destructive"} size="icon" className="rounded-full h-12 w-12" onClick={toggleCamera}>
                     {isCameraOn ? <Video /> : <VideoOff />}
                   </Button>
-                  <Button variant="destructive" size="icon" className="rounded-full h-12 w-12 bg-red-600">
+                  <Button variant="destructive" size="icon" className="rounded-full h-12 w-12 bg-red-600" onClick={handleEndCall}>
                     <PhoneOff />
                   </Button>
               </div>
