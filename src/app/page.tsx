@@ -394,8 +394,8 @@ export default function LandingPage() {
                     ))}
                 </div>
             </div>
-            <footer className="bg-foreground text-background mt-auto">
-              <div className="container mx-auto px-4 py-6 md:px-6">
+            <footer className="bg-foreground text-background mt-auto py-6">
+              <div className="container mx-auto px-4 md:px-6">
                   <div className="grid gap-12 md:grid-cols-2">
                       <div>
                       <h2 className="font-headline text-3xl font-bold tracking-tight">Ready to Start Learning?</h2>
@@ -450,6 +450,9 @@ export default function LandingPage() {
                   </div>
               </div>
             </footer>
+             <div className="container mx-auto px-4 md:px-6 pt-8">
+                <div className="end-of-page-animation"></div>
+            </div>
         </section>
       </main>
 

@@ -17,6 +17,26 @@ body {
   min-height: 100vh;
 }
 
+.end-of-page-animation {
+  height: 2px;
+  width: 0;
+  background-color: hsl(var(--foreground));
+  animation: draw-line 2s ease-out forwards;
+  animation-timeline: view();
+  animation-range-start: entry 0%;
+  animation-range-end: entry 50%;
+}
+
+@keyframes draw-line {
+  from {
+    width: 0%;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+
 @layer base {
   :root {
     --background: 206 50% 95%; /* #F0F4F7 */
