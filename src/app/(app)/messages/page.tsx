@@ -43,7 +43,7 @@ export default function MessagesPage() {
         <p className="text-muted-foreground">Directly message your tutors and peers.</p>
       </div>
       <div className="grid flex-1 grid-cols-1 gap-6 md:grid-cols-3 lg:grid-cols-4 min-h-0">
-        <Card className={cn("flex flex-col md:col-span-1 overflow-hidden", selectedContact ? 'hidden md:flex' : '')}>
+        <Card className={cn("flex flex-col md:col-span-1 overflow-hidden shadow-lg", selectedContact ? 'hidden md:flex' : '')}>
           <div className="p-4 border-b">
              <div className="relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -90,7 +90,7 @@ export default function MessagesPage() {
         </Card>
         
         {selectedContact && (
-          <Card className={cn("flex flex-col md:col-span-2 lg:col-span-3 overflow-hidden", selectedContact ? 'flex' : 'hidden md:flex')}>
+          <Card className={cn("flex flex-col md:col-span-2 lg:col-span-3 overflow-hidden shadow-lg", selectedContact ? 'flex' : 'hidden md:flex')}>
               <div className="p-4 border-b flex items-center gap-3">
                    <Button variant="ghost" size="icon" className="md:hidden" onClick={() => setSelectedContact(undefined)}>
                      <ArrowLeft className="h-5 w-5" />
