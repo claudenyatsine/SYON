@@ -373,7 +373,7 @@ export default function LandingPage() {
         </section>
         
         {/* Clients Section */}
-        <section id="clients" className="flex flex-col justify-center py-20 md:py-24 snap-section">
+        <section id="clients" className="flex min-h-screen flex-col justify-center py-20 md:py-24 snap-section">
             <div className="container mx-auto px-4 md:px-6">
                 <div className="mx-auto max-w-3xl text-center">
                   <h2 className="font-headline text-3xl font-bold tracking-tight">Our Clients</h2>
@@ -397,40 +397,60 @@ export default function LandingPage() {
         </section>
       </main>
       
-      <footer className="bg-foreground text-background snap-section">
-        <div className="container mx-auto flex h-full flex-col justify-center px-4 md:px-6">
-            <div className="flex flex-col items-center justify-center text-center">
-                <h2 className="font-headline text-3xl font-bold tracking-tight">Ready to Start Learning?</h2>
-                <p className="mt-4 text-lg text-background/80">Join thousands of students achieving their academic goals.</p>
-                <div className="mt-8">
-                  <Dialog>
-                      <DialogTrigger asChild>
-                        <Button size="lg" variant="secondary" className="font-bold">Sign Up Now</Button>
-                      </DialogTrigger>
-                      <DialogContent className="max-w-sm">
-                        <DialogHeader className="flex flex-col items-center text-center">
-                            <Icons.logo className="h-12 w-12 text-primary" />
-                            <DialogTitle className="font-headline text-3xl font-bold tracking-tighter text-foreground mt-4">
-                              Create your account
-                            </DialogTitle>
-                          <DialogDescription className="mt-2">
-                            Get started on your learning journey.
-                          </DialogDescription>
-                        </DialogHeader>
-                        <SignUpForm />
-                      </DialogContent>
-                  </Dialog>
+      <footer className="bg-foreground text-background">
+        <div className="container mx-auto px-4 py-16 md:px-6">
+          <div className="grid gap-12 md:grid-cols-2">
+            <div>
+              <h2 className="font-headline text-3xl font-bold tracking-tight">Ready to Start Learning?</h2>
+              <p className="mt-4 text-lg text-background/80">Join thousands of students achieving their academic goals.</p>
+              <div className="mt-8">
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Button size="lg" variant="secondary" className="font-bold">Sign Up Now</Button>
+                  </DialogTrigger>
+                  <DialogContent className="max-w-sm">
+                    <DialogHeader className="flex flex-col items-center text-center">
+                      <Icons.logo className="h-12 w-12 text-primary" />
+                      <DialogTitle className="font-headline text-3xl font-bold tracking-tighter text-foreground mt-4">
+                        Create your account
+                      </DialogTitle>
+                      <DialogDescription className="mt-2">
+                        Get started on your learning journey.
+                      </DialogDescription>
+                    </DialogHeader>
+                    <SignUpForm />
+                  </DialogContent>
+                </Dialog>
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-8 text-sm">
+                <div>
+                    <h3 className="font-semibold uppercase tracking-wider text-background/90">Product</h3>
+                    <ul className="mt-4 space-y-2">
+                        <li><Link href="#" className="hover:underline text-background/70">Features</Link></li>
+                        <li><Link href="#" className="hover:underline text-background/70">Pricing</Link></li>
+                        <li><Link href="#" className="hover:underline text-background/70">Testimonials</Link></li>
+                    </ul>
+                </div>
+                 <div>
+                    <h3 className="font-semibold uppercase tracking-wider text-background/90">Company</h3>
+                    <ul className="mt-4 space-y-2">
+                        <li><Link href="#" className="hover:underline text-background/70">About Us</Link></li>
+                        <li><Link href="#" className="hover:underline text-background/70">Careers</Link></li>
+                        <li><Link href="#" className="hover:underline text-background/70">Contact</Link></li>
+                    </ul>
                 </div>
             </div>
-             <div className="mt-auto pt-8 text-sm text-background/70">
-                <div className="flex flex-col items-center justify-between gap-4 border-t border-background/20 pt-4 sm:flex-row">
-                <p>&copy; {new Date().getFullYear()} LearnetIQ. All rights reserved.</p>
-                <div className="flex gap-4">
-                    <Link href="#" className="hover:underline">Privacy Policy</Link>
-                    <Link href="#" className="hover:underline">Terms of Service</Link>
-                </div>
-                </div>
+          </div>
+          <div className="mt-16 text-sm text-background/70">
+            <div className="flex flex-col items-center justify-between gap-4 border-t border-background/20 pt-8 sm:flex-row">
+              <p>&copy; {new Date().getFullYear()} LearnetIQ. All rights reserved.</p>
+              <div className="flex gap-4">
+                <Link href="#" className="hover:underline">Privacy Policy</Link>
+                <Link href="#" className="hover:underline">Terms of Service</Link>
+              </div>
             </div>
+          </div>
         </div>
       </footer>
     </div>
