@@ -288,7 +288,7 @@ export default function LiveClassroomPage() {
                       </div>
                       <Card className="bg-black/30 backdrop-blur-sm border-white/20 text-white h-full">
                           <CardHeader className="pb-2">
-                              <CardTitle className="text-base">Class Insights</CardTitle>
+                              <CardTitle className="text-base">Class Insight</CardTitle>
                           </CardHeader>
                           <CardContent className="space-y-2 text-sm">
                             {meetingInsights.slice(0,1).map(insight => (
@@ -333,7 +333,7 @@ export default function LiveClassroomPage() {
              <Card className={cn(isFullScreen && 'hidden')}>
                 <CardHeader>
                     <div className="flex justify-between items-center">
-                        <CardTitle>Class Insights</CardTitle>
+                        <CardTitle>Class Insight</CardTitle>
                         <Button variant="link" size="sm">View all</Button>
                     </div>
                 </CardHeader>
@@ -405,7 +405,7 @@ export default function LiveClassroomPage() {
           </Card>
 
            <Card className={cn(
-             "bg-gradient-to-br from-primary via-primary/80 to-accent p-6 rounded-lg text-primary-foreground relative overflow-hidden flex-shrink-0"
+             "bg-gradient-to-br from-primary via-primary/80 to-accent p-6 rounded-lg text-primary-foreground relative overflow-hidden flex-shrink-0", isFullScreen && 'hidden'
            )}>
                 <div className="relative z-10">
                     <CardTitle className="text-lg text-white">Upgrade to Pro</CardTitle>
