@@ -23,19 +23,20 @@ export function DashboardHeader() {
 
   return (
     <header className="sticky top-0 z-30 flex h-16 items-center gap-2 sm:gap-4 border-b bg-background/80 px-4 backdrop-blur-sm sm:px-6 lg:px-8">
-      <div className="flex items-center gap-2">
+      <div className="flex w-[250px] items-center gap-2">
         <SidebarTrigger className="md:hidden" />
-        <div
-          className={cn(
-            "hidden items-center gap-2 md:flex",
-            sidebarState === 'expanded' && 'hidden'
-          )}
-        >
-          <Button variant="ghost" size="icon" onClick={toggleSidebar}>
-            <PanelLeft />
-          </Button>
-          <Icons.logo className="h-8 w-8 text-primary" />
-        </div>
+        {sidebarState === 'collapsed' && (
+          <div
+            className={cn(
+              "hidden items-center gap-2 md:flex"
+            )}
+          >
+            <Button variant="ghost" size="icon" onClick={toggleSidebar}>
+              <PanelLeft />
+            </Button>
+            <Icons.logo className="h-8 w-8 text-primary" />
+          </div>
+        )}
       </div>
       
       <div className="flex-1">
