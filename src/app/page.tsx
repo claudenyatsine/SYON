@@ -360,7 +360,7 @@ export default function LandingPage() {
           {/* CTA Section */}
           <section className="flex flex-col bg-secondary snap-section">
             <div className="container mx-auto flex h-full flex-col justify-center px-4 md:px-6">
-              <div className="flex h-full min-h-[50vh] flex-col rounded-lg bg-primary p-12 text-primary-foreground">
+              <div className="flex h-full min-h-[50vh] flex-col rounded-lg bg-primary p-12 text-primary-foreground translate-y-[-30%]">
                 <div className="m-auto flex flex-col justify-center text-center">
                     <h2 className="font-headline text-3xl font-bold tracking-tight">Ready to Start Learning?</h2>
                     <p className="mt-4 text-lg text-primary-foreground/90">Join thousands of students achieving their academic goals.</p>
