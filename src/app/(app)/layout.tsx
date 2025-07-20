@@ -10,6 +10,8 @@ import {
   SidebarMenuButton,
   SidebarFooter,
   useSidebar,
+  SidebarTrigger,
+  SidebarInset,
 } from '@/components/ui/sidebar';
 import { Icons } from '@/components/icons';
 import {
@@ -25,6 +27,7 @@ import {
 } from 'lucide-react';
 import { DashboardHeader } from '@/components/dashboard-header';
 import { usePathname } from 'next/navigation';
+import { cn } from '@/lib/utils';
 
 const menuItems = [
   { href: '/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
@@ -41,7 +44,7 @@ function AppLayoutContent({ children }: { children: React.ReactNode }) {
 
   return (
     <>
-      <Sidebar>
+      <Sidebar variant="inset" collapsible="icon">
         <SidebarHeader>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
@@ -67,21 +70,25 @@ function AppLayoutContent({ children }: { children: React.ReactNode }) {
         </SidebarHeader>
         <SidebarContent>
           <SidebarMenu>
-            {menuItems.map((item) => (
-              <SidebarMenuItem key={item.href}>
-                <SidebarMenuButton
-                  href={item.href}
-                  tooltip={item.label}
-                  isActive={
-                    pathname === item.href ||
-                    (item.href !== '/dashboard' && pathname.startsWith(item.href))
-                  }
-                >
-                  <item.icon />
-                  {item.label}
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            ))}
+            {menuItems.map((item) => {
+              const isActive =
+                pathname === item.href ||
+                (item.href !== '/dashboard' && pathname.startsWith(item.href));
+              return (
+                <SidebarMenuItem key={item.href}>
+                  <SidebarMenuButton
+                    href={item.href}
+                    tooltip={item.label}
+                    className={cn(
+                      isActive && 'bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground'
+                    )}
+                  >
+                    <item.icon />
+                    {item.label}
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              );
+            })}
           </SidebarMenu>
         </SidebarContent>
         <SidebarFooter>
@@ -101,10 +108,10 @@ function AppLayoutContent({ children }: { children: React.ReactNode }) {
           </SidebarMenu>
         </SidebarFooter>
       </Sidebar>
-      <main className="flex flex-1 flex-col">
+      <SidebarInset>
         <DashboardHeader />
         <div className="flex-1 p-4 sm:p-6 lg:p-8">{children}</div>
-      </main>
+      </SidebarInset>
     </>
   );
 }
