@@ -80,13 +80,14 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                 </SidebarMenuButton>
               </SidebarMenuItem>
                <SidebarMenuItem className="hidden md:block">
-                 <SidebarMenuButton tooltip="Collapse">
-                    <SidebarTrigger asChild>
-                      <>
-                        <PanelLeft />
-                        Collapse
-                      </>
-                    </SidebarTrigger>
+                 <SidebarMenuButton tooltip="Collapse" onClick={() => {
+                    const trigger = document.querySelector('[data-sidebar="trigger"]');
+                    if (trigger instanceof HTMLElement) {
+                      trigger.click();
+                    }
+                 }}>
+                    <PanelLeft />
+                    Collapse
                   </SidebarMenuButton>
               </SidebarMenuItem>
             </SidebarMenu>
