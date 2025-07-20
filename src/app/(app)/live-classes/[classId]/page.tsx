@@ -67,7 +67,7 @@ const meetingInsights = [
 export default function LiveClassroomPage() {
   const params = useParams();
   const { toast } = useToast();
-  const { classId } = params;
+  const classId = params.classId;
   const className = (classId as string)?.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
 
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -370,7 +370,8 @@ export default function LiveClassroomPage() {
           </Card>
 
            <Card className={cn(
-             "bg-gradient-to-br from-primary via-primary/80 to-accent p-6 rounded-lg text-primary-foreground relative overflow-hidden"
+             "bg-gradient-to-br from-primary via-primary/80 to-accent p-6 rounded-lg text-primary-foreground relative overflow-hidden",
+             isFullScreen && "flex-shrink-0"
            )}>
                 <div className="relative z-10">
                     <CardTitle className="text-lg text-white">Upgrade to Pro</CardTitle>
