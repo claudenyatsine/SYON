@@ -1,7 +1,7 @@
 
 'use client';
 
-import { Bell, Search, User, Moon, Sun, PanelLeft } from 'lucide-react';
+import { Bell, Search, User, Moon, Sun } from 'lucide-react';
 import { Button } from './ui/button';
 import {
   DropdownMenu,
@@ -23,7 +23,7 @@ export function DashboardHeader() {
 
   return (
     <header className="sticky top-0 z-30 flex h-16 items-center gap-2 sm:gap-4 border-b bg-background/80 px-4 backdrop-blur-sm sm:px-6 lg:px-8">
-      <div className="flex w-[250px] items-center gap-2">
+      <div className="flex w-[250px] items-center justify-start gap-2">
         <SidebarTrigger className="md:hidden" />
         {sidebarState === 'collapsed' && (
           <div
@@ -32,7 +32,7 @@ export function DashboardHeader() {
             )}
           >
             <Button variant="ghost" size="icon" onClick={toggleSidebar}>
-              <PanelLeft />
+              <Icons.panelLeft className="h-6 w-6" />
             </Button>
             <Icons.logo className="h-8 w-8 text-primary" />
           </div>
