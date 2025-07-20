@@ -355,13 +355,12 @@ export default function LandingPage() {
                 </div>
              </div>
         </section>
-        
-        <Dialog>
-          {/* CTA Section */}
-          <section className="flex flex-col bg-secondary snap-section">
-            <div className="container mx-auto flex h-full flex-col justify-center px-4 md:px-6">
-              <div className="flex h-full min-h-[50vh] flex-col rounded-lg bg-primary p-12 text-primary-foreground translate-y-[-30%]">
-                <div className="m-auto flex flex-col justify-center text-center">
+      </main>
+      
+      <Dialog>
+        <footer className="bg-primary text-primary-foreground snap-section flex flex-col justify-center">
+            <div className="container mx-auto px-4 md:px-6">
+                <div className="flex flex-col items-center justify-center text-center">
                     <h2 className="font-headline text-3xl font-bold tracking-tight">Ready to Start Learning?</h2>
                     <p className="mt-4 text-lg text-primary-foreground/90">Join thousands of students achieving their academic goals.</p>
                     <div className="mt-8">
@@ -379,23 +378,21 @@ export default function LandingPage() {
                     </div>
                     </div>
                 </div>
-              </div>
             </div>
-          </section>
-           <DialogContent className="max-w-sm">
-              <DialogHeader className="flex flex-col items-center text-center">
-                  <Icons.logo className="h-12 w-12 text-primary" />
-                  <DialogTitle className="font-headline text-3xl font-bold tracking-tighter text-foreground mt-4">
-                    Create your account
-                  </DialogTitle>
-                <DialogDescription className="mt-2">
-                  Get started on your learning journey.
-                </DialogDescription>
-              </DialogHeader>
-              <SignUpForm />
-            </DialogContent>
-        </Dialog>
-      </main>
+        </footer>
+         <DialogContent className="max-w-sm">
+            <DialogHeader className="flex flex-col items-center text-center">
+                <Icons.logo className="h-12 w-12 text-primary" />
+                <DialogTitle className="font-headline text-3xl font-bold tracking-tighter text-foreground mt-4">
+                  Create your account
+                </DialogTitle>
+              <DialogDescription className="mt-2">
+                Get started on your learning journey.
+              </DialogDescription>
+            </DialogHeader>
+            <SignUpForm />
+          </DialogContent>
+      </Dialog>
     </div>
   );
 }
