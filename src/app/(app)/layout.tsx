@@ -1,3 +1,4 @@
+
 'use client';
 
 import {
@@ -44,7 +45,7 @@ function AppLayoutContent({ children }: { children: React.ReactNode }) {
 
   return (
     <>
-      <Sidebar variant="inset" collapsible="icon">
+      <Sidebar variant="inset" collapsible="offcanvas">
         <SidebarHeader>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
