@@ -1,6 +1,7 @@
+
 'use client';
 
-import { Bell, Search, User, Moon, Sun } from 'lucide-react';
+import { Bell, Search, User, Moon, Sun, PanelLeft } from 'lucide-react';
 import { Button } from './ui/button';
 import {
   DropdownMenu,
@@ -11,15 +12,31 @@ import {
   DropdownMenuTrigger,
 } from './ui/dropdown-menu';
 import { Input } from './ui/input';
-import { SidebarTrigger } from './ui/sidebar';
+import { SidebarTrigger, useSidebar } from './ui/sidebar';
 import { useTheme } from 'next-themes';
+import { Icons } from './icons';
+import { cn } from '@/lib/utils';
 
 export function DashboardHeader() {
-  const { setTheme, theme } = useTheme()
+  const { setTheme, theme } = useTheme();
+  const { state: sidebarState, toggleSidebar } = useSidebar();
 
   return (
     <header className="sticky top-0 z-30 flex h-16 items-center gap-2 sm:gap-4 border-b bg-background/80 px-4 backdrop-blur-sm sm:px-6 lg:px-8">
       <SidebarTrigger className="md:hidden" />
+      
+      <div
+        className={cn(
+          "hidden items-center gap-2 md:flex",
+          sidebarState === 'expanded' && 'hidden'
+        )}
+      >
+        <Button variant="ghost" size="icon" onClick={toggleSidebar}>
+          <PanelLeft />
+        </Button>
+        <Icons.logo className="h-8 w-8 text-primary" />
+      </div>
+
       <div className="relative flex-1">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
         <Input
