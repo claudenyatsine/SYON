@@ -33,7 +33,7 @@ const forums = [
 ];
 
 export default async function ForumsPage({ searchParams }: { searchParams: { [key: string]: string | string[] | undefined } }) {
-  const { summaries } = await generateSubjectForumSummaries({ forums });
+  const summaries = await generateSubjectForumSummaries({ forums });
   
   return (
     <div className="space-y-8">
@@ -61,7 +61,7 @@ export default async function ForumsPage({ searchParams }: { searchParams: { [ke
             <CardContent>
                 <Separator className="my-4"/>
                 <h4 className="font-semibold text-sm mb-2">Recent Activity Summary</h4>
-                <p className="text-sm text-muted-foreground">{summaries[forum.subject]}</p>
+                <p className="text-sm text-muted-foreground">{summaries[forum.subject] || 'No summary available.'}</p>
             </CardContent>
           </Card>
         ))}

@@ -25,28 +25,34 @@ export type GenerateSubjectForumSummariesInput = z.infer<
   typeof GenerateSubjectForumSummariesInputSchema
 >;
 
-const GenerateSubjectForumSummariesOutputSchema = z.object({
-  summaries: z
-    .record(
-      z.string(),
-      z
-        .string()
-        .describe(
-          'A short summary of the recent forum activity, highlighting common questions and interesting discussions.'
-        )
-    )
+const SummaryItemSchema = z.object({
+  subject: z.string().describe('The subject of the forum.'),
+  summary: z
+    .string()
     .describe(
-      'A map of subject to its corresponding summary. The key is the subject name.'
+      'A short summary of the recent forum activity, highlighting common questions and interesting discussions.'
     ),
 });
-export type GenerateSubjectForumSummariesOutput = z.infer<
-  typeof GenerateSubjectForumSummariesOutputSchema
->;
+
+const GenerateSubjectForumSummariesOutputSchema = z.object({
+  summaries: z.array(SummaryItemSchema),
+});
+
+// We only export the simple Record type for the page component to use.
+export type GenerateSubjectForumSummariesOutput = Record<string, string>;
 
 export async function generateSubjectForumSummaries(
   input: GenerateSubjectForumSummariesInput
 ): Promise<GenerateSubjectForumSummariesOutput> {
-  return generateSubjectForumSummariesFlow(input);
+  const result = await generateSubjectForumSummariesFlow(input);
+  
+  // Convert array of summaries to a Record<string, string>
+  const summariesMap = result.summaries.reduce((acc, item) => {
+    acc[item.subject] = item.summary;
+    return acc;
+  }, {} as Record<string, string>);
+
+  return summariesMap;
 }
 
 const prompt = ai.definePrompt({
@@ -68,7 +74,7 @@ const prompt = ai.definePrompt({
   ---
   {{/each}}
 
-  Return the output as a JSON object where the keys are the subject names and the values are the summaries.
+  Return the output as a JSON object containing a "summaries" array, where each item in the array is an object with "subject" and "summary" fields.
   `,
 });
 
