@@ -272,6 +272,47 @@ export default function LiveClassroomPage() {
                     <PhoneOff />
                   </Button>
               </div>
+
+               {isFullScreen && (
+                  <div className="absolute bottom-20 left-1/2 -translate-x-1/2 w-full max-w-6xl px-4">
+                     <div className="grid grid-cols-12 gap-4">
+                        <div className="col-span-8">
+                          <div className="grid grid-cols-5 gap-4">
+                            {participants.map((p) => (
+                                <Card key={p.name} className="relative aspect-video overflow-hidden bg-black/30 backdrop-blur-sm border-white/20">
+                                    <Image src={p.avatar} alt={p.name} fill objectFit="cover" />
+                                    <div className="absolute inset-0 bg-black/30" />
+                                    <p className="absolute bottom-2 left-2 text-white text-xs font-medium">{p.name}</p>
+                                    {p.isPinned && <Pin className="absolute top-2 right-2 h-4 w-4 text-white" />}
+                                    {p.isHandRaised && <Hand className="absolute top-2 right-2 h-4 w-4 text-yellow-400" />}
+                                </Card>
+                            ))}
+                          </div>
+                        </div>
+                         <div className="col-span-4">
+                            <Card className="bg-black/30 backdrop-blur-sm border-white/20 text-white h-full">
+                                <CardHeader className="pb-2">
+                                    <CardTitle className="text-base">Class Insights</CardTitle>
+                                </CardHeader>
+                                <CardContent className="space-y-2 text-sm">
+                                  {meetingInsights.slice(0,1).map(insight => (
+                                    <div key={insight.title} className="flex items-center gap-2 p-2 rounded-lg">
+                                        <div className="bg-primary/20 text-primary p-2 rounded-full">
+                                          <Calendar className="h-4 w-4"/>
+                                        </div>
+                                        <div className="flex-1">
+                                            <p className="font-semibold text-white">{insight.title}</p>
+                                            <p className="text-xs text-white/70">{insight.duration}</p>
+                                        </div>
+                                        <Progress value={(insight.accomplished / insight.total) * 100} className="w-16 h-1" />
+                                    </div>
+                                  ))}
+                                </CardContent>
+                            </Card>
+                         </div>
+                     </div>
+                  </div>
+              )}
             </div>
 
             <div className={cn("grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4", isFullScreen && 'hidden')}>
