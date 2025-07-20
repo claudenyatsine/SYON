@@ -277,7 +277,7 @@ export default function LiveClassroomPage() {
             <div className={cn("grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4", isFullScreen && 'hidden')}>
                 {participants.map((p) => (
                     <Card key={p.name} className="relative aspect-video overflow-hidden">
-                        <Image src={p.avatar} alt={p.name} layout="fill" objectFit="cover" />
+                        <Image src={p.avatar} alt={p.name} fill objectFit="cover" />
                         <div className="absolute inset-0 bg-black/30" />
                         <p className="absolute bottom-2 left-2 text-white text-xs font-medium">{p.name}</p>
                         {p.isPinned && <Pin className="absolute top-2 right-2 h-4 w-4 text-white" />}
@@ -370,8 +370,7 @@ export default function LiveClassroomPage() {
           </Card>
 
            <Card className={cn(
-             "bg-gradient-to-br from-primary via-primary/80 to-accent p-6 rounded-lg text-primary-foreground relative overflow-hidden",
-             isFullScreen ? 'hidden' : 'lg:block'
+             "bg-gradient-to-br from-primary via-primary/80 to-accent p-6 rounded-lg text-primary-foreground relative overflow-hidden"
            )}>
                 <div className="relative z-10">
                     <CardTitle className="text-lg text-white">Upgrade to Pro</CardTitle>
