@@ -175,44 +175,8 @@ export default function LiveClassroomPage() {
       </header>
       <div ref={fullScreenRef} className="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-6 min-h-0 bg-background">
         
-        {/* Left Nav */}
-        <aside className={cn("hidden lg:flex lg:col-span-1 flex-col items-center gap-4 py-4 bg-muted/30 rounded-lg", isFullScreen && 'hidden')}>
-             <TooltipProvider>
-                <Tooltip>
-                    <TooltipTrigger asChild>
-                       <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground"><Headphones /></Button>
-                    </TooltipTrigger>
-                    <TooltipContent side="right"><p>Audio Settings</p></TooltipContent>
-                </Tooltip>
-                 <Tooltip>
-                    <TooltipTrigger asChild>
-                       <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground"><Shield /></Button>
-                    </TooltipTrigger>
-                    <TooltipContent side="right"><p>Security</p></TooltipContent>
-                </Tooltip>
-                 <Tooltip>
-                    <TooltipTrigger asChild>
-                       <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground"><Calendar /></Button>
-                    </TooltipTrigger>
-                    <TooltipContent side="right"><p>Calendar</p></TooltipContent>
-                </Tooltip>
-                <Tooltip>
-                    <TooltipTrigger asChild>
-                       <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground"><Bell /></Button>
-                    </TooltipTrigger>
-                    <TooltipContent side="right"><p>Notifications</p></TooltipContent>
-                </Tooltip>
-                <Tooltip>
-                    <TooltipTrigger asChild>
-                       <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground"><Settings /></Button>
-                    </TooltipTrigger>
-                    <TooltipContent side="right"><p>Settings</p></TooltipContent>
-                </Tooltip>
-            </TooltipProvider>
-        </aside>
-
         {/* Main Content */}
-        <main className={cn("lg:col-span-8 flex flex-col gap-6 min-h-0", isFullScreen && 'lg:col-span-12')}>
+        <main className={cn("lg:col-span-8 flex flex-col gap-6 min-h-0", isFullScreen ? 'lg:col-span-12' : 'lg:col-span-11')}>
             <div className="relative rounded-lg overflow-hidden flex-grow bg-card p-2 flex flex-col">
               <div className="relative flex-grow rounded-md overflow-hidden bg-black/80">
                 <video ref={videoRef} className="h-full w-full object-cover" autoPlay muted playsInline />
@@ -224,10 +188,51 @@ export default function LiveClassroomPage() {
                         </Avatar>
                     </div>
                 )}
-                <div className="absolute top-3 left-3 flex items-center gap-2">
-                    <Badge variant="destructive" className="bg-red-500 text-white animate-pulse">Live</Badge>
+                
+                {/* Controls */}
+                <div className={cn(
+                    "absolute", 
+                    isFullScreen 
+                    ? "top-3 left-1/2 -translate-x-1/2 flex items-center gap-2 bg-black/50 p-2 rounded-full"
+                    : "left-3 top-1/2 -translate-y-1/2 flex flex-col gap-2 bg-black/50 p-2 rounded-full"
+                )}>
+                     <TooltipProvider>
+                        <Tooltip>
+                            <TooltipTrigger asChild>
+                               <Button variant="ghost" size="icon" className="text-white hover:bg-white/20"><Headphones /></Button>
+                            </TooltipTrigger>
+                            <TooltipContent side={isFullScreen ? "bottom" : "right"}><p>Audio Settings</p></TooltipContent>
+                        </Tooltip>
+                         <Tooltip>
+                            <TooltipTrigger asChild>
+                               <Button variant="ghost" size="icon" className="text-white hover:bg-white/20"><Shield /></Button>
+                            </TooltipTrigger>
+                            <TooltipContent side={isFullScreen ? "bottom" : "right"}><p>Security</p></TooltipContent>
+                        </Tooltip>
+                         <Tooltip>
+                            <TooltipTrigger asChild>
+                               <Button variant="ghost" size="icon" className="text-white hover:bg-white/20"><Calendar /></Button>
+                            </TooltipTrigger>
+                            <TooltipContent side={isFullScreen ? "bottom" : "right"}><p>Calendar</p></TooltipContent>
+                        </Tooltip>
+                        <Tooltip>
+                            <TooltipTrigger asChild>
+                               <Button variant="ghost" size="icon" className="text-white hover:bg-white/20"><Bell /></Button>
+                            </TooltipTrigger>
+                            <TooltipContent side={isFullScreen ? "bottom" : "right"}><p>Notifications</p></TooltipContent>
+                        </Tooltip>
+                        <Tooltip>
+                            <TooltipTrigger asChild>
+                               <Button variant="ghost" size="icon" className="text-white hover:bg-white/20"><Settings /></Button>
+                            </TooltipTrigger>
+                            <TooltipContent side={isFullScreen ? "bottom" : "right"}><p>Settings</p></TooltipContent>
+                        </Tooltip>
+                    </TooltipProvider>
                 </div>
-                 <div className="absolute top-3 right-3">
+
+
+                <div className="absolute top-3 right-3 flex items-center gap-2">
+                    <Badge variant="destructive" className="bg-red-500 text-white animate-pulse">Live</Badge>
                      <Button variant="ghost" size="icon" className="text-white hover:bg-white/20" onClick={toggleFullScreen}>
                         {isFullScreen ? <Shrink/> : <Expand/>}
                      </Button>
@@ -316,8 +321,8 @@ export default function LiveClassroomPage() {
         </main>
         
         {/* Right Sidebar */}
-        <aside className={cn("lg:col-span-3 flex flex-col gap-6 min-h-0", isFullScreen && 'hidden')}>
-          <Card className="flex-1 flex flex-col min-h-0">
+        <aside className={cn("lg:col-span-3 flex flex-col gap-6 min-h-0", isFullScreen ? 'hidden' : 'lg:col-span-1')}>
+          <Card className="flex-1 flex-col min-h-0 hidden lg:flex">
              <CardHeader>
                 <CardTitle>Chat Room</CardTitle>
              </CardHeader>
@@ -342,7 +347,7 @@ export default function LiveClassroomPage() {
              </div>
           </Card>
 
-           <Card className="bg-gradient-to-br from-primary via-primary/80 to-accent p-6 rounded-lg text-primary-foreground relative overflow-hidden">
+           <Card className="bg-gradient-to-br from-primary via-primary/80 to-accent p-6 rounded-lg text-primary-foreground relative overflow-hidden hidden lg:block">
                 <div className="relative z-10">
                     <CardTitle className="text-lg text-white">Upgrade to Pro</CardTitle>
                     <CardDescription className="text-primary-foreground/80 mt-1">Unlock the full potential of AI Assistant!</CardDescription>
@@ -356,3 +361,5 @@ export default function LiveClassroomPage() {
     </div>
   );
 }
+
+    
