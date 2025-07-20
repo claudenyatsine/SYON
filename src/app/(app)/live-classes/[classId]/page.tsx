@@ -1,0 +1,299 @@
+
+'use client';
+
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Progress } from '@/components/ui/progress';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { useToast } from '@/hooks/use-toast';
+import { cn } from '@/lib/utils';
+import {
+  Bell,
+  Calendar,
+  ChevronLeft,
+  Expand,
+  Hand,
+  Headphones,
+  Maximize,
+  Mic,
+  MicOff,
+  MoreVertical,
+  PhoneOff,
+  Pin,
+  PinOff,
+  Send,
+  Settings,
+  Shield,
+  Video,
+  VideoOff,
+  Volume2,
+} from 'lucide-react';
+import Link from 'next/link';
+import { useParams } from 'next/navigation';
+import { useEffect, useRef, useState } from 'react';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+
+const participants = [
+  { name: 'Johnnie B.', avatar: 'https://placehold.co/100x100.png', isPinned: false },
+  { name: 'Ethan C.', avatar: 'https://placehold.co/100x100.png', isPinned: false },
+  { name: 'Andy T.', avatar: 'https://placehold.co/100x100.png', isPinned: false },
+  { name: 'Jordan K.', avatar: 'https://placehold.co/100x100.png', isPinned: true },
+  { name: 'Marta E.', avatar: 'https://placehold.co/100x100.png', isPinned: false, isHandRaised: true },
+];
+
+const chatMessages = [
+    { sender: 'Jonathan Milton', time: '2:30 pm', text: 'Does anyone have the updated presentation? @the_assistant', avatar: 'https://placehold.co/100x100.png' },
+    { sender: 'You', time: '2:31 pm', text: 'I\'ll share it shortly.', isMe: true, avatar: 'https://placehold.co/100x100.png' },
+    { sender: 'AI Assistant', time: '2:31 pm', text: 'Q1_Strategy.pptx', isFile: true, avatar: 'https://placehold.co/100x100.png' },
+    { sender: 'Jonathan Milton', time: '2:33 pm', text: 'Thanks! Let\'s review slide 5 together.', avatar: 'https://placehold.co/100x100.png' },
+    { sender: 'Marta E.', time: '2:34 pm', text: 'We need to update the sales figures.', avatar: 'https://placehold.co/100x100.png' },
+    { sender: 'You', time: '2:35 pm', text: 'Agreed. I\'ll provide the updated data by tomorrow.', isMe: true, avatar: 'https://placehold.co/100x100.png' },
+];
+
+const meetingInsights = [
+    { title: 'PM & Designers Sync Meeting', duration: '30 min', tasks: 5, accomplished: 8, total: 9 },
+    { title: 'Strategic Planning Meeting', duration: '1h', tasks: 8, accomplished: 4, total: 10 },
+]
+
+export default function LiveClassroomPage() {
+  const params = useParams();
+  const { toast } = useToast();
+  const { classId } = params;
+  const className = (classId as string)?.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [hasCameraPermission, setHasCameraPermission] = useState<boolean | null>(null);
+  const [isMicOn, setIsMicOn] = useState(true);
+  const [isCameraOn, setIsCameraOn] = useState(true);
+
+  useEffect(() => {
+    const getCameraPermission = async () => {
+      if (typeof window !== 'undefined' && navigator.mediaDevices) {
+        try {
+          const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+          setHasCameraPermission(true);
+          if (videoRef.current) {
+            videoRef.current.srcObject = stream;
+          }
+          if (!isCameraOn) {
+            stream.getVideoTracks().forEach(track => track.enabled = false);
+          }
+           if (!isMicOn) {
+            stream.getAudioTracks().forEach(track => track.enabled = false);
+          }
+        } catch (error) {
+          console.error('Error accessing camera:', error);
+          setHasCameraPermission(false);
+          toast({
+            variant: 'destructive',
+            title: 'Camera Access Denied',
+            description: 'Please enable camera permissions in your browser settings to use this app.',
+          });
+        }
+      } else {
+        setHasCameraPermission(false);
+      }
+    };
+    getCameraPermission();
+  }, [isCameraOn, isMicOn, toast]);
+
+  const toggleCamera = () => {
+    if (videoRef.current && videoRef.current.srcObject) {
+      const stream = videoRef.current.srcObject as MediaStream;
+      stream.getVideoTracks().forEach(track => track.enabled = !isCameraOn);
+      setIsCameraOn(!isCameraOn);
+    }
+  };
+
+  const toggleMic = () => {
+     if (videoRef.current && videoRef.current.srcObject) {
+      const stream = videoRef.current.srcObject as MediaStream;
+      stream.getAudioTracks().forEach(track => track.enabled = !isMicOn);
+      setIsMicOn(!isMicOn);
+    }
+  };
+
+  return (
+    <div className="bg-background text-foreground h-full flex flex-col p-4 md:p-6 lg:p-8">
+      <header className="flex items-center justify-between mb-4">
+        <div>
+           <Link href="/live-classes" className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-2">
+            <ChevronLeft className="h-4 w-4" />
+            Back to Classes
+           </Link>
+          <h1 className="font-headline text-2xl font-bold tracking-tight">Hello, Cristina!</h1>
+          <p className="text-muted-foreground text-sm">{className} | <span className="text-green-500">Live Now</span></p>
+        </div>
+      </header>
+      <div className="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-6 min-h-0">
+        
+        {/* Left Nav */}
+        <aside className="hidden lg:flex lg:col-span-1 flex-col items-center gap-4 py-4 bg-muted/30 rounded-lg">
+             <TooltipProvider>
+                <Tooltip>
+                    <TooltipTrigger asChild>
+                       <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground"><Headphones /></Button>
+                    </TooltipTrigger>
+                    <TooltipContent side="right"><p>Audio Settings</p></TooltipContent>
+                </Tooltip>
+                 <Tooltip>
+                    <TooltipTrigger asChild>
+                       <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground"><Shield /></Button>
+                    </TooltipTrigger>
+                    <TooltipContent side="right"><p>Security</p></TooltipContent>
+                </Tooltip>
+                 <Tooltip>
+                    <TooltipTrigger asChild>
+                       <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground"><Calendar /></Button>
+                    </TooltipTrigger>
+                    <TooltipContent side="right"><p>Calendar</p></TooltipContent>
+                </Tooltip>
+                <Tooltip>
+                    <TooltipTrigger asChild>
+                       <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground"><Bell /></Button>
+                    </TooltipTrigger>
+                    <TooltipContent side="right"><p>Notifications</p></TooltipContent>
+                </Tooltip>
+                <Tooltip>
+                    <TooltipTrigger asChild>
+                       <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground"><Settings /></Button>
+                    </TooltipTrigger>
+                    <TooltipContent side="right"><p>Settings</p></TooltipContent>
+                </Tooltip>
+            </TooltipProvider>
+        </aside>
+
+        {/* Main Content */}
+        <main className="lg:col-span-8 flex flex-col gap-6 min-h-0">
+            <div className="relative rounded-lg overflow-hidden flex-grow bg-card p-2 flex flex-col">
+              <div className="relative flex-grow rounded-md overflow-hidden bg-black/80">
+                <video ref={videoRef} className="h-full w-full object-cover" autoPlay muted playsInline />
+                {!isCameraOn && (
+                    <div className="absolute inset-0 flex items-center justify-center bg-black/80">
+                        <Avatar className="h-24 w-24">
+                            <AvatarImage src="https://placehold.co/100x100.png" alt="Cristina" />
+                            <AvatarFallback>C</AvatarFallback>
+                        </Avatar>
+                    </div>
+                )}
+                <div className="absolute top-3 left-3 flex items-center gap-2">
+                    <Badge variant="destructive" className="bg-red-500 text-white animate-pulse">Live</Badge>
+                </div>
+                 <div className="absolute top-3 right-3">
+                     <Button variant="ghost" size="icon" className="text-white hover:bg-white/20"><Expand/></Button>
+                 </div>
+                 <div className="absolute bottom-3 right-3 flex items-center gap-2 bg-black/50 p-1 rounded-md">
+                     <Volume2 className="text-white h-4 w-4"/>
+                     <Progress value={80} className="w-20 h-1.5" />
+                 </div>
+              </div>
+              <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center justify-center gap-2">
+                  <Button variant={isMicOn ? "secondary" : "destructive"} size="icon" className="rounded-full h-12 w-12" onClick={toggleMic}>
+                    {isMicOn ? <Mic /> : <MicOff />}
+                  </Button>
+                   <Button variant={isCameraOn ? "secondary" : "destructive"} size="icon" className="rounded-full h-12 w-12" onClick={toggleCamera}>
+                    {isCameraOn ? <Video /> : <VideoOff />}
+                  </Button>
+                  <Button variant="destructive" size="icon" className="rounded-full h-12 w-12 bg-red-600">
+                    <PhoneOff />
+                  </Button>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
+                {participants.map((p) => (
+                    <Card key={p.name} className="relative aspect-video overflow-hidden">
+                        <Image src={p.avatar} alt={p.name} layout="fill" objectFit="cover" />
+                        <div className="absolute inset-0 bg-black/30" />
+                        <p className="absolute bottom-2 left-2 text-white text-xs font-medium">{p.name}</p>
+                        {p.isPinned && <Pin className="absolute top-2 right-2 h-4 w-4 text-white" />}
+                        {p.isHandRaised && <Hand className="absolute top-2 right-2 h-4 w-4 text-yellow-400" />}
+                    </Card>
+                ))}
+            </div>
+             {hasCameraPermission === false && (
+                <Alert variant="destructive">
+                  <VideoOff className="h-4 w-4" />
+                  <AlertTitle>Camera Access Required</AlertTitle>
+                  <AlertDescription>
+                    Please allow camera and microphone access to use the live class feature.
+                  </AlertDescription>
+                </Alert>
+            )}
+
+             <Card className="hidden">
+                <CardHeader>
+                    <div className="flex justify-between items-center">
+                        <CardTitle>Meeting Insights</CardTitle>
+                        <Button variant="link" size="sm">View all</Button>
+                    </div>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  {meetingInsights.map(insight => (
+                    <div key={insight.title} className="flex items-center gap-4 p-2 rounded-lg hover:bg-muted/50">
+                        <div className="bg-primary/20 text-primary p-2 rounded-full">
+                           <Calendar className="h-5 w-5"/>
+                        </div>
+                        <div className="flex-1">
+                            <p className="font-semibold">{insight.title}</p>
+                            <p className="text-sm text-muted-foreground">{insight.duration}</p>
+                        </div>
+                         <div className="flex-1 hidden md:block">
+                            <p className="text-sm text-muted-foreground">Follow-Up Tasks: {insight.tasks}</p>
+                            <p className="text-sm text-muted-foreground">Accomplished: {insight.accomplished}/{insight.total}</p>
+                        </div>
+                        <Progress value={(insight.accomplished / insight.total) * 100} className="w-24 h-2 hidden md:block" />
+                        <Button variant="ghost" size="icon"><MoreVertical className="h-4 w-4"/></Button>
+                    </div>
+                  ))}
+                </CardContent>
+             </Card>
+        </main>
+        
+        {/* Right Sidebar */}
+        <aside className="lg:col-span-3 flex flex-col gap-6 min-h-0">
+          <Card className="flex-1 flex flex-col min-h-0">
+             <CardHeader>
+                <CardTitle>Chat Room</CardTitle>
+             </CardHeader>
+             <ScrollArea className="flex-1 px-4">
+                <div className="space-y-4">
+                    {chatMessages.map((msg, index) => (
+                         <div key={index} className={cn("flex items-start gap-3", msg.isMe && "justify-end")}>
+                            {!msg.isMe && <Avatar className="h-8 w-8"><AvatarImage src={msg.avatar} /><AvatarFallback>{msg.sender.charAt(0)}</AvatarFallback></Avatar>}
+                            <div className={cn("max-w-[75%] rounded-lg p-3 text-sm", msg.isMe ? "bg-primary text-primary-foreground" : "bg-muted")}>
+                                {!msg.isMe && <p className="font-semibold text-xs mb-1">{msg.sender}</p>}
+                                <p>{msg.text}</p>
+                            </div>
+                         </div>
+                    ))}
+                </div>
+             </ScrollArea>
+             <div className="p-4 border-t">
+                <div className="relative">
+                    <Input placeholder="Type your message..." className="pr-10"/>
+                    <Button variant="ghost" size="icon" className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8"><Send className="h-4 w-4"/></Button>
+                </div>
+             </div>
+          </Card>
+
+           <Card className="bg-gradient-to-br from-primary via-primary/80 to-accent p-6 rounded-lg text-primary-foreground relative overflow-hidden">
+                <div className="relative z-10">
+                    <CardTitle className="text-lg text-white">Upgrade to Pro</CardTitle>
+                    <CardDescription className="text-primary-foreground/80 mt-1">Unlock the full potential of AI Assistant!</CardDescription>
+                    <Button variant="secondary" className="mt-4">Explore Pro Plan</Button>
+                </div>
+                <div className="absolute -right-4 -bottom-4 h-24 w-24 rounded-full bg-white/20" />
+                <div className="absolute -right-8 -bottom-8 h-20 w-20 rounded-full bg-white/20" />
+            </Card>
+        </aside>
+      </div>
+    </div>
+  );
+}
+
+    
