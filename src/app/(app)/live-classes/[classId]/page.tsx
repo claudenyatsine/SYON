@@ -174,10 +174,13 @@ export default function LiveClassroomPage() {
           <p className="text-muted-foreground text-sm">{className} | <span className="text-green-500">Live Now</span></p>
         </div>
       </header>
-      <div ref={fullScreenRef} className="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-6 min-h-0 bg-background">
+      <div ref={fullScreenRef} className="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-6 min-h-0 bg-background relative">
         
         {/* Main Content */}
-        <main className={cn("flex flex-col gap-6 min-h-0", isFullScreen ? 'lg:col-span-12' : 'lg:col-span-9')}>
+        <main className={cn(
+          "flex flex-col gap-6 min-h-0", 
+          isFullScreen ? 'lg:col-span-12' : 'lg:col-span-9'
+        )}>
             <div className="relative rounded-lg overflow-hidden flex-grow bg-card p-2 flex flex-col">
               <div className="relative flex-grow rounded-md overflow-hidden bg-black/80">
                 <video ref={videoRef} className="h-full w-full object-cover" autoPlay muted playsInline />
@@ -322,9 +325,17 @@ export default function LiveClassroomPage() {
         </main>
         
         {/* Right Sidebar */}
-        <aside className={cn("lg:col-span-3 flex flex-col gap-6 min-h-0")}>
-          <Card className="flex-1 flex-col min-h-0 hidden lg:flex">
-             <CardHeader>
+        <aside className={cn(
+          "flex-col gap-6 min-h-0", 
+          isFullScreen 
+            ? "absolute top-0 right-0 h-full w-full max-w-sm p-4 flex bg-black/30 backdrop-blur-sm"
+            : "lg:col-span-3 hidden lg:flex"
+        )}>
+          <Card className={cn(
+            "flex-1 flex-col min-h-0 flex",
+            isFullScreen && "bg-transparent border-none shadow-none text-white"
+          )}>
+             <CardHeader className={cn(isFullScreen && "text-white")}>
                 <CardTitle>Chat Room</CardTitle>
              </CardHeader>
              <ScrollArea className="flex-1 px-4">
@@ -332,7 +343,11 @@ export default function LiveClassroomPage() {
                     {chatMessages.map((msg, index) => (
                          <div key={index} className={cn("flex items-start gap-3", msg.isMe && "justify-end")}>
                             {!msg.isMe && <Avatar className="h-8 w-8"><AvatarImage src={msg.avatar} /><AvatarFallback>{msg.sender.charAt(0)}</AvatarFallback></Avatar>}
-                            <div className={cn("max-w-[75%] rounded-lg p-3 text-sm", msg.isMe ? "bg-primary text-primary-foreground" : "bg-muted")}>
+                            <div className={cn(
+                              "max-w-[75%] rounded-lg p-3 text-sm", 
+                              msg.isMe ? "bg-primary text-primary-foreground" : "bg-muted",
+                              isFullScreen && !msg.isMe && "bg-white/20 text-white"
+                            )}>
                                 {!msg.isMe && <p className="font-semibold text-xs mb-1">{msg.sender}</p>}
                                 <p>{msg.text}</p>
                             </div>
@@ -340,15 +355,24 @@ export default function LiveClassroomPage() {
                     ))}
                 </div>
              </ScrollArea>
-             <div className="p-4 border-t">
+             <div className={cn("p-4 border-t", isFullScreen && "border-white/20")}>
                 <div className="relative">
-                    <Input placeholder="Type your message..." className="pr-10"/>
-                    <Button variant="ghost" size="icon" className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8"><Send className="h-4 w-4"/></Button>
+                    <Input 
+                      placeholder="Type your message..." 
+                      className={cn(
+                        "pr-10",
+                        isFullScreen && "bg-white/20 border-white/30 placeholder:text-white/70"
+                      )}
+                    />
+                    <Button variant="ghost" size="icon" className={cn("absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8", isFullScreen && "text-white hover:bg-white/20")}><Send className="h-4 w-4"/></Button>
                 </div>
              </div>
           </Card>
 
-           <Card className="bg-gradient-to-br from-primary via-primary/80 to-accent p-6 rounded-lg text-primary-foreground relative overflow-hidden hidden lg:block">
+           <Card className={cn(
+             "bg-gradient-to-br from-primary via-primary/80 to-accent p-6 rounded-lg text-primary-foreground relative overflow-hidden",
+             isFullScreen ? 'hidden' : 'lg:block'
+           )}>
                 <div className="relative z-10">
                     <CardTitle className="text-lg text-white">Upgrade to Pro</CardTitle>
                     <CardDescription className="text-primary-foreground/80 mt-1">Unlock the full potential of AI Assistant!</CardDescription>
@@ -362,5 +386,3 @@ export default function LiveClassroomPage() {
     </div>
   );
 }
-
-    
