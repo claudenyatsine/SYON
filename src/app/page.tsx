@@ -228,7 +228,7 @@ export default function LandingPage() {
               >
                 <CarouselContent>
                     {features.map((feature, index) => (
-                        <CarouselItem key={index} className="md:basis-1/3 lg:basis-1/5 embla__slide">
+                        <CarouselItem key={index} className="md:basis-1/3 lg:basis-1/3 embla__slide">
                             <div className="p-1 h-full">
                                 <Card className="flex flex-col items-center justify-center p-6 text-center feature-card aspect-[3/4]">
                                     <div className="glowing-border"></div>
