@@ -33,6 +33,7 @@ import {
   Volume2,
 } from 'lucide-react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useParams } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
@@ -295,5 +296,3 @@ export default function LiveClassroomPage() {
     </div>
   );
 }
-
-    
