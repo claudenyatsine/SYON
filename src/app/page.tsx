@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { Icons } from '@/components/icons';
@@ -12,9 +13,6 @@ import { LoginForm } from '@/components/auth/login-form';
 import { BrainCircuit, BookOpen, Users, FolderKanban, ClipboardCheck, GraduationCap, Presentation, MessageSquare, Bell, Library, Target, UsersRound, FileCog, Link2, Smartphone, Trophy, Bot, CircleUser, Menu, ArrowUp, BookCheck, Clock } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
-import Autoplay from 'embla-carousel-autoplay';
-import './carousel.css';
 import React from 'react';
 import { Bar, BarChart, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis, CartesianGrid, Legend } from 'recharts';
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -79,9 +77,6 @@ const subjectPerformanceData = [
 
 
 export default function LandingPage() {
-  const plugin = React.useRef(
-    Autoplay({ delay: 6000, stopOnInteraction: true, direction: 'backward' })
-  )
   const isMobile = useIsMobile();
 
   return (
@@ -210,41 +205,23 @@ export default function LandingPage() {
         </section>
 
         {/* Features Section */}
-        <section id="features" className="flex flex-col justify-center bg-secondary py-20 md:py-24 overflow-hidden relative snap-section">
+        <section id="features" className="flex flex-col justify-center bg-secondary py-20 md:py-24 snap-section">
             <div className="container mx-auto px-4 md:px-6">
                 <div className="mx-auto max-w-3xl text-center">
                   <h2 className="font-headline text-3xl font-bold tracking-tight">Why Choose Learnet<span className="text-primary">IQ</span>?</h2>
                   <p className="mt-4 text-lg text-muted-foreground">Explore our unique system features</p>
                 </div>
-            <Carousel
-                plugins={isMobile ? [plugin.current] : []}
-                className="w-full mt-12"
-                onMouseEnter={plugin.current.stop}
-                onMouseLeave={plugin.current.reset}
-                opts={{
-                    align: 'center',
-                    loop: true,
-                }}
-              >
-                <CarouselContent className="h-[500px] items-end">
+                <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                     {features.map((feature, index) => (
-                        <CarouselItem key={index} className="md:basis-1/3 lg:basis-1/3 embla__slide">
-                            <div className="p-1 h-full">
-                                <Card className="flex flex-col items-center justify-center p-6 text-center feature-card h-full">
-                                    <div className="glowing-border"></div>
-                                    <CardContent className="flex flex-col items-center p-0">
-                                        <feature.icon className="mb-4 h-12 w-12 text-accent" />
-                                        <CardTitle className="font-headline text-xl font-semibold mb-2">{feature.title}</CardTitle>
-                                        <p className="text-sm text-muted-foreground">{feature.description}</p>
-                                    </CardContent>
-                                </Card>
-                            </div>
-                        </CarouselItem>
+                        <Card key={index} className="flex flex-col items-center p-6 text-center">
+                            <CardContent className="flex flex-col items-center p-0">
+                                <feature.icon className="mb-4 h-12 w-12 text-accent" />
+                                <CardTitle className="font-headline text-xl font-semibold mb-2">{feature.title}</CardTitle>
+                                <p className="text-sm text-muted-foreground">{feature.description}</p>
+                            </CardContent>
+                        </Card>
                     ))}
-                </CarouselContent>
-              <CarouselPrevious className="absolute left-[15px] top-[calc(50%_+_20px)] -translate-y-1/2 hidden md:flex" />
-              <CarouselNext className="absolute right-[15px] top-[calc(50%_+_20px)] -translate-y-1/2 hidden md:flex" />
-            </Carousel>
+                </div>
             </div>
         </section>
         
