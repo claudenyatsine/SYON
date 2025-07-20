@@ -1,3 +1,4 @@
+
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -15,7 +16,7 @@ const liveClasses = [
     time: '3:00 PM - 4:30 PM',
     image: 'https://placehold.co/600x400.png',
     aiHint: 'mathematics classroom',
-    status: 'Upcoming'
+    status: 'On going'
   },
   {
     title: 'Thermodynamics Explained',
@@ -26,7 +27,7 @@ const liveClasses = [
     time: '1:00 PM - 2:00 PM',
     image: 'https://placehold.co/600x400.png',
     aiHint: 'science experiment',
-    status: 'Upcoming'
+    status: 'On going'
   },
   {
     title: 'The Renaissance Era',
@@ -48,7 +49,7 @@ const liveClasses = [
     time: '5:00 PM - 6:00 PM',
     image: 'https://placehold.co/600x400.png',
     aiHint: 'writing poetry',
-    status: 'Upcoming'
+    status: 'On going'
   },
 ];
 
@@ -71,7 +72,7 @@ export default function LiveClassesPage() {
                 className="aspect-video w-full object-cover"
                 data-ai-hint={cls.aiHint}
               />
-              <Badge className="absolute top-3 right-3" variant={cls.status === 'Upcoming' ? 'default' : 'secondary'}>{cls.status}</Badge>
+              <Badge className="absolute top-3 right-3" variant={cls.status === 'On going' ? 'default' : 'secondary'}>{cls.status}</Badge>
             </CardHeader>
             <CardContent className="flex-grow space-y-3 p-4">
               <Badge variant="secondary">{cls.subject}</Badge>
@@ -93,8 +94,8 @@ export default function LiveClassesPage() {
               </div>
             </CardContent>
             <CardFooter className="p-4 pt-0">
-              <Button className="w-full font-bold" disabled={cls.status !== 'Upcoming'}>
-                {cls.status === 'Upcoming' ? 'Join Class' : 'View Recording'}
+              <Button className="w-full font-bold" disabled={cls.status !== 'On going'}>
+                {cls.status === 'On going' ? 'Join Class' : 'View Recording'}
               </Button>
             </CardFooter>
           </Card>
