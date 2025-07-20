@@ -9,6 +9,7 @@ import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import Image from 'next/image';
 import { Calendar, Clock } from 'lucide-react';
 import { useState } from 'react';
+import Link from 'next/link';
 
 const liveClasses = [
   {
@@ -20,7 +21,8 @@ const liveClasses = [
     time: '3:00 PM - 4:30 PM',
     image: 'https://placehold.co/600x400.png',
     aiHint: 'mathematics classroom',
-    status: 'On going'
+    status: 'On going',
+    url: 'https://meet.google.com/new'
   },
   {
     title: 'Thermodynamics Explained',
@@ -31,7 +33,8 @@ const liveClasses = [
     time: '1:00 PM - 2:00 PM',
     image: 'https://placehold.co/600x400.png',
     aiHint: 'science experiment',
-    status: 'On going'
+    status: 'On going',
+    url: 'https://meet.google.com/new'
   },
    {
     title: 'Introduction to Python',
@@ -42,7 +45,8 @@ const liveClasses = [
     time: '11:00 AM - 12:30 PM',
     image: 'https://placehold.co/600x400.png',
     aiHint: 'programming code',
-    status: 'Upcoming'
+    status: 'Upcoming',
+    url: 'https://meet.google.com/new'
   },
   {
     title: 'The Renaissance Era',
@@ -53,7 +57,8 @@ const liveClasses = [
     time: '10:00 AM - 11:30 AM',
     image: 'https://placehold.co/600x400.png',
     aiHint: 'historical painting',
-    status: 'Completed'
+    status: 'Completed',
+    url: '#'
   },
   {
     title: 'Poetry Analysis Techniques',
@@ -64,7 +69,8 @@ const liveClasses = [
     time: '5:00 PM - 6:00 PM',
     image: 'https://placehold.co/600x400.png',
     aiHint: 'writing poetry',
-    status: 'Upcoming'
+    status: 'Upcoming',
+    url: 'https://meet.google.com/new'
   },
 ];
 
@@ -153,9 +159,11 @@ export default function LiveClassesPage() {
               </div>
             </CardContent>
             <CardFooter className="p-4 pt-0">
-              <Button className="w-full font-bold" disabled={cls.status === 'Completed'}>
-                 {getButtonText(cls.status)}
-              </Button>
+              <Link href={cls.url} passHref className="w-full" target={cls.status !== 'Completed' ? '_blank' : ''} rel="noopener noreferrer">
+                <Button className="w-full font-bold" disabled={cls.status === 'Completed'}>
+                   {getButtonText(cls.status)}
+                </Button>
+              </Link>
             </CardFooter>
           </Card>
         ))}
