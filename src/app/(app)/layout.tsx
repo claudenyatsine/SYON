@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import {
@@ -44,9 +45,19 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       <div className="flex min-h-screen">
         <Sidebar>
           <SidebarHeader>
-            <div className="flex items-center gap-2">
-              <Icons.logo className="h-8 w-8 text-primary" />
-              <span className="font-headline text-xl font-bold tracking-tight">Learnet<span className="text-primary">IQ</span></span>
+            <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Icons.logo className="h-8 w-8 text-primary" />
+                  <span className="font-headline text-xl font-bold tracking-tight">Learnet<span className="text-primary">IQ</span></span>
+                </div>
+                <SidebarMenuButton tooltip="Collapse" size="icon" variant="ghost" className="hidden h-8 w-8 md:flex" onClick={() => {
+                      const trigger = document.querySelector('[data-sidebar="trigger"]');
+                      if (trigger instanceof HTMLElement) {
+                        trigger.click();
+                      }
+                  }}>
+                      <PanelLeft />
+                </SidebarMenuButton>
             </div>
           </SidebarHeader>
           <SidebarContent>
@@ -78,17 +89,6 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                   <LogOut />
                   Log Out
                 </SidebarMenuButton>
-              </SidebarMenuItem>
-               <SidebarMenuItem className="hidden md:block">
-                 <SidebarMenuButton tooltip="Collapse" onClick={() => {
-                    const trigger = document.querySelector('[data-sidebar="trigger"]');
-                    if (trigger instanceof HTMLElement) {
-                      trigger.click();
-                    }
-                 }}>
-                    <PanelLeft />
-                    Collapse
-                  </SidebarMenuButton>
               </SidebarMenuItem>
             </SidebarMenu>
           </SidebarFooter>
