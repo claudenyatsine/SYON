@@ -5,14 +5,17 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { cn } from '@/lib/utils';
 import { ArrowLeft, Paperclip, SendHorizonal, Search, UserPlus } from 'lucide-react';
 import { useState } from 'react';
 
 const contacts = [
-  { name: 'Dr. Evelyn Reed', subject: 'Physics Tutor', avatar: 'https://placehold.co/100x100.png', online: true },
-  { name: 'Mr. John Carter', subject: 'History Tutor', avatar: 'https://placehold.co/100x100.png', online: false },
-  { name: 'Ms. Anya Sharma', subject: 'Mathematics Tutor', avatar: 'https://placehold.co/100x100.png', online: true },
+  { name: 'Dr. Evelyn Reed', subject: 'Physics Tutor', avatar: 'https://placehold.co/100x100.png', online: true, type: 'tutor' },
+  { name: 'Mr. John Carter', subject: 'History Tutor', avatar: 'https://placehold.co/100x100.png', online: false, type: 'tutor' },
+  { name: 'Ms. Anya Sharma', subject: 'Mathematics Tutor', avatar: 'https://placehold.co/100x100.png', online: true, type: 'tutor' },
+  { name: 'Alice Johnson', subject: 'Classmate', avatar: 'https://placehold.co/100x100.png', online: false, type: 'peer' },
+  { name: 'Bob Williams', subject: 'Classmate', avatar: 'https://placehold.co/100x100.png', online: true, type: 'peer' },
 ];
 
 const messages = [
@@ -25,6 +28,12 @@ const messages = [
 
 export default function MessagesPage() {
   const [selectedContact, setSelectedContact] = useState(contacts[0]);
+  const [filter, setFilter] = useState('all');
+
+  const filteredContacts = contacts.filter(contact => {
+    if (filter === 'all') return true;
+    return contact.type === filter;
+  });
 
   return (
     <div className="flex flex-col h-full">
@@ -39,10 +48,17 @@ export default function MessagesPage() {
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input placeholder="Search contacts..." className="pl-10" />
             </div>
+             <Tabs defaultValue="all" className="w-full mt-4" onValueChange={setFilter}>
+              <TabsList className="grid w-full grid-cols-3">
+                <TabsTrigger value="all">All</TabsTrigger>
+                <TabsTrigger value="tutor">Tutors</TabsTrigger>
+                <TabsTrigger value="peer">Peers</TabsTrigger>
+              </TabsList>
+            </Tabs>
           </div>
           <ScrollArea className="flex-1">
             <div className="p-2 space-y-1">
-              {contacts.map((contact) => (
+              {filteredContacts.map((contact) => (
                 <button 
                   key={contact.name} 
                   className={cn(
