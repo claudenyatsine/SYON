@@ -6,7 +6,7 @@
 
 .embla__slide.is-active {
   filter: blur(0);
-  transform: scale(1);
+  transform: scale(1.05);
 }
 
 .feature-card {
@@ -40,18 +40,5 @@
   100% {
     opacity: 0;
     box-shadow: 0 0 10px 0px #33b5e5, 0 0 20px 0px #33b5e5, inset 0 0 10px 0px #33b5e5;
-  }
-}
-
-.embla__slide.is-active .feature-card {
-  animation: zoom-in-card 6s ease-in-out forwards;
-}
-
-@keyframes zoom-in-card {
-  from {
-    transform: scale(1);
-  }
-  to {
-    transform: scale(1.05);
   }
 }

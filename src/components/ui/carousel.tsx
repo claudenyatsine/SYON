@@ -159,7 +159,7 @@ const CarouselContent = React.forwardRef<
 
   React.useEffect(() => {
     const onSelect = () => {
-      setSlidesInView(api?.slidesInView() || []);
+      setSlidesInView(api?.slidesInView({ containSnaps: true }) || []);
     };
 
     if (api) {
@@ -182,7 +182,6 @@ const CarouselContent = React.forwardRef<
           orientation === "horizontal" ? "" : "flex-col",
           className
         )}
-        {...props}
       >
         {React.Children.map(props.children, (child, index) =>
           React.isValidElement(child)
