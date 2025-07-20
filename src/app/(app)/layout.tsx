@@ -1,3 +1,4 @@
+
 'use client';
 
 import {
@@ -9,6 +10,7 @@ import {
   SidebarMenuItem,
   SidebarMenuButton,
   SidebarFooter,
+  SidebarTrigger,
 } from '@/components/ui/sidebar';
 import { Icons } from '@/components/icons';
 import {
@@ -20,6 +22,7 @@ import {
   Video,
   Settings,
   LogOut,
+  PanelLeft,
 } from 'lucide-react';
 import { DashboardHeader } from '@/components/dashboard-header';
 import { usePathname } from 'next/navigation';
@@ -75,6 +78,14 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                   <LogOut />
                   Log Out
                 </SidebarMenuButton>
+              </SidebarMenuItem>
+               <SidebarMenuItem className="hidden md:block">
+                  <SidebarTrigger asChild>
+                    <SidebarMenuButton tooltip="Collapse">
+                        <PanelLeft />
+                        Collapse
+                    </SidebarMenuButton>
+                  </SidebarTrigger>
               </SidebarMenuItem>
             </SidebarMenu>
           </SidebarFooter>
