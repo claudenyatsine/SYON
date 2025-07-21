@@ -122,11 +122,11 @@ export function FeaturesCarousel() {
             >
               <div className="container mx-auto grid grid-cols-1 md:grid-cols-2 items-center gap-12 px-4 md:px-6 text-primary-foreground">
                 <div className="flex flex-col items-center md:items-start text-center md:text-left">
-                  <feature.icon className="w-16 h-16 mb-4" />
-                  <h2 className="font-headline text-4xl md:text-5xl font-bold tracking-tight">
+                  <feature.icon className="w-20 h-20 mb-4" />
+                  <h2 className="font-headline text-5xl md:text-6xl font-bold tracking-tight">
                     {feature.title}
                   </h2>
-                  <p className="mt-4 text-lg max-w-md">
+                  <p className="mt-4 text-xl max-w-lg">
                     {feature.description}
                   </p>
                 </div>
@@ -134,8 +134,8 @@ export function FeaturesCarousel() {
                    <Image
                     src={feature.image}
                     alt={feature.title}
-                    width={800}
-                    height={600}
+                    width={1040}
+                    height={780}
                     data-ai-hint={feature.aiHint}
                     className="rounded-lg shadow-2xl"
                   />
