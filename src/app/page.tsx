@@ -10,32 +10,14 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { SignUpForm } from '@/components/auth/signup-form';
 import { LoginForm } from '@/components/auth/login-form';
-import { BrainCircuit, BookOpen, Users, FolderKanban, ClipboardCheck, GraduationCap, Presentation, MessageSquare, Bell, Library, Target, UsersRound, FileCog, Link2, Smartphone, Trophy, Bot, CircleUser, Menu, ArrowUp, BookCheck, Clock } from 'lucide-react';
+import { BookOpen, Users, GraduationCap, MessageSquare, Bell, Library, Target, UsersRound, FileCog, Link2, Smartphone, Trophy, Bot, CircleUser, Menu, ArrowUp } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import React from 'react';
 import { Bar, BarChart, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis, CartesianGrid, Legend } from 'recharts';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { FeaturesCarousel } from '@/components/features-carousel';
 
-
-const features = [
-    { icon: FolderKanban, title: 'Course Management', description: 'Course creation and organization by subjects/grade levels, syllabus and curriculum mapping, learning modules with structured content, prerequisite settings and course sequencing.' },
-    { icon: ClipboardCheck, title: 'Assessment System', description: 'Assignment creation and submission portal, exam/quiz builder with various question types, automated grading for objective questions, rubric-based grading for subjective work, plagiarism detection integration.' },
-    { icon: GraduationCap, title: 'Gradebook & Analytics', description: 'Comprehensive grade tracking, weighted grading systems, progress reports and transcripts, performance analytics and visualizations, comparative analytics (class averages, percentiles).' },
-    { icon: Presentation, title: 'Live Classroom', description: 'Virtual classroom with video/audio streaming, interactive whiteboard and screen sharing, breakout rooms for group work, attendance tracking during live sessions, session recording and playback.' },
-    { icon: Users, title: 'Collaboration Tools', description: 'Discussion forums and class boards, group project spaces, peer review systems, shared document editing, virtual study groups.' },
-    { icon: MessageSquare, title: 'Messaging System', description: 'Direct messaging between users, class announcements broadcast, group chats for courses/teams, file sharing in conversations, read receipts and typing indicators.' },
-    { icon: Bell, title: 'Notification Center', description: 'Real-time alerts for new grades, assignment deadline reminders, class schedule notifications, announcement broadcasts, customizable notification preferences.' },
-    { icon: Library, title: 'Learning Resources', description: 'Digital library of study materials, multimedia content hosting (videos, podcasts), interactive learning objects, external resource linking, version control for materials.' },
-    { icon: Target, title: 'Personalized Learning', description: 'Adaptive learning paths, skill gap analysis, recommended resources, learning style assessments, customizable dashboard widgets.' },
-    { icon: UsersRound, title: 'User Management', description: 'Role-based access control (students, teachers, admins), batch enrollment tools, parent/guardian accounts, user activity logging, account approval workflows.' },
-    { icon: FileCog, title: 'Reporting & Compliance', description: 'Institutional reporting, accreditation documentation, audit trails, data export capabilities, custom report builder.' },
-    { icon: Link2, title: 'Integration Capabilities', description: 'Single Sign-On (SSO) support, API for third-party integrations, LTI compatibility for educational tools, calendar synchronization, cloud storage integration.' },
-    { icon: Smartphone, title: 'Accessibility & Mobile', description: 'Responsive design for all devices, dedicated mobile app, screen reader compatibility, keyboard navigation, adjustable text sizes/contrast.' },
-    { icon: Trophy, title: 'Gamification', description: 'Badges and achievements, leaderboards, experience points (XP) system, learning challenges, reward systems.' },
-    { icon: Bot, title: 'AI Enhancements', description: 'Smart tutoring system, automated feedback generation, writing/style suggestions, predictive performance analytics, chatbot for student support.' },
-    { icon: CircleUser, title: 'Parent Portal', description: 'Child progress monitoring, communication with teachers, attendance tracking, event calendars, fee payment integration.' }
-];
 
 const testimonials = [
     {
@@ -221,24 +203,8 @@ export default function LandingPage() {
         </section>
 
         {/* Features Section */}
-        <section id="features" className="snap-section flex flex-col justify-center bg-secondary py-20 md:py-24">
-          <div className="container mx-auto px-4 md:px-6">
-            <div className="mx-auto max-w-3xl text-center">
-              <h2 className="font-headline text-3xl font-bold tracking-tight">Why Choose Learnet<span className="text-primary">IQ</span>?</h2>
-              <p className="mt-4 text-lg text-muted-foreground">Explore our unique system features</p>
-            </div>
-            <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-              {features.map((feature, index) => (
-                <Card key={index} className="flex flex-col items-center p-6 text-center">
-                  <CardContent className="flex flex-col items-center p-0">
-                    <feature.icon className="mb-4 h-12 w-12 text-accent" />
-                    <CardTitle className="font-headline text-xl font-semibold mb-2">{feature.title}</CardTitle>
-                    <p className="text-sm text-muted-foreground">{feature.description}</p>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </div>
+        <section id="features" className="snap-section bg-secondary">
+          <FeaturesCarousel />
         </section>
         
         {/* Statistics Section */}

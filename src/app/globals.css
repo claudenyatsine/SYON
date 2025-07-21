@@ -36,6 +36,63 @@ body {
   }
 }
 
+.embla {
+  overflow: hidden;
+  height: 100%;
+  width: 100%;
+}
+.embla__container {
+  display: flex;
+  height: 100%;
+}
+.embla__slide {
+  flex: 0 0 100%;
+  min-width: 0;
+  position: relative;
+}
+
+.embla__button {
+  -webkit-appearance: none;
+  appearance: none;
+  background-color: transparent;
+  touch-action: manipulation;
+  display: inline-flex;
+  text-decoration: none;
+  cursor: pointer;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  position: absolute;
+  z-index: 10;
+  top: 50%;
+  transform: translateY(-50%);
+  border-radius: 9999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 3rem;
+  height: 3rem;
+}
+
+.embla__button:disabled {
+  cursor: default;
+  opacity: 0.3;
+}
+
+.embla__button__svg {
+  width: 65%;
+  height: 65%;
+  color: hsl(var(--primary-foreground));
+}
+
+.embla__button--prev {
+  left: 1.5rem;
+}
+
+.embla__button--next {
+  right: 1.5rem;
+}
+
 
 @layer base {
   :root {
