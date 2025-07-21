@@ -203,7 +203,7 @@ export default function LandingPage() {
         </section>
 
         {/* Features Section */}
-        <section id="features" className="snap-section bg-secondary pt-[40vh]">
+        <section id="features" className="snap-section">
           <FeaturesCarousel />
         </section>
         
@@ -425,3 +425,5 @@ export default function LandingPage() {
     </div>
   );
 }
+
+    
