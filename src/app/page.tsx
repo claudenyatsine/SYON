@@ -65,12 +65,12 @@ const overallProgressData = [
   { month: 'Jun', progress: 85 },
 ];
 
-const subjectPerformanceData = [
-  { subject: 'Math', score: 92 },
-  { subject: 'Physics', score: 85 },
-  { subject: 'History', score: 78 },
-  { subject: 'English', score: 88 },
-  { subject: 'Chemistry', score: 95 },
+const studySuccessData = [
+  { subject: 'Math', pass: 88, fail: 12 },
+  { subject: 'Physics', pass: 92, fail: 8 },
+  { subject: 'History', pass: 95, fail: 5 },
+  { subject: 'English', pass: 85, fail: 15 },
+  { subject: 'Chemistry', pass: 90, fail: 10 },
 ];
 
 
@@ -160,7 +160,7 @@ export default function LandingPage() {
 
       <main className="snap-container">
         {/* Hero Section */}
-        <section className="snap-section relative flex items-center justify-center overflow-hidden py-20 md:py-24">
+        <section className="snap-section relative flex items-center justify-center overflow-hidden">
            <Image src="https://placehold.co/1920x1080.png" alt="Hero background" layout="fill" objectFit="cover" className="z-0" data-ai-hint="modern classroom" />
            <div className="absolute inset-0 bg-background/60 dark:bg-background/80" />
            <div className="relative z-10 flex w-full items-center">
@@ -283,15 +283,15 @@ export default function LandingPage() {
                 </Card>
                 <Card>
                     <CardHeader>
-                        <CardTitle className="font-headline">Popular Subjects</CardTitle>
-                        <CardDescription>Distribution of student enrollment.</CardDescription>
+                        <CardTitle className="font-headline">Study Success &amp; Pass Rate</CardTitle>
+                        <CardDescription>A comparison of pass and fail rates across subjects.</CardDescription>
                     </CardHeader>
                     <CardContent>
                         <ResponsiveContainer width="100%" height={300}>
-                            <BarChart data={subjectPerformanceData}>
+                            <BarChart data={studySuccessData}>
                                 <CartesianGrid strokeDasharray="3 3" />
                                 <XAxis dataKey="subject" />
-                                <YAxis />
+                                <YAxis unit="%" />
                                 <Tooltip
                                 contentStyle={{
                                     background: "hsl(var(--background))",
@@ -300,7 +300,8 @@ export default function LandingPage() {
                                 }}
                                 />
                                 <Legend />
-                                <Bar dataKey="score" name="Enrollment" fill="hsl(var(--accent))" radius={[4, 4, 0, 0]} />
+                                <Bar dataKey="pass" stackId="a" name="Pass Rate" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} />
+                                <Bar dataKey="fail" stackId="a" name="Fail Rate" fill="hsl(var(--destructive))" radius={[4, 4, 0, 0]} />
                             </BarChart>
                         </ResponsiveContainer>
                     </CardContent>
@@ -425,5 +426,7 @@ export default function LandingPage() {
     </div>
   );
 }
+
+    
 
     
