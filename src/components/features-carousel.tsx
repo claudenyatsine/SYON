@@ -1,7 +1,7 @@
 
 'use client';
 
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import useEmblaCarousel from 'embla-carousel-react';
 import Autoplay from 'embla-carousel-autoplay';
 import {
@@ -99,6 +99,7 @@ const NextButton = (props: React.ComponentProps<typeof Button>) => {
 
 export function FeaturesCarousel() {
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true }, [Autoplay()]);
+  const [selectedIndex, setSelectedIndex] = useState(0);
 
   const scrollPrev = useCallback(() => {
     if (emblaApi) emblaApi.scrollPrev();
@@ -107,6 +108,18 @@ export function FeaturesCarousel() {
   const scrollNext = useCallback(() => {
     if (emblaApi) emblaApi.scrollNext();
   }, [emblaApi]);
+
+  const onSelect = useCallback(() => {
+    if (!emblaApi) return;
+    setSelectedIndex(emblaApi.selectedScrollSnap());
+  }, [emblaApi, setSelectedIndex]);
+
+  useEffect(() => {
+    if (!emblaApi) return;
+    onSelect();
+    emblaApi.on('select', onSelect);
+    emblaApi.on('reInit', onSelect);
+  }, [emblaApi, onSelect]);
 
   return (
     <div className="embla">
@@ -145,8 +158,12 @@ export function FeaturesCarousel() {
           ))}
         </div>
       </div>
-       <PrevButton onClick={scrollPrev} />
-       <NextButton onClick={scrollNext} />
+      {selectedIndex !== 0 && (
+        <>
+            <PrevButton onClick={scrollPrev} />
+            <NextButton onClick={scrollNext} />
+        </>
+      )}
     </div>
   );
 }
