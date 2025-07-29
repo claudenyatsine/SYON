@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
 import { MessageCircle, ThumbsUp } from 'lucide-react';
+import { useParams } from 'next/navigation';
 
 const mockPosts = [
   {
@@ -30,9 +31,10 @@ const mockPosts = [
   },
 ];
 
-export default function SubjectForumPage({ params }: { params: { subject: string } }) {
+export default function SubjectForumPage() {
+  const params = useParams();
   const subject = params.subject as string;
-  const subjectName = subject ? subject.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) : 'Forum';
+  const subjectName = subject ? decodeURIComponent(subject).replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) : 'Forum';
 
   return (
     <div className="space-y-6 md:space-y-8">
