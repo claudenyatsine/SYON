@@ -25,6 +25,7 @@ import {
   Settings,
   LogOut,
   PanelLeft,
+  Library,
 } from 'lucide-react';
 import { DashboardHeader } from '@/components/dashboard-header';
 import { usePathname } from 'next/navigation';
@@ -32,6 +33,7 @@ import { cn } from '@/lib/utils';
 
 const menuItems = [
   { href: '/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
+  { href: '/subjects', icon: Library, label: 'Subjects' },
   { href: '/resources', icon: BookOpen, label: 'Resources' },
   { href: '/forums', icon: Users, label: 'Forums' },
   { href: '/messages', icon: MessageSquare, label: 'Messages' },
