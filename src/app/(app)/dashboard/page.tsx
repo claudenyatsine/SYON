@@ -1,3 +1,4 @@
+
 'use client';
 
 import { recommendLearningResources } from '@/ai/flows/recommend-learning-resources';
@@ -29,6 +30,7 @@ import { useToast } from '@/hooks/use-toast';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Atom, Book, BrainCircuit, Calculator, Landmark, Rocket } from 'lucide-react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -98,9 +100,11 @@ export default function DashboardPage() {
               <p className="text-xs text-muted-foreground">+5% from last week</p>
             </CardContent>
             <CardFooter>
-              <Button size="sm" variant="outline" className="w-full">
-                View Subject
-              </Button>
+              <Link href={`/forums/${subject.name.toLowerCase().replace(/\s/g, '-')}`} passHref className="w-full">
+                <Button size="sm" variant="outline" className="w-full">
+                  View Subject
+                </Button>
+              </Link>
             </CardFooter>
           </Card>
         ))}
