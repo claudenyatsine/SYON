@@ -5,7 +5,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import Image from 'next/image';
 import { Calendar, Clock } from 'lucide-react';
 import { useState } from 'react';
@@ -118,56 +118,60 @@ export default function LiveClassesPage() {
           <TabsTrigger value="upcoming">Upcoming</TabsTrigger>
           <TabsTrigger value="completed">Completed</TabsTrigger>
         </TabsList>
+        <TabsContent value={filter}>
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-3 mt-6">
+                {filteredClasses.map((cls) => (
+                <Card key={cls.title} className="flex flex-col overflow-hidden">
+                    <CardHeader className="relative p-0">
+                    <Image
+                        src={cls.image}
+                        alt={cls.title}
+                        width={600}
+                        height={400}
+                        className="aspect-video w-full object-cover"
+                        data-ai-hint={cls.aiHint}
+                    />
+                    <Badge className="absolute top-3 right-3" variant={getBadgeVariant(cls.status)}>{cls.status}</Badge>
+                    </CardHeader>
+                    <CardContent className="flex-grow space-y-3 p-4">
+                    <Badge variant="secondary">{cls.subject}</Badge>
+                    <CardTitle className="text-lg">{cls.title}</CardTitle>
+                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                        <Avatar className="h-6 w-6">
+                        <AvatarImage src={cls.tutorAvatar} alt={cls.tutor} />
+                        <AvatarFallback>{cls.tutor.charAt(0)}</AvatarFallback>
+                        </Avatar>
+                        <span>{cls.tutor}</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                        <Calendar className="h-4 w-4" />
+                        <span>{cls.date}</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                        <Clock className="h-4 w-4" />
+                        <span>{cls.time}</span>
+                    </div>
+                    </CardContent>
+                    <CardFooter className="p-4 pt-0">
+                    <Link href={`/live-classes/${cls.title.toLowerCase().replace(/\s+/g, '-')}`} passHref className="w-full">
+                        <Button className="w-full font-bold" disabled={cls.status === 'Completed'}>
+                        {getButtonText(cls.status)}
+                        </Button>
+                    </Link>
+                    </CardFooter>
+                </Card>
+                ))}
+            </div>
+            {filteredClasses.length === 0 && (
+                <div className="col-span-1 sm:col-span-2 xl:col-span-3 text-center py-12">
+                    <p className="text-muted-foreground">No classes found for this filter.</p>
+                </div>
+            )}
+        </TabsContent>
       </Tabs>
 
-      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-3">
-        {filteredClasses.map((cls) => (
-          <Card key={cls.title} className="flex flex-col overflow-hidden">
-            <CardHeader className="relative p-0">
-              <Image
-                src={cls.image}
-                alt={cls.title}
-                width={600}
-                height={400}
-                className="aspect-video w-full object-cover"
-                data-ai-hint={cls.aiHint}
-              />
-              <Badge className="absolute top-3 right-3" variant={getBadgeVariant(cls.status)}>{cls.status}</Badge>
-            </CardHeader>
-            <CardContent className="flex-grow space-y-3 p-4">
-              <Badge variant="secondary">{cls.subject}</Badge>
-              <CardTitle className="text-lg">{cls.title}</CardTitle>
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <Avatar className="h-6 w-6">
-                  <AvatarImage src={cls.tutorAvatar} alt={cls.tutor} />
-                  <AvatarFallback>{cls.tutor.charAt(0)}</AvatarFallback>
-                </Avatar>
-                <span>{cls.tutor}</span>
-              </div>
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <Calendar className="h-4 w-4" />
-                <span>{cls.date}</span>
-              </div>
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <Clock className="h-4 w-4" />
-                <span>{cls.time}</span>
-              </div>
-            </CardContent>
-            <CardFooter className="p-4 pt-0">
-               <Link href={`/live-classes/${cls.title.toLowerCase().replace(/\s+/g, '-')}`} passHref className="w-full">
-                <Button className="w-full font-bold" disabled={cls.status === 'Completed'}>
-                   {getButtonText(cls.status)}
-                </Button>
-              </Link>
-            </CardFooter>
-          </Card>
-        ))}
-      </div>
-       {filteredClasses.length === 0 && (
-          <div className="col-span-1 sm:col-span-2 xl:col-span-3 text-center py-12">
-            <p className="text-muted-foreground">No classes found for this filter.</p>
-          </div>
-        )}
     </div>
   );
 }
+
+    

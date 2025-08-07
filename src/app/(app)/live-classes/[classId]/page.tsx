@@ -38,6 +38,8 @@ import {
   Video,
   VideoOff,
   Volume2,
+  MessageSquare,
+  X,
 } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -89,6 +91,7 @@ export default function LiveClassroomPage() {
   const [isFullScreen, setIsFullScreen] = useState(false);
   const [volume, setVolume] = useState([80]);
   const [resources, setResources] = useState(initialResources);
+  const [isChatVisible, setIsChatVisible] = useState(false);
 
 
   useEffect(() => {
@@ -136,7 +139,11 @@ export default function LiveClassroomPage() {
   }, [isCameraOn, isMicOn, toast]);
 
   const handleFullScreenChange = () => {
-    setIsFullScreen(!!document.fullscreenElement);
+    const isFs = !!document.fullscreenElement;
+    setIsFullScreen(isFs);
+    if (!isFs) {
+        setIsChatVisible(false); // Close chat when exiting fullscreen
+    }
   };
 
   useEffect(() => {
@@ -284,6 +291,11 @@ export default function LiveClassroomPage() {
 
                 <div className="absolute top-3 right-3 flex items-center gap-2">
                     <Badge variant="destructive" className="bg-red-500 text-white animate-pulse">Live</Badge>
+                     {isFullScreen && (
+                        <Button variant="ghost" size="icon" className="text-white hover:bg-white/20" onClick={() => setIsChatVisible(!isChatVisible)}>
+                            <MessageSquare />
+                        </Button>
+                    )}
                      <Button variant="ghost" size="icon" className="text-white hover:bg-white/20" onClick={toggleFullScreen}>
                         {isFullScreen ? <Shrink/> : <Expand/>}
                      </Button>
@@ -410,15 +422,22 @@ export default function LiveClassroomPage() {
         <aside className={cn(
           "flex-col gap-6 min-h-0", 
           isFullScreen 
-            ? "absolute top-0 right-0 h-full w-full max-w-sm p-4 flex bg-black/30 backdrop-blur-sm"
-            : "lg:col-span-3 flex"
+            ? "absolute top-0 right-0 h-full w-full max-w-sm p-4 bg-black/30 backdrop-blur-sm transition-transform duration-300 ease-in-out"
+            : "lg:col-span-3 flex",
+          isFullScreen && !isChatVisible && "translate-x-full",
+          isFullScreen && isChatVisible && "translate-x-0"
         )}>
           <Card className={cn(
             "flex-1 flex-col min-h-0 flex",
             isFullScreen && "bg-transparent border-none shadow-none text-white"
           )}>
-             <CardHeader className={cn(isFullScreen && "text-white")}>
+             <CardHeader className={cn("flex-row items-center justify-between", isFullScreen && "text-white")}>
                 <CardTitle>Chat Room</CardTitle>
+                 {isFullScreen && (
+                    <Button variant="ghost" size="icon" onClick={() => setIsChatVisible(false)} className="text-white hover:bg-white/20">
+                        <X className="h-5 w-5" />
+                    </Button>
+                 )}
              </CardHeader>
              <ScrollArea className="flex-1 px-4">
                 <div className="space-y-4">
@@ -485,3 +504,5 @@ export default function LiveClassroomPage() {
     </div>
   );
 }
+
+    
