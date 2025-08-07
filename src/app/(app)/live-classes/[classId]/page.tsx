@@ -6,7 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Popover, PopoverContent, PopoverTrigger, PopoverPortal } from '@/components/ui/popover';
 import { Progress } from '@/components/ui/progress';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Slider } from '@/components/ui/slider';
@@ -365,15 +365,17 @@ export default function LiveClassroomPage() {
                         <Smile />
                       </Button>
                     </PopoverTrigger>
-                    <PopoverContent side="top" className="w-auto p-2 bg-background/80 backdrop-blur-sm border-none">
-                      <div className="flex gap-2">
-                        {reactions.map((emoji) => (
-                          <Button key={emoji} variant="ghost" size="icon" className="text-2xl" onClick={() => handleReaction(emoji)}>
-                            {emoji}
-                          </Button>
-                        ))}
-                      </div>
-                    </PopoverContent>
+                    <PopoverPortal container={fullScreenRef.current}>
+                      <PopoverContent side="top" className="w-auto p-2 bg-background/80 backdrop-blur-sm border-none">
+                        <div className="flex gap-2">
+                          {reactions.map((emoji) => (
+                            <Button key={emoji} variant="ghost" size="icon" className="text-2xl" onClick={() => handleReaction(emoji)}>
+                              {emoji}
+                            </Button>
+                          ))}
+                        </div>
+                      </PopoverContent>
+                    </PopoverPortal>
                   </Popover>
 
                   <Button variant={isHandRaised ? "primary" : "secondary"} size="icon" className="rounded-full h-12 w-12" onClick={() => setIsHandRaised(!isHandRaised)}>
