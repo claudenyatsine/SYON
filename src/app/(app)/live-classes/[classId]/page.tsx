@@ -41,6 +41,7 @@ import {
   MessageSquare,
   X,
   Smile,
+  Users,
 } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -389,20 +390,7 @@ export default function LiveClassroomPage() {
 
                {isFullScreen && (
                   <>
-                  <div className="absolute bottom-20 left-1/2 -translate-x-1/2 w-full max-w-6xl px-4">
-                      <div className="grid grid-cols-5 gap-4">
-                        {participants.map((p) => (
-                            <Card key={p.name} className="relative aspect-video overflow-hidden bg-black/30 backdrop-blur-sm border-white/20">
-                                <Image src={p.avatar} alt={p.name} fill objectFit="cover" />
-                                <div className="absolute inset-0 bg-black/30" />
-                                <p className="absolute bottom-2 left-2 text-white text-xs font-medium">{p.name}</p>
-                                {p.isPinned && <Pin className="absolute top-2 right-2 h-4 w-4 text-white" />}
-                                {p.isHandRaised && <Hand className="absolute top-2 right-2 h-4 w-4 text-yellow-400" />}
-                            </Card>
-                        ))}
-                      </div>
-                    </div>
-                     <div className="absolute bottom-4 left-4 w-full max-w-xs">
+                    <div className="absolute bottom-4 left-4 w-full max-w-xs">
                          <Card className="bg-black/30 backdrop-blur-sm border-white/20 text-white h-full">
                             <CardHeader className="pb-2">
                                 <CardTitle className="text-base">Class Insight</CardTitle>
@@ -423,6 +411,25 @@ export default function LiveClassroomPage() {
                             </CardContent>
                         </Card>
                      </div>
+                    <div className="absolute bottom-4 right-4 w-full max-w-xs">
+                        <Card className="bg-black/30 backdrop-blur-sm border-white/20 text-white h-full">
+                            <CardHeader className="flex flex-row items-center justify-between pb-2">
+                                <CardTitle className="text-base">Participants</CardTitle>
+                                <Users className="h-4 w-4 text-white/70" />
+                            </CardHeader>
+                            <CardContent>
+                                <div className="flex items-center -space-x-2">
+                                    {participants.slice(0, 5).map((p, i) => (
+                                        <Avatar key={i} className="h-8 w-8 border-2 border-black/50">
+                                            <AvatarImage src={p.avatar} alt={p.name} />
+                                            <AvatarFallback>{p.name.charAt(0)}</AvatarFallback>
+                                        </Avatar>
+                                    ))}
+                                </div>
+                                <p className="text-sm text-white/70 mt-2">{participants.length} people in the class</p>
+                            </CardContent>
+                        </Card>
+                    </div>
                   </>
               )}
             </div>
