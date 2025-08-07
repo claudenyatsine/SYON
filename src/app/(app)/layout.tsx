@@ -30,6 +30,7 @@ import {
 import { DashboardHeader } from '@/components/dashboard-header';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
+import { ClientOnly } from '@/components/client-only';
 
 const menuItems = [
   { href: '/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
@@ -123,7 +124,9 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   return (
     <SidebarProvider>
       <div className="flex min-h-screen">
-        <AppLayoutContent>{children}</AppLayoutContent>
+        <ClientOnly>
+          <AppLayoutContent>{children}</AppLayoutContent>
+        </ClientOnly>
       </div>
     </SidebarProvider>
   );
