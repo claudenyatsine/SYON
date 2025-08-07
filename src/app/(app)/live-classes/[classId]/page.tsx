@@ -78,6 +78,11 @@ const initialResources = [
 
 const reactions = ['👍', '❤️', '😂', '👏', '🎉', '🤔'];
 
+type FloatingEmoji = {
+  id: number;
+  emoji: string;
+  left: string;
+}
 
 export default function LiveClassroomPage() {
   const params = useParams();
@@ -97,6 +102,7 @@ export default function LiveClassroomPage() {
   const [volume, setVolume] = useState([80]);
   const [resources, setResources] = useState(initialResources);
   const [isChatVisible, setIsChatVisible] = useState(false);
+  const [floatingEmojis, setFloatingEmojis] = useState<FloatingEmoji[]>([]);
 
 
   useEffect(() => {
@@ -222,9 +228,15 @@ export default function LiveClassroomPage() {
   };
 
   const handleReaction = (emoji: string) => {
-    toast({
-        title: `You reacted with ${emoji}`,
-    });
+    const newEmoji: FloatingEmoji = {
+      id: new Date().getTime(),
+      emoji: emoji,
+      left: `${Math.random() * 80 + 10}%`,
+    };
+    setFloatingEmojis((prev) => [...prev, newEmoji]);
+    setTimeout(() => {
+      setFloatingEmojis((prev) => prev.filter((e) => e.id !== newEmoji.id));
+    }, 4000); // Remove after 4 seconds (animation duration)
   }
 
   return (
@@ -248,6 +260,11 @@ export default function LiveClassroomPage() {
         )}>
             <div className="relative rounded-lg overflow-hidden flex-grow bg-card p-2 flex flex-col">
               <div className="relative flex-grow rounded-md overflow-hidden bg-black/80">
+                {floatingEmojis.map((item) => (
+                  <div key={item.id} className="floating-emoji" style={{ left: item.left }}>
+                    {item.emoji}
+                  </div>
+                ))}
                 <video ref={videoRef} className="h-full w-full object-cover" autoPlay muted playsInline />
                 {!isCameraOn && (
                     <div className="absolute inset-0 flex items-center justify-center bg-black/80">
