@@ -82,6 +82,7 @@ type FloatingEmoji = {
   id: number;
   emoji: string;
   left: string;
+  name: string;
 }
 
 export default function LiveClassroomPage() {
@@ -232,6 +233,7 @@ export default function LiveClassroomPage() {
       id: new Date().getTime(),
       emoji: emoji,
       left: `${Math.random() * 80 + 10}%`,
+      name: 'You',
     };
     setFloatingEmojis((prev) => [...prev, newEmoji]);
     setTimeout(() => {
@@ -262,7 +264,8 @@ export default function LiveClassroomPage() {
               <div className="relative flex-grow rounded-md overflow-hidden bg-black/80">
                 {floatingEmojis.map((item) => (
                   <div key={item.id} className="floating-emoji" style={{ left: item.left }}>
-                    {item.emoji}
+                    <span className="emoji">{item.emoji}</span>
+                    <span className="name-tag">{item.name}</span>
                   </div>
                 ))}
                 <video ref={videoRef} className="h-full w-full object-cover" autoPlay muted playsInline />
