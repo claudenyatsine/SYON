@@ -388,7 +388,8 @@ export default function LiveClassroomPage() {
               </div>
 
                {isFullScreen && (
-                  <div className="absolute bottom-20 left-1/2 -translate-x-1/2 w-full max-w-6xl px-4 grid grid-cols-1 gap-4">
+                  <>
+                  <div className="absolute bottom-20 left-1/2 -translate-x-1/2 w-full max-w-6xl px-4">
                       <div className="grid grid-cols-5 gap-4">
                         {participants.map((p) => (
                             <Card key={p.name} className="relative aspect-video overflow-hidden bg-black/30 backdrop-blur-sm border-white/20">
@@ -400,26 +401,29 @@ export default function LiveClassroomPage() {
                             </Card>
                         ))}
                       </div>
-                      <Card className="bg-black/30 backdrop-blur-sm border-white/20 text-white h-full">
-                          <CardHeader className="pb-2">
-                              <CardTitle className="text-base">Class Insight</CardTitle>
-                          </CardHeader>
-                          <CardContent className="space-y-2 text-sm">
-                            {meetingInsights.slice(0,1).map(insight => (
-                              <div key={insight.title} className="flex items-center gap-2 p-2 rounded-lg">
-                                  <div className="bg-primary/20 text-primary p-2 rounded-full">
-                                    <Calendar className="h-4 w-4"/>
-                                  </div>
-                                  <div className="flex-1">
-                                      <p className="font-semibold text-white">{insight.title}</p>
-                                      <p className="text-xs text-white/70">{insight.duration}</p>
-                                  </div>
-                                  <Progress value={(insight.accomplished / insight.total) * 100} className="w-16 h-1" />
-                              </div>
-                            ))}
-                          </CardContent>
-                      </Card>
-                  </div>
+                    </div>
+                     <div className="absolute bottom-4 left-4 w-full max-w-xs">
+                         <Card className="bg-black/30 backdrop-blur-sm border-white/20 text-white h-full">
+                            <CardHeader className="pb-2">
+                                <CardTitle className="text-base">Class Insight</CardTitle>
+                            </CardHeader>
+                            <CardContent className="space-y-2 text-sm">
+                                {meetingInsights.slice(0,1).map(insight => (
+                                <div key={insight.title} className="flex items-center gap-2 p-2 rounded-lg">
+                                    <div className="bg-primary/20 text-primary p-2 rounded-full">
+                                        <Calendar className="h-4 w-4"/>
+                                    </div>
+                                    <div className="flex-1">
+                                        <p className="font-semibold text-white">{insight.title}</p>
+                                        <p className="text-xs text-white/70">{insight.duration}</p>
+                                    </div>
+                                    <Progress value={(insight.accomplished / insight.total) * 100} className="w-16 h-1" />
+                                </div>
+                                ))}
+                            </CardContent>
+                        </Card>
+                     </div>
+                  </>
               )}
             </div>
 
