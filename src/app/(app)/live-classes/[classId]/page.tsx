@@ -55,6 +55,9 @@ const participants = [
   { name: 'Andy T.', avatar: 'https://placehold.co/100x100.png', isPinned: false, isHandRaised: false },
   { name: 'Jordan K.', avatar: 'https://placehold.co/100x100.png', isPinned: true, isHandRaised: false },
   { name: 'Marta E.', avatar: 'https://placehold.co/100x100.png', isPinned: false, isHandRaised: true },
+  { name: 'Cristina', avatar: 'https://placehold.co/100x100.png', isPinned: false, isHandRaised: false },
+  { name: 'David L.', avatar: 'https://placehold.co/100x100.png', isPinned: false, isHandRaised: false },
+  { name: 'Sophia R.', avatar: 'https://placehold.co/100x100.png', isPinned: false, isHandRaised: false },
 ];
 
 const chatMessages = [
@@ -411,24 +414,54 @@ export default function LiveClassroomPage() {
                             </CardContent>
                         </Card>
                      </div>
-                    <div className="absolute bottom-4 right-4 w-full max-w-xs">
-                        <Card className="bg-black/30 backdrop-blur-sm border-white/20 text-white h-full">
-                            <CardHeader className="flex flex-row items-center justify-between pb-2">
-                                <CardTitle className="text-base">Participants</CardTitle>
-                                <Users className="h-4 w-4 text-white/70" />
-                            </CardHeader>
-                            <CardContent>
-                                <div className="flex items-center -space-x-2">
-                                    {participants.slice(0, 5).map((p, i) => (
-                                        <Avatar key={i} className="h-8 w-8 border-2 border-black/50">
-                                            <AvatarImage src={p.avatar} alt={p.name} />
-                                            <AvatarFallback>{p.name.charAt(0)}</AvatarFallback>
-                                        </Avatar>
-                                    ))}
-                                </div>
-                                <p className="text-sm text-white/70 mt-2">{participants.length} people in the class</p>
-                            </CardContent>
-                        </Card>
+                     <div className="absolute bottom-4 right-4 w-full max-w-xs">
+                        <Popover>
+                            <PopoverTrigger asChild>
+                                <Card className="bg-black/30 backdrop-blur-sm border-white/20 text-white h-full cursor-pointer hover:bg-black/50">
+                                    <CardHeader className="flex flex-row items-center justify-between pb-2">
+                                        <CardTitle className="text-base">Participants</CardTitle>
+                                        <Users className="h-4 w-4 text-white/70" />
+                                    </CardHeader>
+                                    <CardContent>
+                                        <div className="flex items-center -space-x-2">
+                                            {participants.slice(0, 5).map((p, i) => (
+                                                <Avatar key={i} className="h-8 w-8 border-2 border-black/50">
+                                                    <AvatarImage src={p.avatar} alt={p.name} />
+                                                    <AvatarFallback>{p.name.charAt(0)}</AvatarFallback>
+                                                </Avatar>
+                                            ))}
+                                        </div>
+                                        <p className="text-sm text-white/70 mt-2">{participants.length} people in the class</p>
+                                    </CardContent>
+                                </Card>
+                            </PopoverTrigger>
+                            <PopoverPortal container={fullScreenRef.current}>
+                                <PopoverContent side="top" align="end" className="w-80 bg-black/50 backdrop-blur-sm border-white/20 text-white">
+                                    <div className="flex justify-between items-center mb-4">
+                                        <h3 className="font-semibold">Participants ({participants.length})</h3>
+                                    </div>
+                                    <ScrollArea className="h-72">
+                                        <div className="space-y-4">
+                                            {participants.map((p) => (
+                                                <div key={p.name} className="flex items-center justify-between">
+                                                    <div className="flex items-center gap-3">
+                                                        <Avatar className="h-8 w-8">
+                                                            <AvatarImage src={p.avatar} alt={p.name} />
+                                                            <AvatarFallback>{p.name.charAt(0)}</AvatarFallback>
+                                                        </Avatar>
+                                                        <span className="text-sm">{p.name}</span>
+                                                    </div>
+                                                    <div className="flex items-center gap-2">
+                                                        {p.isHandRaised && <Hand className="h-4 w-4 text-yellow-400" />}
+                                                        <Button variant="ghost" size="icon" className="h-7 w-7 text-white hover:bg-white/20"><MoreVertical className="h-4 w-4" /></Button>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </ScrollArea>
+                                </PopoverContent>
+                            </PopoverPortal>
+                        </Popover>
                     </div>
                   </>
               )}
@@ -570,3 +603,5 @@ export default function LiveClassroomPage() {
     </div>
   );
 }
+
+    
