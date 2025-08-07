@@ -40,6 +40,7 @@ import {
   Volume2,
   MessageSquare,
   X,
+  Smile,
 } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -48,10 +49,10 @@ import { useEffect, useRef, useState } from 'react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
 const participants = [
-  { name: 'Johnnie B.', avatar: 'https://placehold.co/100x100.png', isPinned: false },
-  { name: 'Ethan C.', avatar: 'https://placehold.co/100x100.png', isPinned: false },
-  { name: 'Andy T.', avatar: 'https://placehold.co/100x100.png', isPinned: false },
-  { name: 'Jordan K.', avatar: 'https://placehold.co/100x100.png', isPinned: true },
+  { name: 'Johnnie B.', avatar: 'https://placehold.co/100x100.png', isPinned: false, isHandRaised: false },
+  { name: 'Ethan C.', avatar: 'https://placehold.co/100x100.png', isPinned: false, isHandRaised: false },
+  { name: 'Andy T.', avatar: 'https://placehold.co/100x100.png', isPinned: false, isHandRaised: false },
+  { name: 'Jordan K.', avatar: 'https://placehold.co/100x100.png', isPinned: true, isHandRaised: false },
   { name: 'Marta E.', avatar: 'https://placehold.co/100x100.png', isPinned: false, isHandRaised: true },
 ];
 
@@ -75,6 +76,9 @@ const initialResources = [
     { name: 'Chapter_3_Problems.pdf', size: '850KB' },
 ]
 
+const reactions = ['👍', '❤️', '😂', '👏', '🎉', '🤔'];
+
+
 export default function LiveClassroomPage() {
   const params = useParams();
   const router = useRouter();
@@ -88,6 +92,7 @@ export default function LiveClassroomPage() {
   const [hasCameraPermission, setHasCameraPermission] = useState<boolean | null>(null);
   const [isMicOn, setIsMicOn] = useState(true);
   const [isCameraOn, setIsCameraOn] = useState(true);
+  const [isHandRaised, setIsHandRaised] = useState(false);
   const [isFullScreen, setIsFullScreen] = useState(false);
   const [volume, setVolume] = useState([80]);
   const [resources, setResources] = useState(initialResources);
@@ -216,6 +221,12 @@ export default function LiveClassroomPage() {
     }
   };
 
+  const handleReaction = (emoji: string) => {
+    toast({
+        title: `You reacted with ${emoji}`,
+    });
+  }
+
   return (
     <div className="bg-background text-foreground h-full flex flex-col p-4 md:p-6 lg:p-8">
       <header className={cn("flex items-center justify-between mb-4", isFullScreen && 'hidden')}>
@@ -327,6 +338,28 @@ export default function LiveClassroomPage() {
                    <Button variant={isCameraOn ? "secondary" : "destructive"} size="icon" className="rounded-full h-12 w-12" onClick={toggleCamera}>
                     {isCameraOn ? <Video /> : <VideoOff />}
                   </Button>
+
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button variant="secondary" size="icon" className="rounded-full h-12 w-12">
+                        <Smile />
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent side="top" className="w-auto p-2 bg-background/80 backdrop-blur-sm border-none">
+                      <div className="flex gap-2">
+                        {reactions.map((emoji) => (
+                          <Button key={emoji} variant="ghost" size="icon" className="text-2xl" onClick={() => handleReaction(emoji)}>
+                            {emoji}
+                          </Button>
+                        ))}
+                      </div>
+                    </PopoverContent>
+                  </Popover>
+
+                  <Button variant={isHandRaised ? "primary" : "secondary"} size="icon" className="rounded-full h-12 w-12" onClick={() => setIsHandRaised(!isHandRaised)}>
+                    <Hand />
+                  </Button>
+
                   <Button variant="destructive" size="icon" className="rounded-full h-12 w-12 bg-red-600" onClick={handleEndCall}>
                     <PhoneOff />
                   </Button>
@@ -504,5 +537,3 @@ export default function LiveClassroomPage() {
     </div>
   );
 }
-
-    
