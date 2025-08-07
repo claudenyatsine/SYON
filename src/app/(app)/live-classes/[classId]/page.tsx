@@ -250,31 +250,31 @@ export default function LiveClassroomPage() {
                      <TooltipProvider>
                         <Tooltip>
                             <TooltipTrigger asChild>
-                               <Button variant="ghost" size="icon" className="text-white hover:bg-white/20"><Headphones /></Button>
+                               <Button variant="ghost" size="icon" className="text-white hover:bg-white/20" onClick={() => toast({ title: 'Audio settings opened' })}><Headphones /></Button>
                             </TooltipTrigger>
                             <TooltipContent side={isFullScreen ? "bottom" : "right"}><p>Audio Settings</p></TooltipContent>
                         </Tooltip>
                          <Tooltip>
                             <TooltipTrigger asChild>
-                               <Button variant="ghost" size="icon" className="text-white hover:bg-white/20"><Shield /></Button>
+                               <Button variant="ghost" size="icon" className="text-white hover:bg-white/20" onClick={() => toast({ title: 'Security panel opened' })}><Shield /></Button>
                             </TooltipTrigger>
                             <TooltipContent side={isFullScreen ? "bottom" : "right"}><p>Security</p></TooltipContent>
                         </Tooltip>
                          <Tooltip>
                             <TooltipTrigger asChild>
-                               <Button variant="ghost" size="icon" className="text-white hover:bg-white/20"><Calendar /></Button>
+                               <Button variant="ghost" size="icon" className="text-white hover:bg-white/20" onClick={() => toast({ title: 'Calendar opened' })}><Calendar /></Button>
                             </TooltipTrigger>
                             <TooltipContent side={isFullScreen ? "bottom" : "right"}><p>Calendar</p></TooltipContent>
                         </Tooltip>
                         <Tooltip>
                             <TooltipTrigger asChild>
-                               <Button variant="ghost" size="icon" className="text-white hover:bg-white/20"><Bell /></Button>
+                               <Button variant="ghost" size="icon" className="text-white hover:bg-white/20" onClick={() => toast({ title: 'Notifications opened' })}><Bell /></Button>
                             </TooltipTrigger>
                             <TooltipContent side={isFullScreen ? "bottom" : "right"}><p>Notifications</p></TooltipContent>
                         </Tooltip>
                         <Tooltip>
                             <TooltipTrigger asChild>
-                               <Button variant="ghost" size="icon" className="text-white hover:bg-white/20"><Settings /></Button>
+                               <Button variant="ghost" size="icon" className="text-white hover:bg-white/20" onClick={() => toast({ title: 'Settings panel opened' })}><Settings /></Button>
                             </TooltipTrigger>
                             <TooltipContent side={isFullScreen ? "bottom" : "right"}><p>Settings</p></TooltipContent>
                         </Tooltip>
