@@ -41,7 +41,7 @@ export default function SubjectsPage() {
       </div>
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {subjects.map((subject) => (
-          <Link href={`/resources#${subject.name.toLowerCase()}`} key={subject.name} className="group">
+          <Link href={`/subjects/${subject.name.toLowerCase().replace(/\s/g, '-')}`} key={subject.name} className="group">
             <Card className="flex h-full flex-col transition-all group-hover:border-primary group-hover:shadow-lg">
               <CardHeader>
                 <div className="flex items-center gap-4">
