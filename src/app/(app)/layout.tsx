@@ -30,7 +30,7 @@ import {
 import { DashboardHeader } from '@/components/dashboard-header';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
-import { ClientOnly } from '@/components/client-only';
+import { useState, useEffect } from 'react';
 
 const menuItems = [
   { href: '/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
@@ -121,12 +121,16 @@ function AppLayoutContent({ children }: { children: React.ReactNode }) {
 }
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
   return (
     <SidebarProvider>
       <div className="flex min-h-screen">
-        <ClientOnly>
-          <AppLayoutContent>{children}</AppLayoutContent>
-        </ClientOnly>
+        {isMounted ? <AppLayoutContent>{children}</AppLayoutContent> : null}
       </div>
     </SidebarProvider>
   );
