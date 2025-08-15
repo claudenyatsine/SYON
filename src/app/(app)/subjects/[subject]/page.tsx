@@ -4,13 +4,16 @@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useParams } from 'next/navigation';
-import { Atom, Book, BookCopy, Calculator, Calendar as CalendarIcon, Download, FileText, Landmark, Target, ClipboardCheck, Lightbulb } from 'lucide-react';
+import { Atom, Book, BookCopy, Calculator, Calendar as CalendarIcon, Download, FileText, Landmark, Target, ClipboardCheck, Lightbulb, CheckSquare, BookOpen } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogTrigger, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Badge } from '@/components/ui/badge';
 import { Calendar } from '@/components/ui/calendar';
 import React from 'react';
+import { DayPicker, DayProps } from 'react-day-picker';
+import { cn } from '@/lib/utils';
+import { format } from 'date-fns';
 
 
 const subjectDetails: { [key: string]: any } = {
@@ -64,6 +67,58 @@ const gradeBreakdown = [
     },
 ]
 
+const syllabusData = {
+  mathematics: [
+    { week: 1, topic: 'Introduction to Calculus', description: 'Understanding limits, continuity, and the definition of a derivative.' },
+    { week: 2, topic: 'Differentiation Techniques', description: 'Mastering the power rule, product rule, quotient rule, and chain rule.' },
+    { week: 3, topic: 'Applications of Differentiation', description: 'Optimization problems, related rates, and curve sketching.' },
+    { week: 4, topic: 'Introduction to Integration', description: 'Understanding the definite and indefinite integral, and the Fundamental Theorem of Calculus.' },
+  ],
+   physics: [
+    { week: 1, topic: 'Kinematics', description: 'Study of motion, including displacement, velocity, and acceleration.' },
+    { week: 2, topic: 'Newton\'s Laws of Motion', description: 'Understanding the three laws that form the basis of classical mechanics.' },
+  ],
+  history: [
+    { week: 1, topic: 'The Ancient World', description: 'A survey of early civilizations in Mesopotamia, Egypt, and the Indus Valley.' },
+    { week: 2, topic: 'The Roman Republic and Empire', description: 'Exploring the rise and fall of one of history\'s most influential civilizations.' },
+  ],
+  english: [
+    { week: 1, topic: 'Introduction to Shakespeare', description: 'An overview of Shakespearean drama and the context of his works.' },
+    { week: 2, topic: 'Analyzing Hamlet', description: 'A deep dive into the themes, characters, and language of Shakespeare\'s most famous tragedy.' },
+  ],
+};
+
+
+const scheduledClasses = [
+    { date: new Date(2025, 7, 15), subject: 'Math', startTime: '10:00', endTime: '11:00' },
+    { date: new Date(2025, 7, 20), subject: 'Physics', startTime: '14:00', endTime: '15:00' },
+    { date: new Date(2025, 7, 22), subject: 'History', startTime: '11:00', endTime: '12:00' },
+];
+
+
+function formatTimeRange(start: string, end: string) {
+    const startFormatted = start.replace(':', '');
+    const endFormatted = end.replace(':', '');
+    return `${startFormatted}-${endFormatted}hrs`;
+}
+
+function CustomDay(props: DayProps) {
+    const { date } = props;
+    const scheduledClass = scheduledClasses.find(c => format(c.date, 'yyyy-MM-dd') === format(date, 'yyyy-MM-dd'));
+
+    return (
+        <div className="relative flex h-full w-full flex-col items-center justify-center p-1">
+            <time dateTime={date.toDateString()} className="absolute top-1 left-1 text-xs">{format(date, 'd')}</time>
+            {scheduledClass && (
+                <div className="mt-2 text-center text-[10px] leading-tight">
+                    <p className="font-bold">{scheduledClass.subject}</p>
+                    <p>{formatTimeRange(scheduledClass.startTime, scheduledClass.endTime)}</p>
+                </div>
+            )}
+        </div>
+    );
+}
+
 export default function SubjectDetailPage() {
   const params = useParams();
   const subjectSlug = params.subject as string;
@@ -74,7 +129,14 @@ export default function SubjectDetailPage() {
     description: 'Details for this subject are not yet available.'
   };
 
-  const [date, setDate] = React.useState<Date | undefined>(new Date())
+  const [date, setDate] = React.useState<Date | undefined>(new Date(2025, 7, 15));
+  const currentSyllabus = syllabusData[subjectSlug as keyof typeof syllabusData] || [];
+  
+  const subjectScheduledClasses = scheduledClasses.filter(
+    (c) => c.subject.toLowerCase() === subject.name.toLowerCase()
+  );
+
+  const scheduledDays = subjectScheduledClasses.map((c) => c.date);
 
   return (
     <div className="space-y-6 md:space-y-8">
@@ -206,10 +268,10 @@ export default function SubjectDetailPage() {
                             </CardContent>
                         </Card>
                       </DialogTrigger>
-                      <DialogContent className="w-auto">
+                       <DialogContent className="w-auto">
                         <DialogHeader>
                           <DialogTitle className="font-headline text-2xl">Class Schedule</DialogTitle>
-                          <DialogDescription>
+                           <DialogDescription>
                             Your scheduled lessons for {subject.name}.
                           </DialogDescription>
                         </DialogHeader>
@@ -218,7 +280,16 @@ export default function SubjectDetailPage() {
                                 mode="single"
                                 selected={date}
                                 onSelect={setDate}
-                                className="rounded-md border"
+                                defaultMonth={scheduledDays[0]}
+                                modifiers={{ scheduled: scheduledDays }}
+                                classNames={{
+                                  cell: "h-16 w-16 text-center text-sm p-0 relative [&:has([aria-selected])]:bg-accent first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20",
+                                  day: "h-16 w-16",
+                                  head_cell: "w-16"
+                                }}
+                                components={{
+                                  Day: CustomDay
+                                }}
                             />
                         </div>
                       </DialogContent>
@@ -233,8 +304,27 @@ export default function SubjectDetailPage() {
                     <CardDescription>The course structure and topics for {subject.name}.</CardDescription>
                 </CardHeader>
                 <CardContent>
-                    <p className="text-muted-foreground">Syllabus content will be displayed here. This includes the course outline, grading policy, and learning objectives.</p>
-                     <Button className="mt-4">Download Syllabus PDF</Button>
+                   <Accordion type="single" collapsible className="w-full" defaultValue="item-0">
+                      {currentSyllabus.map((item, index) => (
+                        <AccordionItem value={`item-${index}`} key={index}>
+                          <AccordionTrigger>
+                            <div className="flex items-center gap-3">
+                              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10 text-primary">
+                                <CheckSquare className="h-5 w-5" />
+                              </div>
+                              <span>Week {item.week}: {item.topic}</span>
+                            </div>
+                          </AccordionTrigger>
+                          <AccordionContent className="pl-14">
+                            {item.description}
+                          </AccordionContent>
+                        </AccordionItem>
+                      ))}
+                    </Accordion>
+                     <Button className="mt-6">
+                        <Download className="mr-2 h-4 w-4"/>
+                        Download Syllabus PDF
+                    </Button>
                 </CardContent>
             </Card>
         </TabsContent>
@@ -274,5 +364,5 @@ export default function SubjectDetailPage() {
       </Tabs>
     </div>
   );
-
+}
     
