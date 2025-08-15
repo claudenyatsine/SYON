@@ -5,7 +5,7 @@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useParams } from 'next/navigation';
-import { Atom, Book, Calculator, Calendar as CalendarIcon, Download, FileText, Landmark, Target, ClipboardCheck, Lightbulb, CheckSquare, ExternalLink, Clock, Hourglass, CheckCircle, XCircle, TrendingUp, BookOpen, Clock3, Percent, BarChart3 } from 'lucide-react';
+import { Atom, Book, Calculator, Calendar as CalendarIcon, Download, FileText, Landmark, Target, ClipboardCheck, Lightbulb, CheckSquare, ExternalLink, Clock, Hourglass, CheckCircle, XCircle, TrendingUp, BookOpen, Clock3, Percent, BarChart3, MessageSquare } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogTrigger, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
@@ -132,7 +132,10 @@ const progressMetrics = {
     grade: 'A-',
     attendance: '98%',
     assignmentsCompleted: '12/15',
-    timeSpent: '32 hours'
+    timeSpent: '32 hours',
+    punctuality: 'On Time',
+    forumParticipation: 'High',
+    missedClasses: 1,
 };
 
 const subjectProgressData = [
@@ -534,7 +537,7 @@ export default function SubjectDetailPage() {
             </Card>
         </TabsContent>
         <TabsContent value="progress" className="mt-6">
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                  <Card>
                     <CardHeader className="flex flex-row items-center justify-between pb-2">
                         <CardTitle className="text-sm font-medium">Overall Grade</CardTitle>
@@ -552,7 +555,7 @@ export default function SubjectDetailPage() {
                     </CardHeader>
                     <CardContent>
                         <div className="text-2xl font-bold">{progressMetrics.attendance}</div>
-                        <p className="text-xs text-muted-foreground">Excellent record</p>
+                        <p className="text-xs text-muted-foreground">{progressMetrics.missedClasses} class missed</p>
                     </CardContent>
                 </Card>
                 <Card>
@@ -573,6 +576,26 @@ export default function SubjectDetailPage() {
                     <CardContent>
                         <div className="text-2xl font-bold">{progressMetrics.timeSpent}</div>
                         <p className="text-xs text-muted-foreground">Last 30 days</p>
+                    </CardContent>
+                </Card>
+                 <Card>
+                    <CardHeader className="flex flex-row items-center justify-between pb-2">
+                        <CardTitle className="text-sm font-medium">Punctuality</CardTitle>
+                        <Clock className="h-4 w-4 text-muted-foreground" />
+                    </CardHeader>
+                    <CardContent>
+                        <div className="text-2xl font-bold">{progressMetrics.punctuality}</div>
+                        <p className="text-xs text-muted-foreground">Assignments & classes</p>
+                    </CardContent>
+                </Card>
+                <Card>
+                    <CardHeader className="flex flex-row items-center justify-between pb-2">
+                        <CardTitle className="text-sm font-medium">Forum Participation</CardTitle>
+                        <MessageSquare className="h-4 w-4 text-muted-foreground" />
+                    </CardHeader>
+                    <CardContent>
+                        <div className="text-2xl font-bold">{progressMetrics.forumParticipation}</div>
+                        <p className="text-xs text-muted-foreground">Active in discussions</p>
                     </CardContent>
                 </Card>
             </div>
