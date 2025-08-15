@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 import { Toaster } from '@/components/ui/toaster';
 import { ThemeProvider } from '@/components/theme-provider';
+import { ClientOnly } from '@/components/client-only';
 
 export const metadata: Metadata = {
   title: 'LearnetIQ',
@@ -29,7 +30,9 @@ export default function RootLayout({
             disableTransitionOnChange
           >
           {children}
-          <Toaster />
+          <ClientOnly>
+            <Toaster />
+          </ClientOnly>
         </ThemeProvider>
       </body>
     </html>
