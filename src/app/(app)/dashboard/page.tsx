@@ -100,7 +100,7 @@ export default function DashboardPage() {
               <p className="text-xs text-muted-foreground">+5% from last week</p>
             </CardContent>
             <CardFooter>
-              <Link href={`/forums/${subject.name.toLowerCase().replace(/\s/g, '-')}`} passHref className="w-full">
+              <Link href={`/subjects/${subject.name.toLowerCase().replace(/\s/g, '-')}`} passHref className="w-full">
                 <Button size="sm" variant="outline" className="w-full">
                   View Subject
                 </Button>
