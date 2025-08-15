@@ -5,7 +5,7 @@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useParams } from 'next/navigation';
-import { Atom, Book, Calculator, Calendar as CalendarIcon, Download, FileText, Landmark, Target, ClipboardCheck, Lightbulb, CheckSquare, ExternalLink, Clock, Hourglass, CheckCircle, XCircle, TrendingUp, BookOpen, Clock3, Percent, BarChart3, MessageSquare } from 'lucide-react';
+import { Atom, Book, Calculator, Calendar as CalendarIcon, Download, FileText, Landmark, Target, ClipboardCheck, Lightbulb, CheckSquare, ExternalLink, Clock, Hourglass, CheckCircle, XCircle, TrendingUp, BookOpen, Clock3, Percent, BarChart3, MessageSquare, ThumbsUp, UserCheck, Timer } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogTrigger, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
@@ -55,7 +55,9 @@ const gradeBreakdown = [
         insights: 'Solid understanding of core concepts. Some difficulty with application questions.',
         improvement: 'Review Chapter 3, Section 2 on practical applications. Try the supplementary practice problems.',
         summary: 'The midterm exam covered all topics from the first half of the semester, including differentiation, integration, and their applications. It consisted of multiple-choice and free-response questions.',
-        status: 'Completed'
+        status: 'Completed',
+        submissionDate: '2025-05-15',
+        punctuality: 'On Time'
     },
     {
         task: 'Assignment 1: Algebra Problems',
@@ -65,7 +67,9 @@ const gradeBreakdown = [
         insights: 'Excellent work. All problems were solved correctly and efficiently.',
         improvement: 'Keep up the great work! Challenge yourself with the advanced problems in the textbook.',
         summary: 'This assignment focused on solving complex algebraic equations and inequalities from Chapter 2.',
-        status: 'Completed'
+        status: 'Completed',
+        submissionDate: '2025-03-20',
+        punctuality: 'On Time'
     },
      {
         task: 'Quiz: Geometry',
@@ -75,7 +79,9 @@ const gradeBreakdown = [
         insights: 'Good performance. Minor calculation errors on two questions.',
         improvement: 'Double-check calculations before submitting. Use a calculator to verify your answers.',
         summary: 'A short quiz covering the fundamentals of Euclidean geometry, including triangles, circles, and polygons.',
-        status: 'Completed'
+        status: 'Completed',
+        submissionDate: '2025-04-10',
+        punctuality: 'Late'
     },
      {
         task: 'Final Project: Real-World Application',
@@ -136,6 +142,27 @@ const progressMetrics = {
     punctuality: 'On Time',
     forumParticipation: 'High',
     missedClasses: 1,
+};
+
+const attendanceDetails = {
+    totalClasses: 50,
+    attended: 49,
+    missed: 1,
+    missedDates: ['2025-04-05 (Sick Leave)']
+};
+
+const timeSpentDetails = [
+    { topic: 'Lectures', hours: 15 },
+    { topic: 'Assignments', hours: 10 },
+    { topic: 'Self-Study', hours: 5 },
+    { topic: 'Forums', hours: 2 },
+];
+
+const forumParticipationDetails = {
+    posts: 5,
+    replies: 12,
+    likesReceived: 30,
+    recentPost: 'Can anyone recommend a good video on integration by parts? I\'m finding it a bit tricky.'
 };
 
 const subjectProgressData = [
@@ -547,26 +574,97 @@ export default function SubjectDetailPage() {
         </TabsContent>
         <TabsContent value="progress" className="mt-6">
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                 <Card>
-                    <CardHeader className="flex flex-row items-center justify-between pb-2">
-                        <CardTitle className="text-sm font-medium">Overall Grade</CardTitle>
-                        <Target className="h-4 w-4 text-muted-foreground" />
-                    </CardHeader>
-                    <CardContent>
-                        <div className="text-2xl font-bold">{progressMetrics.grade}</div>
-                        <p className="text-xs text-muted-foreground">91.5%</p>
-                    </CardContent>
-                </Card>
-                <Card>
-                    <CardHeader className="flex flex-row items-center justify-between pb-2">
-                        <CardTitle className="text-sm font-medium">Attendance</CardTitle>
-                        <CheckCircle className="h-4 w-4 text-muted-foreground" />
-                    </CardHeader>
-                    <CardContent>
-                        <div className="text-2xl font-bold">{progressMetrics.attendance}</div>
-                        <p className="text-xs text-muted-foreground">{progressMetrics.missedClasses} class missed</p>
-                    </CardContent>
-                </Card>
+                <Dialog>
+                    <DialogTrigger asChild>
+                         <Card className="cursor-pointer hover:bg-muted/50 transition-colors">
+                            <CardHeader className="flex flex-row items-center justify-between pb-2">
+                                <CardTitle className="text-sm font-medium">Overall Grade</CardTitle>
+                                <Target className="h-4 w-4 text-muted-foreground" />
+                            </CardHeader>
+                            <CardContent>
+                                <div className="text-2xl font-bold">{progressMetrics.grade}</div>
+                                <p className="text-xs text-muted-foreground">91.5%</p>
+                            </CardContent>
+                        </Card>
+                    </DialogTrigger>
+                    <DialogContent>
+                        <DialogHeader>
+                            <DialogTitle className="font-headline text-2xl">Grade Breakdown</DialogTitle>
+                            <DialogDescription>A summary of all graded tasks for {subject.name}.</DialogDescription>
+                        </DialogHeader>
+                        <Accordion type="single" collapsible className="w-full">
+                            {gradeBreakdown.filter(t => t.status === 'Completed').map((item) => (
+                                <AccordionItem value={item.task} key={item.task}>
+                                    <AccordionTrigger>
+                                        <div className="flex justify-between w-full pr-4">
+                                            <div className="flex items-center gap-2">
+                                                    <ClipboardCheck className="h-4 w-4" />
+                                                    <span>{item.task}</span>
+                                            </div>
+                                            <div className="flex items-center gap-2">
+                                                <Badge variant="secondary">{item.score}</Badge>
+                                                <span className="text-sm text-muted-foreground font-normal">({item.weight})</span>
+                                            </div>
+                                        </div>
+                                    </AccordionTrigger>
+                                    <AccordionContent className="space-y-4 pt-2">
+                                        <div className="flex items-start gap-3 rounded-lg border bg-muted/50 p-3">
+                                            <Lightbulb className="h-5 w-5 text-yellow-500 mt-1 flex-shrink-0"/>
+                                            <div>
+                                                <h4 className="font-semibold">Insights</h4>
+                                                <p className="text-sm text-muted-foreground">{item.insights}</p>
+                                            </div>
+                                        </div>
+                                    </AccordionContent>
+                                </AccordionItem>
+                            ))}
+                        </Accordion>
+                    </DialogContent>
+                </Dialog>
+                <Dialog>
+                    <DialogTrigger asChild>
+                        <Card className="cursor-pointer hover:bg-muted/50 transition-colors">
+                            <CardHeader className="flex flex-row items-center justify-between pb-2">
+                                <CardTitle className="text-sm font-medium">Attendance</CardTitle>
+                                <CheckCircle className="h-4 w-4 text-muted-foreground" />
+                            </CardHeader>
+                            <CardContent>
+                                <div className="text-2xl font-bold">{progressMetrics.attendance}</div>
+                                <p className="text-xs text-muted-foreground">{progressMetrics.missedClasses} class missed</p>
+                            </CardContent>
+                        </Card>
+                    </DialogTrigger>
+                    <DialogContent>
+                         <DialogHeader>
+                            <DialogTitle className="font-headline text-2xl">Attendance Details</DialogTitle>
+                            <DialogDescription>Your attendance record for {subject.name}.</DialogDescription>
+                        </DialogHeader>
+                        <div className="space-y-4 py-4">
+                             <div className="flex items-center justify-between rounded-lg border p-4">
+                                <div>
+                                    <p className="font-semibold">Total Attended</p>
+                                    <p className="text-3xl font-bold">{attendanceDetails.attended}/{attendanceDetails.totalClasses}</p>
+                                </div>
+                                <UserCheck className="h-8 w-8 text-green-500"/>
+                            </div>
+                            <div className="flex items-center justify-between rounded-lg border p-4">
+                                <div>
+                                    <p className="font-semibold">Total Missed</p>
+                                    <p className="text-3xl font-bold">{attendanceDetails.missed}</p>
+                                </div>
+                                <XCircle className="h-8 w-8 text-red-500"/>
+                            </div>
+                            {attendanceDetails.missed > 0 && (
+                                <div>
+                                    <h4 className="font-semibold">Missed Class Dates:</h4>
+                                    <ul className="list-disc pl-5 text-sm text-muted-foreground mt-2">
+                                        {attendanceDetails.missedDates.map(date => <li key={date}>{date}</li>)}
+                                    </ul>
+                                </div>
+                            )}
+                        </div>
+                    </DialogContent>
+                </Dialog>
                 <Dialog>
                     <DialogTrigger asChild>
                         <Card className="cursor-pointer hover:bg-muted/50 transition-colors">
@@ -600,36 +698,107 @@ export default function SubjectDetailPage() {
                         </div>
                     </DialogContent>
                 </Dialog>
-                <Card>
-                    <CardHeader className="flex flex-row items-center justify-between pb-2">
-                        <CardTitle className="text-sm font-medium">Time Spent</CardTitle>
-                        <Clock3 className="h-4 w-4 text-muted-foreground" />
-                    </CardHeader>
-                    <CardContent>
-                        <div className="text-2xl font-bold">{progressMetrics.timeSpent}</div>
-                        <p className="text-xs text-muted-foreground">Last 30 days</p>
-                    </CardContent>
-                </Card>
-                 <Card>
-                    <CardHeader className="flex flex-row items-center justify-between pb-2">
-                        <CardTitle className="text-sm font-medium">Punctuality</CardTitle>
-                        <Clock className="h-4 w-4 text-muted-foreground" />
-                    </CardHeader>
-                    <CardContent>
-                        <div className="text-2xl font-bold">{progressMetrics.punctuality}</div>
-                        <p className="text-xs text-muted-foreground">Assignments & classes</p>
-                    </CardContent>
-                </Card>
-                <Card>
-                    <CardHeader className="flex flex-row items-center justify-between pb-2">
-                        <CardTitle className="text-sm font-medium">Forum Participation</CardTitle>
-                        <MessageSquare className="h-4 w-4 text-muted-foreground" />
-                    </CardHeader>
-                    <CardContent>
-                        <div className="text-2xl font-bold">{progressMetrics.forumParticipation}</div>
-                        <p className="text-xs text-muted-foreground">Active in discussions</p>
-                    </CardContent>
-                </Card>
+                <Dialog>
+                    <DialogTrigger asChild>
+                        <Card className="cursor-pointer hover:bg-muted/50 transition-colors">
+                            <CardHeader className="flex flex-row items-center justify-between pb-2">
+                                <CardTitle className="text-sm font-medium">Time Spent</CardTitle>
+                                <Clock3 className="h-4 w-4 text-muted-foreground" />
+                            </CardHeader>
+                            <CardContent>
+                                <div className="text-2xl font-bold">{progressMetrics.timeSpent}</div>
+                                <p className="text-xs text-muted-foreground">Last 30 days</p>
+                            </CardContent>
+                        </Card>
+                    </DialogTrigger>
+                    <DialogContent>
+                        <DialogHeader>
+                            <DialogTitle className="font-headline text-2xl">Time Spent Breakdown</DialogTitle>
+                            <DialogDescription>How your study time is distributed.</DialogDescription>
+                        </DialogHeader>
+                        <div className="space-y-4 py-4">
+                            {timeSpentDetails.map(item => (
+                                <div key={item.topic} className="flex items-center justify-between">
+                                    <div className="flex items-center gap-2">
+                                        <Timer className="h-5 w-5 text-muted-foreground"/>
+                                        <p className="font-medium">{item.topic}</p>
+                                    </div>
+                                    <p className="font-semibold">{item.hours} hours</p>
+                                </div>
+                            ))}
+                        </div>
+                    </DialogContent>
+                </Dialog>
+                <Dialog>
+                    <DialogTrigger asChild>
+                        <Card className="cursor-pointer hover:bg-muted/50 transition-colors">
+                            <CardHeader className="flex flex-row items-center justify-between pb-2">
+                                <CardTitle className="text-sm font-medium">Punctuality</CardTitle>
+                                <Clock className="h-4 w-4 text-muted-foreground" />
+                            </CardHeader>
+                            <CardContent>
+                                <div className="text-2xl font-bold">{progressMetrics.punctuality}</div>
+                                <p className="text-xs text-muted-foreground">Assignments & classes</p>
+                            </CardContent>
+                        </Card>
+                    </DialogTrigger>
+                    <DialogContent>
+                         <DialogHeader>
+                            <DialogTitle className="font-headline text-2xl">Punctuality Report</DialogTitle>
+                            <DialogDescription>Your submission history for graded tasks.</DialogDescription>
+                        </DialogHeader>
+                        <div className="space-y-4 py-4">
+                            {gradeBreakdown.filter(t => t.status === 'Completed').map(task => (
+                                <div key={task.task} className="flex items-center justify-between">
+                                    <p className="font-medium">{task.task}</p>
+                                    <Badge variant={task.punctuality === 'On Time' ? 'default' : 'destructive'}>{task.punctuality}</Badge>
+                                </div>
+                            ))}
+                        </div>
+                    </DialogContent>
+                </Dialog>
+                <Dialog>
+                    <DialogTrigger asChild>
+                        <Card className="cursor-pointer hover:bg-muted/50 transition-colors">
+                            <CardHeader className="flex flex-row items-center justify-between pb-2">
+                                <CardTitle className="text-sm font-medium">Forum Participation</CardTitle>
+                                <MessageSquare className="h-4 w-4 text-muted-foreground" />
+                            </CardHeader>
+                            <CardContent>
+                                <div className="text-2xl font-bold">{progressMetrics.forumParticipation}</div>
+                                <p className="text-xs text-muted-foreground">Active in discussions</p>
+                            </CardContent>
+                        </Card>
+                    </DialogTrigger>
+                     <DialogContent>
+                        <DialogHeader>
+                            <DialogTitle className="font-headline text-2xl">Forum Activity</DialogTitle>
+                            <DialogDescription>Your engagement in the {subject.name} forum.</DialogDescription>
+                        </DialogHeader>
+                        <div className="space-y-4 py-4">
+                             <div className="grid grid-cols-3 gap-4 text-center">
+                                <div>
+                                    <p className="text-2xl font-bold">{forumParticipationDetails.posts}</p>
+                                    <p className="text-sm text-muted-foreground">Posts</p>
+                                </div>
+                                 <div>
+                                    <p className="text-2xl font-bold">{forumParticipationDetails.replies}</p>
+                                    <p className="text-sm text-muted-foreground">Replies</p>
+                                </div>
+                                 <div>
+                                    <p className="text-2xl font-bold">{forumParticipationDetails.likesReceived}</p>
+                                    <p className="text-sm text-muted-foreground">Likes</p>
+                                </div>
+                            </div>
+                            <div>
+                                <h4 className="font-semibold">Most Recent Post:</h4>
+                                <blockquote className="mt-2 border-l-2 pl-4 italic text-muted-foreground">
+                                    "{forumParticipationDetails.recentPost}"
+                                </blockquote>
+                            </div>
+                        </div>
+                    </DialogContent>
+                </Dialog>
             </div>
             <div className="grid gap-6 mt-6 md:grid-cols-2">
                 <Card>
