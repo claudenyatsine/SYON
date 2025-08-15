@@ -109,7 +109,7 @@ function CustomDay(props: DayProps) {
     return (
         <div className={cn(
           "relative flex h-full w-full flex-col items-center justify-center p-1",
-          scheduledClass && "bg-black/60 text-white"
+          scheduledClass && "bg-black/30 text-white"
         )}>
             <time dateTime={date.toDateString()}>{format(date, 'd')}</time>
             {scheduledClass && (
