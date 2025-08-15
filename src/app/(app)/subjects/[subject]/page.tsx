@@ -4,7 +4,7 @@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useParams } from 'next/navigation';
-import { Atom, Book, BookCopy, Calculator, Calendar as CalendarIcon, Download, FileText, Landmark, Target, ClipboardCheck, Lightbulb, CheckSquare, BookOpen, ExternalLink } from 'lucide-react';
+import { Atom, Book, BookCopy, Calculator, Calendar as CalendarIcon, Download, FileText, Landmark, Target, ClipboardCheck, Lightbulb, CheckSquare, BookOpen, ExternalLink, Notebook } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogTrigger, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
@@ -46,6 +46,7 @@ const subjectDetails: { [key: string]: any } = {
 const gradeBreakdown = [
     {
         task: 'Midterm Exam',
+        type: 'Exam',
         score: '85/100',
         weight: '30%',
         insights: 'Solid understanding of core concepts. Some difficulty with application questions.',
@@ -54,6 +55,7 @@ const gradeBreakdown = [
     },
     {
         task: 'Assignment 1: Algebra Problems',
+        type: 'Assignment',
         score: '95/100',
         weight: '15%',
         insights: 'Excellent work. All problems were solved correctly and efficiently.',
@@ -62,12 +64,22 @@ const gradeBreakdown = [
     },
      {
         task: 'Quiz: Geometry',
+        type: 'Quiz',
         score: '88/100',
         weight: '10%',
         insights: 'Good performance. Minor calculation errors on two questions.',
         improvement: 'Double-check calculations before submitting. Use a calculator to verify your answers.',
         summary: 'A short quiz covering the fundamentals of Euclidean geometry, including triangles, circles, and polygons.'
     },
+    {
+        task: 'Final Exam',
+        type: 'Exam',
+        score: '92/100',
+        weight: '45%',
+        insights: 'Outstanding performance, particularly on the application problems. Great improvement since the midterm.',
+        improvement: 'Continue to practice consistently. Well done!',
+        summary: 'The final exam covered all course topics, with an emphasis on integration techniques and real-world applications.'
+    }
 ]
 
 const syllabusData = {
@@ -124,6 +136,75 @@ function CustomDay(props: DayProps) {
     );
 }
 
+const TaskAccordion = ({ tasks, type }: { tasks: typeof gradeBreakdown, type: string }) => (
+    <Accordion type="single" collapsible className="w-full">
+        {tasks.filter(item => item.type === type || (type === 'Assignment' && item.type === 'Quiz')).length > 0 ? (
+            tasks.filter(item => item.type === type || (type === 'Assignment' && item.type === 'Quiz')).map((item) => (
+                <AccordionItem value={item.task} key={item.task}>
+                    <AccordionTrigger>
+                        <div className="flex justify-between w-full pr-4">
+                            <div className="flex items-center gap-2">
+                                <ClipboardCheck className="h-4 w-4" />
+                                <span>{item.task}</span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <Badge variant="secondary">{item.score}</Badge>
+                                <span className="text-sm text-muted-foreground font-normal">({item.weight})</span>
+                            </div>
+                        </div>
+                    </AccordionTrigger>
+                    <AccordionContent className="space-y-4 pt-2">
+                        <div className="flex items-start gap-3 rounded-lg border bg-muted/50 p-3">
+                            <Lightbulb className="h-5 w-5 text-yellow-500 mt-1 flex-shrink-0"/>
+                            <div>
+                                <h4 className="font-semibold">Insights</h4>
+                                <p className="text-sm text-muted-foreground">{item.insights}</p>
+                            </div>
+                        </div>
+                        <div className="flex items-start gap-3 rounded-lg border bg-green-500/10 p-3">
+                            <Target className="h-5 w-5 text-green-600 mt-1 flex-shrink-0"/>
+                            <div>
+                                <h4 className="font-semibold">How to Improve</h4>
+                                <p className="text-sm text-muted-foreground">{item.improvement}</p>
+                            </div>
+                        </div>
+                        <Dialog>
+                            <DialogTrigger asChild>
+                                <Button variant="outline" size="sm" className="mt-2">
+                                    <ExternalLink className="mr-2 h-4 w-4" />
+                                    Review Task
+                                </Button>
+                            </DialogTrigger>
+                            <DialogContent>
+                                <DialogHeader>
+                                    <DialogTitle className="font-headline text-2xl">{item.task}</DialogTitle>
+                                    <DialogDescription>
+                                        Here are the details for this task.
+                                    </DialogDescription>
+                                </DialogHeader>
+                                <div className="py-4 space-y-4">
+                                    <h4 className="font-semibold">Summary</h4>
+                                    <p className="text-sm text-muted-foreground">
+                                        {item.summary}
+                                    </p>
+                                </div>
+                                <DialogFooter>
+                                    <Button>
+                                        <Download className="mr-2 h-4 w-4" />
+                                        Download PDF
+                                    </Button>
+                                </DialogFooter>
+                            </DialogContent>
+                        </Dialog>
+                    </AccordionContent>
+                </AccordionItem>
+            ))
+        ) : (
+            <p className="text-muted-foreground text-sm py-4">No {type.toLowerCase()}s found for this subject.</p>
+        )}
+    </Accordion>
+);
+
 export default function SubjectDetailPage() {
   const params = useParams();
   const subjectSlug = params.subject as string;
@@ -156,11 +237,12 @@ export default function SubjectDetailPage() {
       </div>
       
        <Tabs defaultValue="overview" className="w-full">
-        <TabsList className="grid w-full grid-cols-2 sm:grid-cols-3 md:grid-cols-5">
+        <TabsList className="grid w-full grid-cols-3 sm:grid-cols-4 md:grid-cols-6">
           <TabsTrigger value="overview">Overview</TabsTrigger>
           <TabsTrigger value="syllabus">Syllabus</TabsTrigger>
           <TabsTrigger value="resources">Resources</TabsTrigger>
           <TabsTrigger value="assignments">Assignments</TabsTrigger>
+          <TabsTrigger value="exams">Exams</TabsTrigger>
           <TabsTrigger value="progress">Progress</TabsTrigger>
         </TabsList>
         <TabsContent value="overview" className="mt-6">
@@ -347,72 +429,22 @@ export default function SubjectDetailPage() {
          <TabsContent value="assignments" className="mt-6">
            <Card>
                 <CardHeader>
-                    <CardTitle>Assignments & Exams</CardTitle>
-                     <CardDescription>Submit your work and prepare for exams for {subject.name}.</CardDescription>
+                    <CardTitle>Assignments & Quizzes</CardTitle>
+                     <CardDescription>Submit your work and prepare for quizzes for {subject.name}.</CardDescription>
                 </CardHeader>
                 <CardContent>
-                   <Accordion type="single" collapsible className="w-full">
-                        {gradeBreakdown.map((item) => (
-                            <AccordionItem value={item.task} key={item.task}>
-                                <AccordionTrigger>
-                                    <div className="flex justify-between w-full pr-4">
-                                        <div className="flex items-center gap-2">
-                                                <ClipboardCheck className="h-4 w-4" />
-                                                <span>{item.task}</span>
-                                        </div>
-                                        <div className="flex items-center gap-2">
-                                            <Badge variant="secondary">{item.score}</Badge>
-                                            <span className="text-sm text-muted-foreground font-normal">({item.weight})</span>
-                                        </div>
-                                    </div>
-                                </AccordionTrigger>
-                                <AccordionContent className="space-y-4 pt-2">
-                                    <div className="flex items-start gap-3 rounded-lg border bg-muted/50 p-3">
-                                        <Lightbulb className="h-5 w-5 text-yellow-500 mt-1 flex-shrink-0"/>
-                                        <div>
-                                            <h4 className="font-semibold">Insights</h4>
-                                            <p className="text-sm text-muted-foreground">{item.insights}</p>
-                                        </div>
-                                    </div>
-                                    <div className="flex items-start gap-3 rounded-lg border bg-green-500/10 p-3">
-                                        <Target className="h-5 w-5 text-green-600 mt-1 flex-shrink-0"/>
-                                        <div>
-                                            <h4 className="font-semibold">How to Improve</h4>
-                                            <p className="text-sm text-muted-foreground">{item.improvement}</p>
-                                        </div>
-                                    </div>
-                                    <Dialog>
-                                      <DialogTrigger asChild>
-                                         <Button variant="outline" size="sm" className="mt-2">
-                                          <ExternalLink className="mr-2 h-4 w-4" />
-                                          Review Task
-                                        </Button>
-                                      </DialogTrigger>
-                                      <DialogContent>
-                                        <DialogHeader>
-                                          <DialogTitle className="font-headline text-2xl">{item.task}</DialogTitle>
-                                          <DialogDescription>
-                                            Here are the details for this task.
-                                          </DialogDescription>
-                                        </DialogHeader>
-                                        <div className="py-4 space-y-4">
-                                          <h4 className="font-semibold">Summary</h4>
-                                          <p className="text-sm text-muted-foreground">
-                                            {item.summary}
-                                          </p>
-                                        </div>
-                                        <DialogFooter>
-                                          <Button>
-                                            <Download className="mr-2 h-4 w-4" />
-                                            Download PDF
-                                          </Button>
-                                        </DialogFooter>
-                                      </DialogContent>
-                                    </Dialog>
-                                </AccordionContent>
-                            </AccordionItem>
-                        ))}
-                    </Accordion>
+                   <TaskAccordion tasks={gradeBreakdown} type="Assignment" />
+                </CardContent>
+            </Card>
+        </TabsContent>
+         <TabsContent value="exams" className="mt-6">
+           <Card>
+                <CardHeader>
+                    <CardTitle>Exams</CardTitle>
+                     <CardDescription>Review your performance on major exams for {subject.name}.</CardDescription>
+                </CardHeader>
+                <CardContent>
+                   <TaskAccordion tasks={gradeBreakdown} type="Exam" />
                 </CardContent>
             </Card>
         </TabsContent>
@@ -431,8 +463,6 @@ export default function SubjectDetailPage() {
     </div>
   );
 }
-    
-
     
 
     
