@@ -4,11 +4,13 @@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useParams } from 'next/navigation';
-import { Atom, Book, BookCopy, Calculator, Calendar, Download, FileText, Landmark, Target, ClipboardCheck, Lightbulb } from 'lucide-react';
+import { Atom, Book, BookCopy, Calculator, Calendar as CalendarIcon, Download, FileText, Landmark, Target, ClipboardCheck, Lightbulb } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogTrigger, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Badge } from '@/components/ui/badge';
+import { Calendar } from '@/components/ui/calendar';
+import React from 'react';
 
 
 const subjectDetails: { [key: string]: any } = {
@@ -71,6 +73,8 @@ export default function SubjectDetailPage() {
     color: 'text-gray-500',
     description: 'Details for this subject are not yet available.'
   };
+
+  const [date, setDate] = React.useState<Date | undefined>(new Date())
 
   return (
     <div className="space-y-6 md:space-y-8">
@@ -189,16 +193,36 @@ export default function SubjectDetailPage() {
                         </DialogFooter>
                       </DialogContent>
                     </Dialog>
-                     <Card>
-                        <CardHeader className="flex flex-row items-center justify-between pb-2">
-                            <CardTitle className="text-sm font-medium">Next Class</CardTitle>
-                            <Calendar className="h-4 w-4 text-muted-foreground" />
-                        </CardHeader>
-                        <CardContent>
-                            <div className="text-2xl font-bold">Tomorrow</div>
-                            <p className="text-xs text-muted-foreground">10:00 AM - 11:30 AM</p>
-                        </CardContent>
-                    </Card>
+                    <Dialog>
+                      <DialogTrigger asChild>
+                        <Card className="cursor-pointer hover:bg-muted/50 transition-colors">
+                            <CardHeader className="flex flex-row items-center justify-between pb-2">
+                                <CardTitle className="text-sm font-medium">Next Class</CardTitle>
+                                <CalendarIcon className="h-4 w-4 text-muted-foreground" />
+                            </CardHeader>
+                            <CardContent>
+                                <div className="text-2xl font-bold">Tomorrow</div>
+                                <p className="text-xs text-muted-foreground">10:00 AM - 11:30 AM</p>
+                            </CardContent>
+                        </Card>
+                      </DialogTrigger>
+                      <DialogContent className="w-auto">
+                        <DialogHeader>
+                          <DialogTitle className="font-headline text-2xl">Class Schedule</DialogTitle>
+                          <DialogDescription>
+                            Your scheduled lessons for {subject.name}.
+                          </DialogDescription>
+                        </DialogHeader>
+                        <div className="flex justify-center">
+                            <Calendar
+                                mode="single"
+                                selected={date}
+                                onSelect={setDate}
+                                className="rounded-md border"
+                            />
+                        </div>
+                      </DialogContent>
+                    </Dialog>
                 </CardContent>
             </Card>
         </TabsContent>
@@ -250,4 +274,5 @@ export default function SubjectDetailPage() {
       </Tabs>
     </div>
   );
-}
+
+    
