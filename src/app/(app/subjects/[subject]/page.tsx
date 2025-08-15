@@ -5,7 +5,7 @@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useParams } from 'next/navigation';
-import { Atom, Book, Calculator, Calendar as CalendarIcon, Download, FileText, Landmark, Target, ClipboardCheck, Lightbulb, CheckSquare, ExternalLink, Clock, Hourglass } from 'lucide-react';
+import { Atom, Book, Calculator, Calendar as CalendarIcon, Download, FileText, Landmark, Target, ClipboardCheck, Lightbulb, CheckSquare, ExternalLink, Clock, Hourglass, CheckCircle, XCircle, TrendingUp, BookOpen, Clock3, Percent } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogTrigger, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
@@ -15,6 +15,7 @@ import React from 'react';
 import { DayProps } from 'react-day-picker';
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
+import { Bar, BarChart, CartesianGrid, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 
 
 const subjectDetails: { [key: string]: any } = {
@@ -126,6 +127,41 @@ const scheduledClasses = [
     { date: new Date(2025, 7, 22), subject: 'History', startTime: '11:00', endTime: '12:00' },
 ];
 
+const progressMetrics = {
+    grade: 'A-',
+    attendance: '98%',
+    assignmentsCompleted: '12/15',
+    timeSpent: '32 hours'
+};
+
+const subjectProgressData = [
+    { month: 'Jan', score: 75 },
+    { month: 'Feb', score: 80 },
+    { month: 'Mar', score: 82 },
+    { month: 'Apr', score: 88 },
+    { month: 'May', score: 90 },
+    { month: 'Jun', score: 92 },
+];
+
+const topicPerformanceData = [
+    { topic: 'Algebra', score: 95 },
+    { topic: 'Geometry', score: 88 },
+    { topic: 'Calculus I', score: 90 },
+    { topic: 'Calculus II', score: 85 },
+    { topic: 'Trigonometry', score: 91 },
+];
+
+const strengths = [
+    'Excellent problem-solving in Algebra.',
+    'Consistent high scores on quizzes.',
+    'Strong understanding of differentiation.'
+];
+
+const weaknesses = [
+    'Difficulty with word problems in Calculus.',
+    'Minor calculation errors under pressure.',
+    'Could improve on showing all steps in solutions.'
+];
 
 function formatTimeRange(start: string, end: string) {
     const startFormatted = start.replace(':', '');
@@ -491,15 +527,122 @@ export default function SubjectDetailPage() {
             </Card>
         </TabsContent>
          <TabsContent value="progress" className="mt-6">
-           <Card>
-                <CardHeader>
-                    <CardTitle>Your Progress</CardTitle>
-                     <CardDescription>Your performance and progress in {subject.name}.</CardDescription>
-                </CardHeader>
-                <CardContent>
-                    <p className="text-muted-foreground">Charts and statistics detailing your progress in this subject will be displayed here.</p>
-                </CardContent>
-            </Card>
+             <div className="space-y-6">
+                <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+                     <Card>
+                        <CardHeader className="flex flex-row items-center justify-between pb-2">
+                            <CardTitle className="text-sm font-medium">Overall Grade</CardTitle>
+                            <TrendingUp className="h-4 w-4 text-muted-foreground" />
+                        </CardHeader>
+                        <CardContent>
+                            <div className="text-2xl font-bold">{progressMetrics.grade}</div>
+                             <p className="text-xs text-muted-foreground">91.5%</p>
+                        </CardContent>
+                    </Card>
+                     <Card>
+                        <CardHeader className="flex flex-row items-center justify-between pb-2">
+                            <CardTitle className="text-sm font-medium">Attendance</CardTitle>
+                            <Percent className="h-4 w-4 text-muted-foreground" />
+                        </CardHeader>
+                        <CardContent>
+                            <div className="text-2xl font-bold">{progressMetrics.attendance}</div>
+                             <p className="text-xs text-muted-foreground">1 missed class</p>
+                        </CardContent>
+                    </Card>
+                    <Card>
+                        <CardHeader className="flex flex-row items-center justify-between pb-2">
+                            <CardTitle className="text-sm font-medium">Assignments</CardTitle>
+                            <BookOpen className="h-4 w-4 text-muted-foreground" />
+                        </CardHeader>
+                        <CardContent>
+                            <div className="text-2xl font-bold">{progressMetrics.assignmentsCompleted}</div>
+                             <p className="text-xs text-muted-foreground">3 pending</p>
+                        </CardContent>
+                    </Card>
+                    <Card>
+                        <CardHeader className="flex flex-row items-center justify-between pb-2">
+                            <CardTitle className="text-sm font-medium">Time Spent</CardTitle>
+                            <Clock3 className="h-4 w-4 text-muted-foreground" />
+                        </CardHeader>
+                        <CardContent>
+                            <div className="text-2xl font-bold">{progressMetrics.timeSpent}</div>
+                             <p className="text-xs text-muted-foreground">Last 30 days</p>
+                        </CardContent>
+                    </Card>
+                </div>
+                 <div className="grid gap-6 lg:grid-cols-2">
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Score Over Time</CardTitle>
+                            <CardDescription>Your scores on assignments and exams this semester.</CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                           <ResponsiveContainer width="100%" height={250}>
+                             <LineChart data={subjectProgressData}>
+                                <CartesianGrid strokeDasharray="3 3" />
+                                <XAxis dataKey="month" />
+                                <YAxis domain={[60, 100]} />
+                                <Tooltip />
+                                <Legend />
+                                <Line type="monotone" dataKey="score" stroke="hsl(var(--primary))" />
+                             </LineChart>
+                           </ResponsiveContainer>
+                        </CardContent>
+                    </Card>
+                     <Card>
+                        <CardHeader>
+                            <CardTitle>Performance by Topic</CardTitle>
+                            <CardDescription>Your average score for different topics in {subject.name}.</CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                           <ResponsiveContainer width="100%" height={250}>
+                             <BarChart data={topicPerformanceData}>
+                               <CartesianGrid strokeDasharray="3 3" />
+                               <XAxis dataKey="topic" />
+                               <YAxis domain={[60, 100]}/>
+                               <Tooltip />
+                               <Legend />
+                               <Bar dataKey="score" fill="hsl(var(--primary))" />
+                             </BarChart>
+                           </ResponsiveContainer>
+                        </CardContent>
+                    </Card>
+                </div>
+                <div className="grid gap-6 lg:grid-cols-2">
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Strengths</CardTitle>
+                             <CardDescription>Areas where you are excelling.</CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                           <ul className="space-y-2">
+                                {strengths.map((strength, i) => (
+                                    <li key={i} className="flex items-center text-sm">
+                                        <CheckCircle className="h-4 w-4 mr-2 text-green-500" />
+                                        {strength}
+                                    </li>
+                                ))}
+                           </ul>
+                        </CardContent>
+                    </Card>
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Areas for Improvement</CardTitle>
+                            <CardDescription>Topics and skills to focus on.</CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                           <ul className="space-y-2">
+                                {weaknesses.map((weakness, i) => (
+                                    <li key={i} className="flex items-center text-sm">
+                                        <XCircle className="h-4 w-4 mr-2 text-destructive" />
+                                        {weakness}
+                                    </li>
+                                ))}
+                           </ul>
+                        </CardContent>
+                    </Card>
+                </div>
+            </div>
         </TabsContent>
       </Tabs>
     </div>
