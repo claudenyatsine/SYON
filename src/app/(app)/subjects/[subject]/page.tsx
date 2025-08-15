@@ -1,11 +1,13 @@
 
 'use client';
 
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useParams } from 'next/navigation';
-import { Atom, Book, BookCopy, Calculator, Calendar, FileText, Landmark, Target } from 'lucide-react';
+import { Atom, Book, BookCopy, Calculator, Calendar, Download, FileText, Landmark, Target } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Dialog, DialogContent, DialogTrigger, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
+
 
 const subjectDetails: { [key: string]: any } = {
   mathematics: {
@@ -81,16 +83,40 @@ export default function SubjectDetailPage() {
                             <p className="text-xs text-muted-foreground">91.5%</p>
                         </CardContent>
                     </Card>
-                     <Card>
-                        <CardHeader className="flex flex-row items-center justify-between pb-2">
-                            <CardTitle className="text-sm font-medium">Upcoming Assignment</CardTitle>
-                            <FileText className="h-4 w-4 text-muted-foreground" />
-                        </CardHeader>
-                        <CardContent>
-                            <div className="text-2xl font-bold">Chapter 5 Problems</div>
-                            <p className="text-xs text-muted-foreground">Due in 3 days</p>
-                        </CardContent>
-                    </Card>
+                    <Dialog>
+                      <DialogTrigger asChild>
+                         <Card className="cursor-pointer hover:bg-muted/50 transition-colors">
+                            <CardHeader className="flex flex-row items-center justify-between pb-2">
+                                <CardTitle className="text-sm font-medium">Upcoming Assignment</CardTitle>
+                                <FileText className="h-4 w-4 text-muted-foreground" />
+                            </CardHeader>
+                            <CardContent>
+                                <div className="text-2xl font-bold">Chapter 5 Problems</div>
+                                <p className="text-xs text-muted-foreground">Due in 3 days</p>
+                            </CardContent>
+                        </Card>
+                      </DialogTrigger>
+                      <DialogContent>
+                        <DialogHeader>
+                          <DialogTitle className="font-headline text-2xl">Assignment: Chapter 5 Problems</DialogTitle>
+                          <DialogDescription>
+                            Due in 3 days. Please submit your solutions before the deadline.
+                          </DialogDescription>
+                        </DialogHeader>
+                        <div className="py-4 space-y-4">
+                          <h4 className="font-semibold">Summary</h4>
+                          <p className="text-sm text-muted-foreground">
+                            This assignment covers the core concepts of differentiation and integration from Chapter 5. It includes 10 problems that test your understanding of derivatives, integrals, and their applications in solving real-world problems. Ensure you show all your work for full credit.
+                          </p>
+                        </div>
+                        <DialogFooter>
+                          <Button>
+                            <Download className="mr-2 h-4 w-4" />
+                            Download PDF
+                          </Button>
+                        </DialogFooter>
+                      </DialogContent>
+                    </Dialog>
                      <Card>
                         <CardHeader className="flex flex-row items-center justify-between pb-2">
                             <CardTitle className="text-sm font-medium">Next Class</CardTitle>
