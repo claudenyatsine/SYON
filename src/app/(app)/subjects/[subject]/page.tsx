@@ -4,7 +4,7 @@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useParams } from 'next/navigation';
-import { Atom, Book, BookCopy, Calculator, Calendar as CalendarIcon, Download, FileText, Landmark, Target, ClipboardCheck, Lightbulb, CheckSquare, BookOpen } from 'lucide-react';
+import { Atom, Book, BookCopy, Calculator, Calendar as CalendarIcon, Download, FileText, Landmark, Target, ClipboardCheck, Lightbulb, CheckSquare, BookOpen, ExternalLink } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogTrigger, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
@@ -49,21 +49,24 @@ const gradeBreakdown = [
         score: '85/100',
         weight: '30%',
         insights: 'Solid understanding of core concepts. Some difficulty with application questions.',
-        improvement: 'Review Chapter 3, Section 2 on practical applications. Try the supplementary practice problems.'
+        improvement: 'Review Chapter 3, Section 2 on practical applications. Try the supplementary practice problems.',
+        summary: 'The midterm exam covered all topics from the first half of the semester, including differentiation, integration, and their applications. It consisted of multiple-choice and free-response questions.'
     },
     {
         task: 'Assignment 1: Algebra Problems',
         score: '95/100',
         weight: '15%',
         insights: 'Excellent work. All problems were solved correctly and efficiently.',
-        improvement: 'Keep up the great work! Challenge yourself with the advanced problems in the textbook.'
+        improvement: 'Keep up the great work! Challenge yourself with the advanced problems in the textbook.',
+        summary: 'This assignment focused on solving complex algebraic equations and inequalities from Chapter 2.'
     },
      {
         task: 'Quiz: Geometry',
         score: '88/100',
         weight: '10%',
         insights: 'Good performance. Minor calculation errors on two questions.',
-        improvement: 'Double-check calculations before submitting. Use a calculator to verify your answers.'
+        improvement: 'Double-check calculations before submitting. Use a calculator to verify your answers.',
+        summary: 'A short quiz covering the fundamentals of Euclidean geometry, including triangles, circles, and polygons.'
     },
 ]
 
@@ -371,13 +374,41 @@ export default function SubjectDetailPage() {
                                             <p className="text-sm text-muted-foreground">{item.insights}</p>
                                         </div>
                                     </div>
-                                        <div className="flex items-start gap-3 rounded-lg border bg-green-500/10 p-3">
+                                    <div className="flex items-start gap-3 rounded-lg border bg-green-500/10 p-3">
                                         <Target className="h-5 w-5 text-green-600 mt-1 flex-shrink-0"/>
                                         <div>
                                             <h4 className="font-semibold">How to Improve</h4>
                                             <p className="text-sm text-muted-foreground">{item.improvement}</p>
                                         </div>
                                     </div>
+                                    <Dialog>
+                                      <DialogTrigger asChild>
+                                         <Button variant="outline" size="sm" className="mt-2">
+                                          <ExternalLink className="mr-2 h-4 w-4" />
+                                          Review Task
+                                        </Button>
+                                      </DialogTrigger>
+                                      <DialogContent>
+                                        <DialogHeader>
+                                          <DialogTitle className="font-headline text-2xl">{item.task}</DialogTitle>
+                                          <DialogDescription>
+                                            Here are the details for this task.
+                                          </DialogDescription>
+                                        </DialogHeader>
+                                        <div className="py-4 space-y-4">
+                                          <h4 className="font-semibold">Summary</h4>
+                                          <p className="text-sm text-muted-foreground">
+                                            {item.summary}
+                                          </p>
+                                        </div>
+                                        <DialogFooter>
+                                          <Button>
+                                            <Download className="mr-2 h-4 w-4" />
+                                            Download PDF
+                                          </Button>
+                                        </DialogFooter>
+                                      </DialogContent>
+                                    </Dialog>
                                 </AccordionContent>
                             </AccordionItem>
                         ))}
@@ -400,6 +431,8 @@ export default function SubjectDetailPage() {
     </div>
   );
 }
+    
+
     
 
     
