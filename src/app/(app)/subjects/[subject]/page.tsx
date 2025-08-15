@@ -107,8 +107,8 @@ function CustomDay(props: DayProps) {
     const scheduledClass = scheduledClasses.find(c => format(c.date, 'yyyy-MM-dd') === format(date, 'yyyy-MM-dd'));
 
     return (
-        <div className="relative flex h-full w-full flex-col items-center justify-center p-1">
-            <time dateTime={date.toDateString()} className="absolute top-1 left-1 text-xs">{format(date, 'd')}</time>
+        <div className="relative flex h-full w-full flex-col items-center justify-center p-1 bg-black text-white">
+            <time dateTime={date.toDateString()} className="text-xs">{format(date, 'd')}</time>
             {scheduledClass && (
                 <div className="mt-2 text-center text-[10px] leading-tight">
                     <p>{formatTimeRange(scheduledClass.startTime, scheduledClass.endTime)}</p>
@@ -364,4 +364,6 @@ export default function SubjectDetailPage() {
     </div>
   );
 }
+    
+
     
