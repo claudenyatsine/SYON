@@ -135,6 +135,7 @@ const progressMetrics = {
     timeSpent: '32 hours',
     punctuality: 'On Time',
     forumParticipation: 'High',
+    missedClasses: 1,
 };
 
 const subjectProgressData = [
@@ -304,6 +305,15 @@ export default function SubjectDetailPage() {
   );
 
   const scheduledDays = subjectScheduledClasses.map((c) => c.date);
+  
+  const getBadgeVariantByStatus = (status: string) => {
+    switch (status) {
+        case 'Completed': return 'default';
+        case 'Pending': return 'secondary';
+        case 'Upcoming': return 'outline';
+        default: return 'secondary';
+    }
+  }
 
   return (
     <div className="space-y-6 md:space-y-8">
@@ -554,19 +564,42 @@ export default function SubjectDetailPage() {
                     </CardHeader>
                     <CardContent>
                         <div className="text-2xl font-bold">{progressMetrics.attendance}</div>
-                        <p className="text-xs text-muted-foreground">Excellent record</p>
+                        <p className="text-xs text-muted-foreground">{progressMetrics.missedClasses} class missed</p>
                     </CardContent>
                 </Card>
-                <Card>
-                    <CardHeader className="flex flex-row items-center justify-between pb-2">
-                        <CardTitle className="text-sm font-medium">Assignments</CardTitle>
-                        <BookOpen className="h-4 w-4 text-muted-foreground" />
-                    </CardHeader>
-                    <CardContent>
-                        <div className="text-2xl font-bold">{progressMetrics.assignmentsCompleted}</div>
-                        <p className="text-xs text-muted-foreground">3 pending</p>
-                    </CardContent>
-                </Card>
+                <Dialog>
+                    <DialogTrigger asChild>
+                        <Card className="cursor-pointer hover:bg-muted/50 transition-colors">
+                            <CardHeader className="flex flex-row items-center justify-between pb-2">
+                                <CardTitle className="text-sm font-medium">Assignments</CardTitle>
+                                <BookOpen className="h-4 w-4 text-muted-foreground" />
+                            </CardHeader>
+                            <CardContent>
+                                <div className="text-2xl font-bold">{progressMetrics.assignmentsCompleted}</div>
+                                <p className="text-xs text-muted-foreground">3 pending</p>
+                            </CardContent>
+                        </Card>
+                    </DialogTrigger>
+                    <DialogContent className="sm:max-w-lg">
+                        <DialogHeader>
+                            <DialogTitle className="font-headline text-2xl">Assignment Status</DialogTitle>
+                            <DialogDescription>A detailed breakdown of your assignments.</DialogDescription>
+                        </DialogHeader>
+                        <div className="space-y-4 py-4">
+                            {gradeBreakdown.filter(t => t.type === 'Assignment' || t.type === 'Quiz').map(task => (
+                                <div key={task.task} className="flex items-center justify-between">
+                                    <div>
+                                        <p className="font-medium">{task.task}</p>
+                                        <p className="text-sm text-muted-foreground">
+                                            {task.status === 'Completed' ? `Score: ${task.score}` : `Due: ${task.dueDate}`}
+                                        </p>
+                                    </div>
+                                    <Badge variant={getBadgeVariantByStatus(task.status)}>{task.status}</Badge>
+                                </div>
+                            ))}
+                        </div>
+                    </DialogContent>
+                </Dialog>
                 <Card>
                     <CardHeader className="flex flex-row items-center justify-between pb-2">
                         <CardTitle className="text-sm font-medium">Time Spent</CardTitle>
@@ -666,3 +699,4 @@ export default function SubjectDetailPage() {
     
 
     
+
