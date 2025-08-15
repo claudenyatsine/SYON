@@ -127,10 +127,14 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     setIsMounted(true);
   }, []);
 
+  if (!isMounted) {
+    return null;
+  }
+
   return (
     <SidebarProvider>
       <div className="flex min-h-screen">
-        {isMounted ? <AppLayoutContent>{children}</AppLayoutContent> : null}
+        <AppLayoutContent>{children}</AppLayoutContent>
       </div>
     </SidebarProvider>
   );
