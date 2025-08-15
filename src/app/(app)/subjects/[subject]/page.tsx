@@ -109,7 +109,7 @@ function CustomDay(props: DayProps) {
     return (
         <div className={cn(
           "relative flex h-full w-full flex-col items-center justify-center p-1",
-          scheduledClass && "bg-black/30 text-white"
+          scheduledClass && "bg-black/30 text-white rounded-md"
         )}>
             <time dateTime={date.toDateString()}>{format(date, 'd')}</time>
             {scheduledClass && (
@@ -348,7 +348,40 @@ export default function SubjectDetailPage() {
                      <CardDescription>Submit your work and prepare for exams for {subject.name}.</CardDescription>
                 </CardHeader>
                 <CardContent>
-                    <p className="text-muted-foreground">A list of upcoming and past assignments, quizzes, and exams will be displayed here.</p>
+                   <Accordion type="single" collapsible className="w-full">
+                        {gradeBreakdown.map((item) => (
+                            <AccordionItem value={item.task} key={item.task}>
+                                <AccordionTrigger>
+                                    <div className="flex justify-between w-full pr-4">
+                                        <div className="flex items-center gap-2">
+                                                <ClipboardCheck className="h-4 w-4" />
+                                                <span>{item.task}</span>
+                                        </div>
+                                        <div className="flex items-center gap-2">
+                                            <Badge variant="secondary">{item.score}</Badge>
+                                            <span className="text-sm text-muted-foreground font-normal">({item.weight})</span>
+                                        </div>
+                                    </div>
+                                </AccordionTrigger>
+                                <AccordionContent className="space-y-4 pt-2">
+                                    <div className="flex items-start gap-3 rounded-lg border bg-muted/50 p-3">
+                                        <Lightbulb className="h-5 w-5 text-yellow-500 mt-1 flex-shrink-0"/>
+                                        <div>
+                                            <h4 className="font-semibold">Insights</h4>
+                                            <p className="text-sm text-muted-foreground">{item.insights}</p>
+                                        </div>
+                                    </div>
+                                        <div className="flex items-start gap-3 rounded-lg border bg-green-500/10 p-3">
+                                        <Target className="h-5 w-5 text-green-600 mt-1 flex-shrink-0"/>
+                                        <div>
+                                            <h4 className="font-semibold">How to Improve</h4>
+                                            <p className="text-sm text-muted-foreground">{item.improvement}</p>
+                                        </div>
+                                    </div>
+                                </AccordionContent>
+                            </AccordionItem>
+                        ))}
+                    </Accordion>
                 </CardContent>
             </Card>
         </TabsContent>
