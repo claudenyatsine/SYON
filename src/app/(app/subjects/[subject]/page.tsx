@@ -5,7 +5,7 @@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useParams } from 'next/navigation';
-import { Atom, Book, Calculator, Calendar as CalendarIcon, Download, FileText, Landmark, Target, ClipboardCheck, Lightbulb, CheckSquare, ExternalLink, Clock, Hourglass, CheckCircle, XCircle, TrendingUp, BookOpen, Clock3, Percent, BarChart3 } from 'lucide-react';
+import { Atom, Book, Calculator, Calendar as CalendarIcon, Download, FileText, Landmark, Target, ClipboardCheck, Lightbulb, CheckSquare, ExternalLink, Clock, Hourglass, CheckCircle, XCircle, TrendingUp, BookOpen, Clock3, Percent, BarChart3, MessageSquare } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogTrigger, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
@@ -132,7 +132,9 @@ const progressMetrics = {
     grade: 'A-',
     attendance: '98%',
     assignmentsCompleted: '12/15',
-    timeSpent: '32 hours'
+    timeSpent: '32 hours',
+    punctuality: 'On Time',
+    forumParticipation: 'High',
 };
 
 const subjectProgressData = [
@@ -322,12 +324,13 @@ export default function SubjectDetailPage() {
       </div>
       
        <Tabs defaultValue="overview" className="w-full">
-        <TabsList className="grid w-full grid-cols-2 sm:grid-cols-3 md:grid-cols-5">
+        <TabsList className="grid w-full grid-cols-2 sm:grid-cols-3 md:grid-cols-6">
           <TabsTrigger value="overview">Overview</TabsTrigger>
           <TabsTrigger value="syllabus">Syllabus</TabsTrigger>
           <TabsTrigger value="resources">Resources</TabsTrigger>
           <TabsTrigger value="assignments">Assignments</TabsTrigger>
           <TabsTrigger value="exams">Exams</TabsTrigger>
+          <TabsTrigger value="progress">Progress</TabsTrigger>
         </TabsList>
         <TabsContent value="overview" className="mt-6">
             <Card>
@@ -531,6 +534,130 @@ export default function SubjectDetailPage() {
                    <TaskSection tasks={gradeBreakdown} type="Exam" />
                 </CardContent>
             </Card>
+        </TabsContent>
+        <TabsContent value="progress" className="mt-6">
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                 <Card>
+                    <CardHeader className="flex flex-row items-center justify-between pb-2">
+                        <CardTitle className="text-sm font-medium">Overall Grade</CardTitle>
+                        <Target className="h-4 w-4 text-muted-foreground" />
+                    </CardHeader>
+                    <CardContent>
+                        <div className="text-2xl font-bold">{progressMetrics.grade}</div>
+                        <p className="text-xs text-muted-foreground">91.5%</p>
+                    </CardContent>
+                </Card>
+                <Card>
+                    <CardHeader className="flex flex-row items-center justify-between pb-2">
+                        <CardTitle className="text-sm font-medium">Attendance</CardTitle>
+                        <CheckCircle className="h-4 w-4 text-muted-foreground" />
+                    </CardHeader>
+                    <CardContent>
+                        <div className="text-2xl font-bold">{progressMetrics.attendance}</div>
+                        <p className="text-xs text-muted-foreground">Excellent record</p>
+                    </CardContent>
+                </Card>
+                <Card>
+                    <CardHeader className="flex flex-row items-center justify-between pb-2">
+                        <CardTitle className="text-sm font-medium">Assignments</CardTitle>
+                        <BookOpen className="h-4 w-4 text-muted-foreground" />
+                    </CardHeader>
+                    <CardContent>
+                        <div className="text-2xl font-bold">{progressMetrics.assignmentsCompleted}</div>
+                        <p className="text-xs text-muted-foreground">3 pending</p>
+                    </CardContent>
+                </Card>
+                <Card>
+                    <CardHeader className="flex flex-row items-center justify-between pb-2">
+                        <CardTitle className="text-sm font-medium">Time Spent</CardTitle>
+                        <Clock3 className="h-4 w-4 text-muted-foreground" />
+                    </CardHeader>
+                    <CardContent>
+                        <div className="text-2xl font-bold">{progressMetrics.timeSpent}</div>
+                        <p className="text-xs text-muted-foreground">Last 30 days</p>
+                    </CardContent>
+                </Card>
+                 <Card>
+                    <CardHeader className="flex flex-row items-center justify-between pb-2">
+                        <CardTitle className="text-sm font-medium">Punctuality</CardTitle>
+                        <Clock className="h-4 w-4 text-muted-foreground" />
+                    </CardHeader>
+                    <CardContent>
+                        <div className="text-2xl font-bold">{progressMetrics.punctuality}</div>
+                        <p className="text-xs text-muted-foreground">Assignments & classes</p>
+                    </CardContent>
+                </Card>
+                <Card>
+                    <CardHeader className="flex flex-row items-center justify-between pb-2">
+                        <CardTitle className="text-sm font-medium">Forum Participation</CardTitle>
+                        <MessageSquare className="h-4 w-4 text-muted-foreground" />
+                    </CardHeader>
+                    <CardContent>
+                        <div className="text-2xl font-bold">{progressMetrics.forumParticipation}</div>
+                        <p className="text-xs text-muted-foreground">Active in discussions</p>
+                    </CardContent>
+                </Card>
+            </div>
+            <div className="grid gap-6 mt-6 md:grid-cols-2">
+                <Card>
+                    <CardHeader>
+                        <CardTitle>Progress Over Time</CardTitle>
+                        <CardDescription>Your score improvement this semester.</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                        <ResponsiveContainer width="100%" height={300}>
+                            <LineChart data={subjectProgressData}>
+                                <CartesianGrid strokeDasharray="3 3" />
+                                <XAxis dataKey="month" />
+                                <YAxis unit="%" />
+                                <Tooltip />
+                                <Legend />
+                                <Line type="monotone" dataKey="score" stroke="hsl(var(--primary))" />
+                            </LineChart>
+                        </ResponsiveContainer>
+                    </CardContent>
+                </Card>
+                <Card>
+                    <CardHeader>
+                        <CardTitle>Topic Performance</CardTitle>
+                        <CardDescription>Your performance breakdown by topic.</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                        <ResponsiveContainer width="100%" height={300}>
+                            <BarChart data={topicPerformanceData}>
+                                <CartesianGrid strokeDasharray="3 3" />
+                                <XAxis dataKey="topic" />
+                                <YAxis unit="%" />
+                                <Tooltip />
+                                <Legend />
+                                <Bar dataKey="score" fill="hsl(var(--accent))" />
+                            </BarChart>
+                        </ResponsiveContainer>
+                    </CardContent>
+                </Card>
+            </div>
+            <div className="grid gap-6 mt-6 md:grid-cols-2">
+                <Card>
+                    <CardHeader>
+                        <CardTitle className="flex items-center gap-2"><TrendingUp className="h-5 w-5 text-green-500" /> Strengths</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <ul className="list-disc pl-5 space-y-2 text-sm">
+                            {strengths.map((strength, i) => <li key={i}>{strength}</li>)}
+                        </ul>
+                    </CardContent>
+                </Card>
+                <Card>
+                    <CardHeader>
+                        <CardTitle className="flex items-center gap-2"><TrendingUp className="h-5 w-5 text-red-500 rotate-180" /> Areas for Improvement</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                         <ul className="list-disc pl-5 space-y-2 text-sm">
+                            {weaknesses.map((weakness, i) => <li key={i}>{weakness}</li>)}
+                        </ul>
+                    </CardContent>
+                </Card>
+            </div>
         </TabsContent>
       </Tabs>
     </div>
