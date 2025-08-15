@@ -111,7 +111,6 @@ function CustomDay(props: DayProps) {
             <time dateTime={date.toDateString()} className="absolute top-1 left-1 text-xs">{format(date, 'd')}</time>
             {scheduledClass && (
                 <div className="mt-2 text-center text-[10px] leading-tight">
-                    <p className="font-bold">{scheduledClass.subject}</p>
                     <p>{formatTimeRange(scheduledClass.startTime, scheduledClass.endTime)}</p>
                 </div>
             )}
