@@ -90,7 +90,7 @@ const syllabusData = {
 
 
 const scheduledClasses = [
-    { date: new Date(2025, 7, 15), subject: 'Math', startTime: '10:00', endTime: '11:00' },
+    { date: new Date(2025, 7, 15), subject: 'Mathematics', startTime: '10:00', endTime: '11:00' },
     { date: new Date(2025, 7, 20), subject: 'Physics', startTime: '14:00', endTime: '15:00' },
     { date: new Date(2025, 7, 22), subject: 'History', startTime: '11:00', endTime: '12:00' },
 ];
@@ -107,8 +107,11 @@ function CustomDay(props: DayProps) {
     const scheduledClass = scheduledClasses.find(c => format(c.date, 'yyyy-MM-dd') === format(date, 'yyyy-MM-dd'));
 
     return (
-        <div className="relative flex h-full w-full flex-col items-center justify-center p-1 bg-black text-white">
-            <time dateTime={date.toDateString()} className="text-xs">{format(date, 'd')}</time>
+        <div className={cn(
+          "relative flex h-full w-full flex-col items-center justify-center p-1",
+          scheduledClass && "bg-black/60 text-white"
+        )}>
+            <time dateTime={date.toDateString()}>{format(date, 'd')}</time>
             {scheduledClass && (
                 <div className="mt-2 text-center text-[10px] leading-tight">
                     <p>{formatTimeRange(scheduledClass.startTime, scheduledClass.endTime)}</p>
