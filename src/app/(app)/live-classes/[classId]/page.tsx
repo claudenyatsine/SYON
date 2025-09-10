@@ -262,9 +262,12 @@ export default function LiveClassroomPage() {
         {/* Main Content */}
         <main className={cn(
           "flex flex-col gap-6 min-h-0", 
-          isFullScreen ? "lg:col-span-12" : "lg:col-span-9"
+          isFullScreen ? "lg:col-span-12 justify-center" : "lg:col-span-9"
         )}>
-            <div className="relative rounded-lg overflow-hidden flex-grow bg-card p-2 flex flex-col">
+            <div className={cn(
+              "relative rounded-lg overflow-hidden flex-grow bg-card p-2 flex flex-col",
+              isFullScreen && "flex-grow-0 h-2/3"
+            )}>
               <div className="relative flex-grow rounded-md overflow-hidden bg-black/80">
                 {floatingEmojis.map((item) => (
                   <div key={item.id} className="floating-emoji" style={{ left: item.left }}>
@@ -603,5 +606,3 @@ export default function LiveClassroomPage() {
     </div>
   );
 }
-
-    
