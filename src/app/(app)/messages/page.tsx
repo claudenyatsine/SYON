@@ -7,9 +7,9 @@ import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { cn } from '@/lib/utils';
-import { ArrowLeft, Paperclip, SendHorizonal, Search, UserPlus } from 'lucide-react';
+import { ArrowLeft, Paperclip, SendHorizonal, Search, PlusCircle } from 'lucide-react';
 import { useState } from 'react';
-import { Card } from '@/components/ui/card';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 
 const contacts = [
   { name: 'Dr. Evelyn Reed', subject: 'Physics Tutor', avatar: 'https://placehold.co/100x100.png', online: true, type: 'tutor' },
@@ -38,12 +38,18 @@ export default function MessagesPage() {
 
   return (
     <div className="flex h-full flex-col">
-      <div className="mb-4">
-        <h1 className="font-headline text-3xl font-bold tracking-tight">Messages</h1>
-        <p className="text-muted-foreground">Directly message your tutors and peers.</p>
+      <div className="mb-4 flex items-center justify-between">
+        <div>
+            <h1 className="font-headline text-3xl font-bold tracking-tight">Messages</h1>
+            <p className="text-muted-foreground">Directly message your students and peers.</p>
+        </div>
+        <Button>
+            <PlusCircle className="mr-2 h-4 w-4" />
+            New Message
+        </Button>
       </div>
-      <div className="grid flex-1 grid-cols-1 gap-6 md:grid-cols-3 lg:grid-cols-4 min-h-0">
-        <Card className={cn("flex flex-col md:col-span-1 overflow-hidden shadow-lg", selectedContact ? 'hidden md:flex' : '')}>
+      <Card className="grid flex-1 grid-cols-1 md:grid-cols-3 lg:grid-cols-4 min-h-0 overflow-hidden">
+        <div className={cn("flex flex-col md:col-span-1 border-r", selectedContact ? 'hidden md:flex' : '')}>
           <div className="p-4 border-b">
              <div className="relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -81,16 +87,10 @@ export default function MessagesPage() {
               ))}
             </div>
           </ScrollArea>
-           <div className="p-4 border-t">
-            <Button className="w-full">
-              <UserPlus className="mr-2 h-4 w-4" />
-              Add Contact
-            </Button>
-          </div>
-        </Card>
+        </div>
         
         {selectedContact && (
-          <Card className={cn("flex flex-col md:col-span-2 lg:col-span-3 overflow-hidden shadow-lg", selectedContact ? 'flex' : 'hidden md:flex')}>
+          <div className={cn("flex flex-col md:col-span-2 lg:col-span-3", selectedContact ? 'flex' : 'hidden md:flex')}>
               <div className="p-4 border-b flex items-center gap-3">
                    <Button variant="ghost" size="icon" className="md:hidden" onClick={() => setSelectedContact(undefined)}>
                      <ArrowLeft className="h-5 w-5" />
@@ -130,9 +130,9 @@ export default function MessagesPage() {
                 </div>
               </div>
             </div>
-          </Card>
+          </div>
         )}
-      </div>
+      </Card>
     </div>
   );
 }
