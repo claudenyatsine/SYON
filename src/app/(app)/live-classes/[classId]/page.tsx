@@ -30,6 +30,7 @@ import {
   PhoneOff,
   Pin,
   PinOff,
+  ScreenShare,
   Send,
   Settings,
   Shield,
@@ -100,12 +101,14 @@ export default function LiveClassroomPage() {
   const className = (classId as string)?.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
 
   const videoRef = useRef<HTMLVideoElement>(null);
+  const userStreamRef = useRef<MediaStream | null>(null);
   const fullScreenRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [hasCameraPermission, setHasCameraPermission] = useState<boolean | null>(null);
   const [isMicOn, setIsMicOn] = useState(true);
   const [isCameraOn, setIsCameraOn] = useState(true);
   const [isHandRaised, setIsHandRaised] = useState(false);
+  const [isScreenSharing, setIsScreenSharing] = useState(false);
   const [isFullScreen, setIsFullScreen] = useState(false);
   const [volume, setVolume] = useState([80]);
   const [resources, setResources] = useState(initialResources);
@@ -120,20 +123,14 @@ export default function LiveClassroomPage() {
   }, [volume]);
 
   useEffect(() => {
-    let stream: MediaStream | null = null;
     const getCameraPermission = async () => {
       if (typeof window !== 'undefined' && navigator.mediaDevices) {
         try {
-          stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+          const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+          userStreamRef.current = stream;
           setHasCameraPermission(true);
           if (videoRef.current) {
             videoRef.current.srcObject = stream;
-          }
-          if (!isCameraOn) {
-            stream.getVideoTracks().forEach(track => track.enabled = false);
-          }
-           if (!isMicOn) {
-            stream.getAudioTracks().forEach(track => track.enabled = false);
           }
         } catch (error) {
           console.error('Error accessing camera:', error);
@@ -151,11 +148,11 @@ export default function LiveClassroomPage() {
     getCameraPermission();
     
     return () => {
-      if (stream) {
-        stream.getTracks().forEach(track => track.stop());
+      if (userStreamRef.current) {
+        userStreamRef.current.getTracks().forEach(track => track.stop());
       }
     }
-  }, [isCameraOn, isMicOn, toast]);
+  }, [toast]);
 
   const handleFullScreenChange = () => {
     const isFs = !!document.fullscreenElement;
@@ -193,25 +190,62 @@ export default function LiveClassroomPage() {
 
 
   const toggleCamera = () => {
-    if (videoRef.current && videoRef.current.srcObject) {
-      const stream = videoRef.current.srcObject as MediaStream;
-      stream.getVideoTracks().forEach(track => track.enabled = !isCameraOn);
+    if (userStreamRef.current) {
+      userStreamRef.current.getVideoTracks().forEach(track => track.enabled = !isCameraOn);
       setIsCameraOn(!isCameraOn);
     }
   };
 
   const toggleMic = () => {
-     if (videoRef.current && videoRef.current.srcObject) {
-      const stream = videoRef.current.srcObject as MediaStream;
-      stream.getAudioTracks().forEach(track => track.enabled = !isMicOn);
+     if (userStreamRef.current) {
+      userStreamRef.current.getAudioTracks().forEach(track => track.enabled = !isMicOn);
       setIsMicOn(!isMicOn);
     }
   };
+
+  const toggleScreenShare = async () => {
+    if (isScreenSharing) {
+        // Stop screen sharing and revert to camera
+        if (userStreamRef.current && videoRef.current) {
+            videoRef.current.srcObject = userStreamRef.current;
+        }
+        setIsScreenSharing(false);
+    } else {
+        // Start screen sharing
+        try {
+            const screenStream = await navigator.mediaDevices.getDisplayMedia({ video: true });
+            
+            screenStream.getVideoTracks()[0].addEventListener('ended', () => {
+                // Revert to camera when user stops sharing from browser UI
+                if (userStreamRef.current && videoRef.current) {
+                    videoRef.current.srcObject = userStreamRef.current;
+                }
+                setIsScreenSharing(false);
+            });
+            
+            if (videoRef.current) {
+                videoRef.current.srcObject = screenStream;
+            }
+            setIsScreenSharing(true);
+        } catch (error) {
+            console.error('Error starting screen share:', error);
+            toast({
+                variant: 'destructive',
+                title: 'Screen Share Failed',
+                description: 'Could not start screen sharing. Please check permissions and try again.'
+            });
+        }
+    }
+};
+
 
   const handleEndCall = () => {
     if (videoRef.current && videoRef.current.srcObject) {
       const stream = videoRef.current.srcObject as MediaStream;
       stream.getTracks().forEach(track => track.stop());
+    }
+    if (userStreamRef.current) {
+        userStreamRef.current.getTracks().forEach(track => track.stop());
     }
     router.push('/live-classes');
   };
@@ -281,8 +315,8 @@ export default function LiveClassroomPage() {
                     <span className="name-tag">{item.name}</span>
                   </div>
                 ))}
-                <video ref={videoRef} className="h-full w-full object-cover" autoPlay muted playsInline />
-                {!isCameraOn && (
+                <video ref={videoRef} className="h-full w-full object-contain" autoPlay muted playsInline />
+                {!isCameraOn && !isScreenSharing && (
                     <div className="absolute inset-0 flex items-center justify-center bg-black/80">
                         <Avatar className="h-24 w-24">
                             <AvatarImage src="https://placehold.co/100x100.png" alt="Cristina" />
@@ -448,6 +482,10 @@ export default function LiveClassroomPage() {
                   </Button>
                    <Button variant={isCameraOn ? "secondary" : "destructive"} size="icon" className="rounded-full h-12 w-12" onClick={toggleCamera}>
                     {isCameraOn ? <Video /> : <VideoOff />}
+                  </Button>
+
+                   <Button variant={isScreenSharing ? "primary" : "secondary"} size="icon" className="rounded-full h-12 w-12" onClick={toggleScreenShare}>
+                    <ScreenShare />
                   </Button>
 
                   <Popover>
@@ -694,3 +732,4 @@ export default function LiveClassroomPage() {
     
 
     
+
