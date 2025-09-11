@@ -315,7 +315,7 @@ export default function LiveClassroomPage() {
                     <span className="name-tag">{item.name}</span>
                   </div>
                 ))}
-                <video ref={videoRef} className="h-full w-full object-contain" autoPlay muted playsInline />
+                <video ref={videoRef} className="h-full w-full object-cover" autoPlay muted playsInline />
                 {!isCameraOn && !isScreenSharing && (
                     <div className="absolute inset-0 flex items-center justify-center bg-black/80">
                         <Avatar className="h-24 w-24">
@@ -726,5 +726,6 @@ export default function LiveClassroomPage() {
     
 
     
+
 
 
