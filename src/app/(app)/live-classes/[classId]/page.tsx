@@ -48,6 +48,9 @@ import Image from 'next/image';
 import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Label } from '@/components/ui/label';
+import { Switch } from '@/components/ui/switch';
 
 const participants = [
   { name: 'Johnnie B.', avatar: 'https://placehold.co/100x100.png', isPinned: false, isHandRaised: false },
@@ -262,7 +265,7 @@ export default function LiveClassroomPage() {
         {/* Main Content */}
         <main className={cn(
           "lg:col-span-9 flex flex-col gap-6 min-h-0", 
-          isFullScreen && "lg:col-span-12"
+          isFullScreen && "lg:col-span-12 items-center justify-center"
         )}>
             <div className={cn(
               "relative rounded-lg overflow-hidden bg-card w-full flex-grow",
@@ -270,7 +273,7 @@ export default function LiveClassroomPage() {
             )}>
               <div className={cn(
                 "relative bg-black/80 h-full w-full",
-                 isFullScreen ? "rounded-none" : "rounded-md overflow-hidden"
+                 isFullScreen ? "rounded-none h-full" : "rounded-md overflow-hidden"
               )}>
                 {floatingEmojis.map((item) => (
                   <div key={item.id} className="floating-emoji" style={{ left: item.left }}>
@@ -296,36 +299,112 @@ export default function LiveClassroomPage() {
                     : "left-3 top-1/2 -translate-y-1/2 flex flex-col gap-2 bg-black/50 p-2 rounded-full"
                 )}>
                      <TooltipProvider>
-                        <Tooltip>
-                            <TooltipTrigger asChild>
-                               <Button variant="ghost" size="icon" className="text-white hover:bg-white/20" onClick={() => toast({ title: 'Audio settings opened' })}><Headphones /></Button>
-                            </TooltipTrigger>
-                            <TooltipContent side={isFullScreen ? "bottom" : "right"}><p>Audio Settings</p></TooltipContent>
-                        </Tooltip>
-                         <Tooltip>
-                            <TooltipTrigger asChild>
-                               <Button variant="ghost" size="icon" className="text-white hover:bg-white/20" onClick={() => toast({ title: 'Security panel opened' })}><Shield /></Button>
-                            </TooltipTrigger>
-                            <TooltipContent side={isFullScreen ? "bottom" : "right"}><p>Security</p></TooltipContent>
-                        </Tooltip>
-                         <Tooltip>
-                            <TooltipTrigger asChild>
-                               <Button variant="ghost" size="icon" className="text-white hover:bg-white/20" onClick={() => toast({ title: 'Calendar opened' })}><Calendar /></Button>
-                            </TooltipTrigger>
-                            <TooltipContent side={isFullScreen ? "bottom" : "right"}><p>Calendar</p></TooltipContent>
-                        </Tooltip>
-                        <Tooltip>
-                            <TooltipTrigger asChild>
-                               <Button variant="ghost" size="icon" className="text-white hover:bg-white/20" onClick={() => toast({ title: 'Notifications opened' })}><Bell /></Button>
-                            </TooltipTrigger>
-                            <TooltipContent side={isFullScreen ? "bottom" : "right"}><p>Notifications</p></TooltipContent>
-                        </Tooltip>
-                        <Tooltip>
-                            <TooltipTrigger asChild>
-                               <Button variant="ghost" size="icon" className="text-white hover:bg-white/20" onClick={() => toast({ title: 'Settings panel opened' })}><Settings /></Button>
-                            </TooltipTrigger>
-                            <TooltipContent side={isFullScreen ? "bottom" : "right"}><p>Settings</p></TooltipContent>
-                        </Tooltip>
+                        <Dialog>
+                            <Tooltip>
+                                <TooltipTrigger asChild>
+                                    <DialogTrigger asChild>
+                                        <Button variant="ghost" size="icon" className="text-white hover:bg-white/20"><Headphones /></Button>
+                                    </DialogTrigger>
+                                </TooltipTrigger>
+                                <TooltipContent side={isFullScreen ? "bottom" : "right"}><p>Audio Settings</p></TooltipContent>
+                            </Tooltip>
+                            <DialogContent>
+                                <DialogHeader>
+                                    <DialogTitle>Audio Settings</DialogTitle>
+                                    <DialogDescription>Adjust your audio input and output settings.</DialogDescription>
+                                </DialogHeader>
+                                <div className="space-y-4 py-4">
+                                    <div className="space-y-2">
+                                        <Label>Microphone Volume</Label>
+                                        <Slider defaultValue={[80]} max={100} step={1} />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label>Speaker Volume</Label>
+                                        <Slider defaultValue={[60]} max={100} step={1} />
+                                    </div>
+                                </div>
+                            </DialogContent>
+                        </Dialog>
+                         <Dialog>
+                            <Tooltip>
+                                <TooltipTrigger asChild>
+                                    <DialogTrigger asChild>
+                                        <Button variant="ghost" size="icon" className="text-white hover:bg-white/20"><Shield /></Button>
+                                    </DialogTrigger>
+                                </TooltipTrigger>
+                                <TooltipContent side={isFullScreen ? "bottom" : "right"}><p>Security</p></TooltipContent>
+                            </Tooltip>
+                             <DialogContent>
+                                <DialogHeader>
+                                    <DialogTitle>Security Settings</DialogTitle>
+                                    <DialogDescription>Manage class security options.</DialogDescription>
+                                </DialogHeader>
+                                <div className="space-y-4 py-4">
+                                    <div className="flex items-center justify-between">
+                                        <Label htmlFor="lock-meeting">Lock Class</Label>
+                                        <Switch id="lock-meeting" />
+                                    </div>
+                                    <div className="flex items-center justify-between">
+                                        <Label htmlFor="waiting-room">Enable Waiting Room</Label>
+                                        <Switch id="waiting-room" defaultChecked/>
+                                    </div>
+                                </div>
+                            </DialogContent>
+                        </Dialog>
+                         <Dialog>
+                            <Tooltip>
+                                <TooltipTrigger asChild>
+                                    <DialogTrigger asChild>
+                                        <Button variant="ghost" size="icon" className="text-white hover:bg-white/20"><Calendar /></Button>
+                                    </DialogTrigger>
+                                </TooltipTrigger>
+                                <TooltipContent side={isFullScreen ? "bottom" : "right"}><p>Calendar</p></TooltipContent>
+                            </Tooltip>
+                            <DialogContent>
+                                <DialogHeader>
+                                    <DialogTitle>Upcoming Events</DialogTitle>
+                                </DialogHeader>
+                                <div className="py-4">
+                                    <p>No upcoming events today.</p>
+                                </div>
+                            </DialogContent>
+                         </Dialog>
+                        <Dialog>
+                            <Tooltip>
+                                <TooltipTrigger asChild>
+                                    <DialogTrigger asChild>
+                                        <Button variant="ghost" size="icon" className="text-white hover:bg-white/20"><Bell /></Button>
+                                    </DialogTrigger>
+                                </TooltipTrigger>
+                                <TooltipContent side={isFullScreen ? "bottom" : "right"}><p>Notifications</p></TooltipContent>
+                            </Tooltip>
+                            <DialogContent>
+                                <DialogHeader>
+                                    <DialogTitle>Notifications</DialogTitle>
+                                </DialogHeader>
+                                <div className="py-4">
+                                    <p>No new notifications.</p>
+                                </div>
+                            </DialogContent>
+                        </Dialog>
+                         <Dialog>
+                            <Tooltip>
+                                <TooltipTrigger asChild>
+                                    <DialogTrigger asChild>
+                                        <Button variant="ghost" size="icon" className="text-white hover:bg-white/20"><Settings /></Button>
+                                    </DialogTrigger>
+                                </TooltipTrigger>
+                                <TooltipContent side={isFullScreen ? "bottom" : "right"}><p>Settings</p></TooltipContent>
+                            </Tooltip>
+                            <DialogContent>
+                                <DialogHeader>
+                                    <DialogTitle>General Settings</DialogTitle>
+                                </DialogHeader>
+                                <div className="py-4">
+                                    <p>General settings will be displayed here.</p>
+                                </div>
+                            </DialogContent>
+                        </Dialog>
                     </TooltipProvider>
                 </div>
 
@@ -609,3 +688,5 @@ export default function LiveClassroomPage() {
     </div>
   );
 }
+
+    
