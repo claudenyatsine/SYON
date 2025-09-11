@@ -9,7 +9,6 @@ import {
   SidebarMenu,
   SidebarMenuItem,
   SidebarMenuButton,
-  SidebarFooter,
   useSidebar,
   SidebarTrigger,
   SidebarInset,
@@ -22,8 +21,6 @@ import {
   MessageSquare,
   BarChart3,
   Video,
-  Settings,
-  LogOut,
   PanelLeft,
   Library,
 } from 'lucide-react';
@@ -95,16 +92,6 @@ function AppLayoutContent({ children }: { children: React.ReactNode }) {
             })}
           </SidebarMenu>
         </SidebarContent>
-        <SidebarFooter>
-          <SidebarMenu>
-            <SidebarMenuItem>
-              <SidebarMenuButton href="/" tooltip="Log Out">
-                <LogOut />
-                Log Out
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-          </SidebarMenu>
-        </SidebarFooter>
       </Sidebar>
       <SidebarInset className="flex-1">
         <DashboardHeader />
