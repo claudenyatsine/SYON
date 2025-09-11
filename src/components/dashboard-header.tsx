@@ -16,6 +16,7 @@ import { SidebarTrigger, useSidebar } from './ui/sidebar';
 import { useTheme } from 'next-themes';
 import { Icons } from './icons';
 import { cn } from '@/lib/utils';
+import Link from 'next/link';
 
 export function DashboardHeader() {
   const { setTheme, theme } = useTheme();
@@ -73,10 +74,16 @@ export function DashboardHeader() {
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>My Account</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>Profile</DropdownMenuItem>
-            <DropdownMenuItem>Settings</DropdownMenuItem>
+            <Link href="/profile">
+              <DropdownMenuItem>Profile</DropdownMenuItem>
+            </Link>
+            <Link href="/profile">
+              <DropdownMenuItem>Settings</DropdownMenuItem>
+            </Link>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>Log out</DropdownMenuItem>
+             <Link href="/">
+              <DropdownMenuItem>Log out</DropdownMenuItem>
+            </Link>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
