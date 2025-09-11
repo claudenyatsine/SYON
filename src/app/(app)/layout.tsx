@@ -98,7 +98,7 @@ function AppLayoutContent({ children }: { children: React.ReactNode }) {
         <SidebarFooter>
           <SidebarMenu>
             <SidebarMenuItem>
-              <SidebarMenuButton href="#" tooltip="Settings">
+              <SidebarMenuButton href="/profile" tooltip="Settings">
                 <Settings />
                 Settings
               </SidebarMenuButton>
@@ -112,7 +112,7 @@ function AppLayoutContent({ children }: { children: React.ReactNode }) {
           </SidebarMenu>
         </SidebarFooter>
       </Sidebar>
-      <SidebarInset>
+      <SidebarInset className="flex-1">
         <DashboardHeader />
         <div className="flex-1 p-4 sm:p-6 lg:p-8">{children}</div>
       </SidebarInset>
@@ -133,7 +133,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
   return (
     <SidebarProvider>
-      <div className="flex min-h-screen">
+      <div className="flex min-h-screen min-h-0">
         <AppLayoutContent>{children}</AppLayoutContent>
       </div>
     </SidebarProvider>
