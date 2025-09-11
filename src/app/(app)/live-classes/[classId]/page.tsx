@@ -308,7 +308,7 @@ export default function LiveClassroomPage() {
                                 </TooltipTrigger>
                                 <TooltipContent side={isFullScreen ? "bottom" : "right"}><p>Audio Settings</p></TooltipContent>
                             </Tooltip>
-                            <DialogContent>
+                            <DialogContent container={fullScreenRef.current}>
                                 <DialogHeader>
                                     <DialogTitle>Audio Settings</DialogTitle>
                                     <DialogDescription>Adjust your audio input and output settings.</DialogDescription>
@@ -334,7 +334,7 @@ export default function LiveClassroomPage() {
                                 </TooltipTrigger>
                                 <TooltipContent side={isFullScreen ? "bottom" : "right"}><p>Security</p></TooltipContent>
                             </Tooltip>
-                             <DialogContent>
+                             <DialogContent container={fullScreenRef.current}>
                                 <DialogHeader>
                                     <DialogTitle>Security Settings</DialogTitle>
                                     <DialogDescription>Manage class security options.</DialogDescription>
@@ -360,7 +360,7 @@ export default function LiveClassroomPage() {
                                 </TooltipTrigger>
                                 <TooltipContent side={isFullScreen ? "bottom" : "right"}><p>Calendar</p></TooltipContent>
                             </Tooltip>
-                            <DialogContent>
+                            <DialogContent container={fullScreenRef.current}>
                                 <DialogHeader>
                                     <DialogTitle>Upcoming Events</DialogTitle>
                                 </DialogHeader>
@@ -378,7 +378,7 @@ export default function LiveClassroomPage() {
                                 </TooltipTrigger>
                                 <TooltipContent side={isFullScreen ? "bottom" : "right"}><p>Notifications</p></TooltipContent>
                             </Tooltip>
-                            <DialogContent>
+                            <DialogContent container={fullScreenRef.current}>
                                 <DialogHeader>
                                     <DialogTitle>Notifications</DialogTitle>
                                 </DialogHeader>
@@ -396,7 +396,7 @@ export default function LiveClassroomPage() {
                                 </TooltipTrigger>
                                 <TooltipContent side={isFullScreen ? "bottom" : "right"}><p>Settings</p></TooltipContent>
                             </Tooltip>
-                            <DialogContent>
+                            <DialogContent container={fullScreenRef.current}>
                                 <DialogHeader>
                                     <DialogTitle>General Settings</DialogTitle>
                                 </DialogHeader>
@@ -427,16 +427,18 @@ export default function LiveClassroomPage() {
                                 <Volume2 className="h-4 w-4"/>
                            </Button>
                         </PopoverTrigger>
-                        <PopoverContent className="w-auto p-2" side="top" align="center">
-                            <Slider
-                                defaultValue={[80]}
-                                max={100}
-                                step={1}
-                                orientation="vertical"
-                                className="h-24"
-                                onValueChange={setVolume}
-                            />
-                        </PopoverContent>
+                        <PopoverPortal container={fullScreenRef.current}>
+                          <PopoverContent className="w-auto p-2" side="top" align="center">
+                              <Slider
+                                  defaultValue={[80]}
+                                  max={100}
+                                  step={1}
+                                  orientation="vertical"
+                                  className="h-24"
+                                  onValueChange={setVolume}
+                              />
+                          </PopoverContent>
+                        </PopoverPortal>
                     </Popover>
                  </div>
               </div>
