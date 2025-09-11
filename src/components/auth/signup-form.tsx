@@ -47,7 +47,7 @@ const formSchema = z
     email: z.string().email({ message: 'Please enter a valid email address.' }),
     password: z.string().min(8, { message: 'Password must be at least 8 characters.' }),
     confirmPassword: z.string(),
-    role: z.string({ required_error: 'Please select a role.' }),
+    role: z.string({ required_error: 'Please select a role.' }).min(1, { message: 'Please select a role.' }),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords don't match.",
@@ -81,9 +81,12 @@ export function SignUpForm() {
         title: 'Registration Successful!',
         description: 'Please check your email to verify your account.',
       });
-       // In a real app you would redirect or close the modal here.
-       // For now, we'll just reset the form.
-      form.reset();
+      
+      if (values.role === 'tutor') {
+        router.push('/tutor/dashboard');
+      } else {
+        router.push('/dashboard');
+      }
 
     } catch (error) {
       console.error('Failed to send welcome email:', error);
@@ -99,14 +102,19 @@ export function SignUpForm() {
 
   const handleGoogleSignUp = async () => {
     const user = await signInWithGoogle();
+    const role = form.getValues('role');
     if (user) {
       toast({
         title: "Account Created Successfully",
         description: `Welcome, ${user.displayName}!`,
       });
       // In a real app, you might want to send a welcome email here too.
-      // For now, just redirect.
-      router.push('/dashboard');
+      // And role would be part of the user profile, not just form state.
+      if (role === 'tutor') {
+        router.push('/tutor/dashboard');
+      } else {
+        router.push('/dashboard');
+      }
     } else {
        toast({
         variant: 'destructive',

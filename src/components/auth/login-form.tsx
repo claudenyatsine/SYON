@@ -15,6 +15,7 @@ import {
 } from '@/components/ui/select';
 import { signInWithGoogle } from '@/lib/firebase';
 import { useToast } from '@/hooks/use-toast';
+import { useState } from 'react';
 
 function GoogleIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
@@ -31,11 +32,15 @@ function GoogleIcon(props: React.SVGProps<SVGSVGElement>) {
 export function LoginForm() {
   const router = useRouter();
   const { toast } = useToast();
+  const [role, setRole] = useState('');
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    // Mock login logic
-    router.push('/dashboard');
+    if (role === 'tutor') {
+      router.push('/tutor/dashboard');
+    } else {
+      router.push('/dashboard');
+    }
   };
 
   const handleGoogleSignIn = async () => {
@@ -45,7 +50,12 @@ export function LoginForm() {
         title: "Signed In Successfully",
         description: `Welcome back, ${user.displayName}!`,
       });
-      router.push('/dashboard');
+      // Simple role routing for google sign in, in a real app this would be stored with the user profile
+      if (role === 'tutor') {
+        router.push('/tutor/dashboard');
+      } else {
+        router.push('/dashboard');
+      }
     } else {
        toast({
         variant: 'destructive',
@@ -83,7 +93,7 @@ export function LoginForm() {
           </div>
            <div className="space-y-2">
             <Label htmlFor="role">I am a</Label>
-            <Select required>
+            <Select required onValueChange={setRole}>
               <SelectTrigger id="role">
                 <SelectValue placeholder="Select your role" />
               </SelectTrigger>
