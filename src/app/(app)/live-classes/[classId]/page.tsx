@@ -273,7 +273,7 @@ export default function LiveClassroomPage() {
             )}>
               <div className={cn(
                 "relative bg-black/80 h-full w-full",
-                 isFullScreen ? "rounded-none h-full" : "rounded-md overflow-hidden"
+                 isFullScreen ? "rounded-none h-full w-full" : "rounded-md overflow-hidden"
               )}>
                 {floatingEmojis.map((item) => (
                   <div key={item.id} className="floating-emoji" style={{ left: item.left }}>
@@ -454,7 +454,7 @@ export default function LiveClassroomPage() {
                         <Smile />
                       </Button>
                     </PopoverTrigger>
-                    <PopoverPortal container={fullScreenRef.current}>
+                    <PopoverPortal container={fullScreenRef.current!}>
                       <PopoverContent side="top" className="w-auto p-2 bg-background/80 backdrop-blur-sm border-none">
                         <div className="flex gap-2">
                           {reactions.map((emoji) => (
@@ -689,4 +689,6 @@ export default function LiveClassroomPage() {
   );
 }
     
+    
+
     
