@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import Image from 'next/image';
-import { Calendar, Clock } from 'lucide-react';
+import { Calendar, Clock, Edit, PlusCircle } from 'lucide-react';
 import { useState } from 'react';
 import Link from 'next/link';
 
@@ -82,16 +82,16 @@ const getBadgeVariant = (status: string) => {
   }
 }
 
-const getButtonText = (status: string) => {
+const getButtonConfig = (status: string) => {
     switch (status) {
         case 'On going':
-            return 'Join Class';
+            return { text: 'Manage Class', variant: 'default' as const, disabled: false };
         case 'Upcoming':
-            return 'Register';
+            return { text: 'Edit Class', variant: 'outline' as const, disabled: false };
         case 'Completed':
-            return 'View Recording';
+            return { text: 'View Report', variant: 'outline' as const, disabled: false };
         default:
-            return 'View Details';
+            return { text: 'View Details', variant: 'secondary' as const, disabled: true };
     }
 }
 
@@ -106,10 +106,16 @@ export default function LiveClassesPage() {
 
   return (
     <div className="space-y-6 md:space-y-8">
-      <div>
-        <h1 className="font-headline text-3xl font-bold tracking-tight">Live Classes</h1>
-        <p className="text-muted-foreground">Join live, interactive classes with expert tutors.</p>
-      </div>
+       <div className="flex items-center justify-between">
+            <div>
+                <h1 className="font-headline text-3xl font-bold tracking-tight">Live Classes</h1>
+                <p className="text-muted-foreground">Manage your scheduled classes and create new ones.</p>
+            </div>
+            <Button>
+                <PlusCircle className="mr-2 h-4 w-4" />
+                Create New Class
+            </Button>
+        </div>
       
        <Tabs defaultValue="all" onValueChange={setFilter}>
         <TabsList>
@@ -120,47 +126,51 @@ export default function LiveClassesPage() {
         </TabsList>
         <TabsContent value={filter}>
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-3 mt-6">
-                {filteredClasses.map((cls) => (
-                <Card key={cls.title} className="flex flex-col overflow-hidden">
-                    <CardHeader className="relative p-0">
-                    <Image
-                        src={cls.image}
-                        alt={cls.title}
-                        width={600}
-                        height={400}
-                        className="aspect-video w-full object-cover"
-                        data-ai-hint={cls.aiHint}
-                    />
-                    <Badge className="absolute top-3 right-3" variant={getBadgeVariant(cls.status)}>{cls.status}</Badge>
-                    </CardHeader>
-                    <CardContent className="flex-grow space-y-3 p-4">
-                    <Badge variant="secondary">{cls.subject}</Badge>
-                    <CardTitle className="text-lg">{cls.title}</CardTitle>
-                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                        <Avatar className="h-6 w-6">
-                        <AvatarImage src={cls.tutorAvatar} alt={cls.tutor} />
-                        <AvatarFallback>{cls.tutor.charAt(0)}</AvatarFallback>
-                        </Avatar>
-                        <span>{cls.tutor}</span>
-                    </div>
-                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                        <Calendar className="h-4 w-4" />
-                        <span>{cls.date}</span>
-                    </div>
-                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                        <Clock className="h-4 w-4" />
-                        <span>{cls.time}</span>
-                    </div>
-                    </CardContent>
-                    <CardFooter className="p-4 pt-0">
-                    <Link href={`/live-classes/${cls.title.toLowerCase().replace(/\s+/g, '-')}`} passHref className="w-full">
-                        <Button className="w-full font-bold" disabled={cls.status === 'Completed'}>
-                        {getButtonText(cls.status)}
-                        </Button>
-                    </Link>
-                    </CardFooter>
-                </Card>
-                ))}
+                {filteredClasses.map((cls) => {
+                    const buttonConfig = getButtonConfig(cls.status);
+                    return (
+                        <Card key={cls.title} className="flex flex-col overflow-hidden">
+                            <CardHeader className="relative p-0">
+                            <Image
+                                src={cls.image}
+                                alt={cls.title}
+                                width={600}
+                                height={400}
+                                className="aspect-video w-full object-cover"
+                                data-ai-hint={cls.aiHint}
+                            />
+                            <Badge className="absolute top-3 right-3" variant={getBadgeVariant(cls.status)}>{cls.status}</Badge>
+                            </CardHeader>
+                            <CardContent className="flex-grow space-y-3 p-4">
+                            <Badge variant="secondary">{cls.subject}</Badge>
+                            <CardTitle className="text-lg">{cls.title}</CardTitle>
+                            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                                <Avatar className="h-6 w-6">
+                                <AvatarImage src={cls.tutorAvatar} alt={cls.tutor} />
+                                <AvatarFallback>{cls.tutor.charAt(0)}</AvatarFallback>
+                                </Avatar>
+                                <span>{cls.tutor}</span>
+                            </div>
+                            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                                <Calendar className="h-4 w-4" />
+                                <span>{cls.date}</span>
+                            </div>
+                            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                                <Clock className="h-4 w-4" />
+                                <span>{cls.time}</span>
+                            </div>
+                            </CardContent>
+                            <CardFooter className="p-4 pt-0">
+                            <Link href={`/live-classes/${cls.title.toLowerCase().replace(/\s+/g, '-')}`} passHref className="w-full">
+                                <Button className="w-full font-bold" variant={buttonConfig.variant} disabled={buttonConfig.disabled}>
+                                  {buttonConfig.text === 'Edit Class' && <Edit className="mr-2 h-4 w-4" />}
+                                  {buttonConfig.text}
+                                </Button>
+                            </Link>
+                            </CardFooter>
+                        </Card>
+                    )
+                })}
             </div>
             {filteredClasses.length === 0 && (
                 <div className="col-span-1 sm:col-span-2 xl:col-span-3 text-center py-12">
@@ -173,5 +183,3 @@ export default function LiveClassesPage() {
     </div>
   );
 }
-
-    
