@@ -461,8 +461,7 @@ export default function LiveClassroomPage() {
                                 <Volume2 className="h-4 w-4"/>
                            </Button>
                         </PopoverTrigger>
-                        <PopoverPortal container={fullScreenRef.current}>
-                          <PopoverContent className="w-auto p-2" side="top" align="center">
+                        <PopoverContent container={fullScreenRef.current} className="w-auto p-2" side="top" align="center">
                               <Slider
                                   defaultValue={[80]}
                                   max={100}
@@ -471,8 +470,7 @@ export default function LiveClassroomPage() {
                                   className="h-24"
                                   onValueChange={setVolume}
                               />
-                          </PopoverContent>
-                        </PopoverPortal>
+                        </PopoverContent>
                     </Popover>
                  </div>
               </div>
@@ -494,8 +492,7 @@ export default function LiveClassroomPage() {
                         <Smile />
                       </Button>
                     </PopoverTrigger>
-                    <PopoverPortal container={fullScreenRef.current!}>
-                      <PopoverContent side="top" className="w-auto p-2 bg-background/80 backdrop-blur-sm border-none">
+                      <PopoverContent container={fullScreenRef.current} side="top" className="w-auto p-2 bg-background/80 backdrop-blur-sm border-none">
                         <div className="flex gap-2">
                           {reactions.map((emoji) => (
                             <Button key={emoji} variant="ghost" size="icon" className="text-2xl" onClick={() => handleReaction(emoji)}>
@@ -504,7 +501,6 @@ export default function LiveClassroomPage() {
                           ))}
                         </div>
                       </PopoverContent>
-                    </PopoverPortal>
                   </Popover>
 
                   <Button variant={isHandRaised ? "primary" : "secondary"} size="icon" className="rounded-full h-12 w-12" onClick={() => setIsHandRaised(!isHandRaised)}>
@@ -560,8 +556,7 @@ export default function LiveClassroomPage() {
                                     </CardContent>
                                 </Card>
                             </PopoverTrigger>
-                            <PopoverPortal container={fullScreenRef.current}>
-                                <PopoverContent side="top" align="end" className="w-80 bg-black/50 backdrop-blur-sm border-white/20 text-white">
+                            <PopoverContent container={fullScreenRef.current} side="top" align="end" className="w-80 bg-black/50 backdrop-blur-sm border-white/20 text-white">
                                     <div className="flex justify-between items-center mb-4">
                                         <h3 className="font-semibold">Participants ({participants.length})</h3>
                                     </div>
@@ -584,8 +579,7 @@ export default function LiveClassroomPage() {
                                             ))}
                                         </div>
                                     </ScrollArea>
-                                </PopoverContent>
-                            </PopoverPortal>
+                            </PopoverContent>
                         </Popover>
                     </div>
                   </>
@@ -732,4 +726,5 @@ export default function LiveClassroomPage() {
     
 
     
+
 
