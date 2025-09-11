@@ -10,6 +10,7 @@ import { Separator } from '@/components/ui/separator';
 import { Switch } from '@/components/ui/switch';
 import { Shield, User, Bell, CreditCard, KeyRound } from 'lucide-react';
 import { useState } from 'react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 export default function ProfilePage() {
     const [activeTab, setActiveTab] = useState('account');
@@ -73,6 +74,34 @@ export default function ProfilePage() {
                               <div className="space-y-2">
                                   <Label htmlFor="email">Email</Label>
                                   <Input id="email" type="email" defaultValue="alex.doe@example.com" disabled />
+                              </div>
+                               <div className="space-y-2">
+                                  <Label htmlFor="grade">Grade</Label>
+                                  <Select>
+                                    <SelectTrigger id="grade">
+                                        <SelectValue placeholder="Select your grade" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        {[...Array(12)].map((_, i) => (
+                                            <SelectItem key={i + 1} value={`Grade ${i + 1}`}>
+                                                Grade {i + 1}
+                                            </SelectItem>
+                                        ))}
+                                         <SelectItem value="higher-ed">Higher Education</SelectItem>
+                                    </SelectContent>
+                                  </Select>
+                              </div>
+                              <div className="space-y-2">
+                                  <Label htmlFor="subjects">Subjects</Label>
+                                  <Input id="subjects" placeholder="e.g. Math, Physics" />
+                              </div>
+                               <div className="space-y-2">
+                                  <Label htmlFor="phone">Phone Number</Label>
+                                  <Input id="phone" type="tel" placeholder="+1 (555) 123-4567" />
+                              </div>
+                               <div className="space-y-2">
+                                  <Label htmlFor="address">Address</Label>
+                                  <Input id="address" placeholder="123 Main St, Anytown, USA" />
                               </div>
                           </div>
                           <div className="space-y-2">
