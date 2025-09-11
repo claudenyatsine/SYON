@@ -133,7 +133,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
   return (
     <SidebarProvider>
-      <div className="flex min-h-screen min-h-0">
+      <div className="flex min-h-screen w-full min-h-0">
         <AppLayoutContent>{children}</AppLayoutContent>
       </div>
     </SidebarProvider>
