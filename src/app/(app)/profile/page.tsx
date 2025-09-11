@@ -8,9 +8,16 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import { Switch } from '@/components/ui/switch';
-import { Shield, User, Bell, CreditCard, KeyRound } from 'lucide-react';
+import { Shield, User, Bell, CreditCard, KeyRound, Briefcase, DollarSign, Banknote, Download } from 'lucide-react';
 import { useState } from 'react';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+
+const transactionHistory = [
+    { id: 'txn_1', date: '2024-07-20', description: 'Payout to Bank Account', amount: '+$1,200.00', status: 'Completed' },
+    { id: 'txn_2', date: '2024-07-18', description: 'Platform Fee', amount: '-$120.00', status: 'Completed' },
+    { id: 'txn_3', date: '2024-07-15', description: 'Payment from Class: Algebra 101', amount: '+$150.00', status: 'Completed' },
+    { id: 'txn_4', date: '2024-07-12', description: 'Payment from Tutoring Session', amount: '+$50.00', status: 'Completed' },
+];
 
 export default function ProfilePage() {
     const [activeTab, setActiveTab] = useState('account');
@@ -18,8 +25,8 @@ export default function ProfilePage() {
     <div className="w-full">
       <div className="space-y-6 md:space-y-8">
         <div>
-          <h1 className="font-headline text-3xl font-bold tracking-tight">Account Settings</h1>
-          <p className="text-muted-foreground">Manage your account, preferences, and notifications.</p>
+          <h1 className="font-headline text-3xl font-bold tracking-tight">Tutor Settings</h1>
+          <p className="text-muted-foreground">Manage your account, professional profile, and payout settings.</p>
         </div>
 
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-4">
@@ -29,7 +36,7 @@ export default function ProfilePage() {
                       <nav className="flex flex-col space-y-1">
                           <Button variant={activeTab === 'account' ? 'secondary' : 'ghost'} onClick={() => setActiveTab('account')} className="justify-start">
                               <User className="mr-2 h-4 w-4" />
-                              Account
+                              Profile
                           </Button>
                           <Button variant={activeTab === 'notifications' ? 'secondary' : 'ghost'} onClick={() => setActiveTab('notifications')} className="justify-start">
                               <Bell className="mr-2 h-4 w-4" />
@@ -41,7 +48,7 @@ export default function ProfilePage() {
                           </Button>
                           <Button variant={activeTab === 'billing' ? 'secondary' : 'ghost'} onClick={() => setActiveTab('billing')} className="justify-start">
                               <CreditCard className="mr-2 h-4 w-4" />
-                              Billing
+                              Earnings
                           </Button>
                       </nav>
                   </CardContent>
@@ -52,8 +59,8 @@ export default function ProfilePage() {
               {activeTab === 'account' && (
                   <Card>
                       <CardHeader>
-                          <CardTitle>Profile</CardTitle>
-                          <CardDescription>This information will be displayed publicly.</CardDescription>
+                          <CardTitle>Tutor Profile</CardTitle>
+                          <CardDescription>This information will be displayed on your public tutor profile.</CardDescription>
                       </CardHeader>
                       <CardContent className="space-y-6">
                           <div className="flex items-center gap-6">
@@ -69,44 +76,40 @@ export default function ProfilePage() {
                           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
                               <div className="space-y-2">
                                   <Label htmlFor="fullName">Full Name</Label>
-                                  <Input id="fullName" defaultValue="Alex Doe" />
+                                  <Input id="fullName" defaultValue="Anya Sharma" />
                               </div>
                               <div className="space-y-2">
                                   <Label htmlFor="email">Email</Label>
-                                  <Input id="email" type="email" defaultValue="alex.doe@example.com" disabled />
+                                  <Input id="email" type="email" defaultValue="anya.sharma@example.com" disabled />
+                              </div>
+                              <div className="space-y-2 sm:col-span-2">
+                                  <Label htmlFor="title">Title / Headline</Label>
+                                  <Input id="title" placeholder="e.g. Senior Math & Physics Tutor" />
                               </div>
                                <div className="space-y-2">
-                                  <Label htmlFor="grade">Grade</Label>
-                                  <Select>
-                                    <SelectTrigger id="grade">
-                                        <SelectValue placeholder="Select your grade" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        {[...Array(12)].map((_, i) => (
-                                            <SelectItem key={i + 1} value={`Grade ${i + 1}`}>
-                                                Grade {i + 1}
-                                            </SelectItem>
-                                        ))}
-                                         <SelectItem value="higher-ed">Higher Education</SelectItem>
-                                    </SelectContent>
-                                  </Select>
+                                  <Label htmlFor="experience">Years of Experience</Label>
+                                  <Input id="experience" type="number" placeholder="e.g. 5" />
                               </div>
-                              <div className="space-y-2">
-                                  <Label htmlFor="subjects">Subjects</Label>
-                                  <Input id="subjects" placeholder="e.g. Math, Physics" />
+                               <div className="space-y-2">
+                                  <Label htmlFor="rate">Hourly Rate ($)</Label>
+                                  <Input id="rate" type="number" placeholder="e.g. 50" />
+                              </div>
+                              <div className="space-y-2 sm:col-span-2">
+                                  <Label htmlFor="expertise">Expertise / Subjects</Label>
+                                  <Input id="expertise" placeholder="e.g. Mathematics, Physics, Computer Science" />
                               </div>
                                <div className="space-y-2">
                                   <Label htmlFor="phone">Phone Number</Label>
                                   <Input id="phone" type="tel" placeholder="+1 (555) 123-4567" />
                               </div>
                                <div className="space-y-2">
-                                  <Label htmlFor="address">Address</Label>
-                                  <Input id="address" placeholder="123 Main St, Anytown, USA" />
+                                  <Label htmlFor="website">Website / Portfolio</Label>
+                                  <Input id="website" placeholder="https://your-portfolio.com" />
                               </div>
                           </div>
                           <div className="space-y-2">
                               <Label htmlFor="bio">Bio</Label>
-                              <textarea id="bio" rows={3} className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm" placeholder="Tell us a little about yourself..."></textarea>
+                              <textarea id="bio" rows={4} className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm" placeholder="Tell students about your teaching philosophy, experience, and what makes you a great tutor..."></textarea>
                           </div>
                       </CardContent>
                   </Card>
@@ -115,29 +118,29 @@ export default function ProfilePage() {
                   <Card>
                       <CardHeader>
                           <CardTitle>Notifications</CardTitle>
-                          <CardDescription>Manage how you receive notifications.</CardDescription>
+                          <CardDescription>Manage how you receive notifications about student activity.</CardDescription>
                       </CardHeader>
                       <CardContent className="space-y-6">
                         <div className="space-y-4">
                               <h3 className="font-medium">By Email</h3>
                               <div className="flex items-center justify-between rounded-lg border p-4">
                                   <div>
-                                      <p className="font-medium">New Messages</p>
-                                      <p className="text-sm text-muted-foreground">Notify me when I receive a new direct message.</p>
+                                      <p className="font-medium">New Student Messages</p>
+                                      <p className="text-sm text-muted-foreground">Notify me when a student sends you a direct message.</p>
                                   </div>
                                   <Switch defaultChecked />
                               </div>
                               <div className="flex items-center justify-between rounded-lg border p-4">
                                   <div>
-                                      <p className="font-medium">Forum Mentions</p>
-                                      <p className="text-sm text-muted-foreground">Notify me when someone mentions me in a forum.</p>
+                                      <p className="font-medium">New Forum Posts</p>
+                                      <p className="text-sm text-muted-foreground">Notify me when a student posts in a forum you manage.</p>
                                   </div>
                                   <Switch defaultChecked />
                               </div>
                               <div className="flex items-center justify-between rounded-lg border p-4">
                                   <div>
-                                      <p className="font-medium">Class Reminders</p>
-                                      <p className="text-sm text-muted-foreground">Remind me about upcoming live classes.</p>
+                                      <p className="font-medium">Class Booking Confirmations</p>
+                                      <p className="text-sm text-muted-foreground">Notify me when a student books a live class.</p>
                                   </div>
                                   <Switch />
                               </div>
@@ -193,45 +196,83 @@ export default function ProfilePage() {
                   </Card>
               )}
               {activeTab === 'billing' && (
-                  <Card>
-                      <CardHeader>
-                          <CardTitle>Billing</CardTitle>
-                          <CardDescription>Manage your subscription and payment methods.</CardDescription>
-                      </CardHeader>
-                      <CardContent className="space-y-6">
-                        <div className="rounded-lg border p-4">
-                              <div className="flex justify-between items-start">
-                                  <div>
-                                      <h3 className="font-semibold">Pro Plan</h3>
-                                      <p className="text-sm text-muted-foreground">Renews on August 29, 2025</p>
-                                  </div>
-                                  <p className="font-semibold">$15/month</p>
-                              </div>
-                              <Separator className="my-4" />
-                              <div className="flex justify-end gap-2">
-                                  <Button variant="outline">Change Plan</Button>
-                                  <Button variant="destructive">Cancel Subscription</Button>
-                              </div>
-                          </div>
+                  <div className="space-y-6">
+                    <div className="grid gap-6 md:grid-cols-2">
+                         <Card>
+                            <CardHeader className="flex flex-row items-center justify-between pb-2">
+                                <CardTitle className="text-sm font-medium">Total Earnings</CardTitle>
+                                <DollarSign className="h-4 w-4 text-muted-foreground" />
+                            </CardHeader>
+                            <CardContent>
+                                <div className="text-2xl font-bold">$12,540.00</div>
+                                <p className="text-xs text-muted-foreground">All-time earnings</p>
+                            </CardContent>
+                        </Card>
+                         <Card>
+                            <CardHeader className="flex flex-row items-center justify-between pb-2">
+                                <CardTitle className="text-sm font-medium">Next Payout</CardTitle>
+                                <Banknote className="h-4 w-4 text-muted-foreground" />
+                            </CardHeader>
+                            <CardContent>
+                                <div className="text-2xl font-bold">$1,200.00</div>
+                                <p className="text-xs text-muted-foreground">Scheduled for August 1, 2024</p>
+                            </CardContent>
+                        </Card>
+                    </div>
 
-                          <div>
-                              <h3 className="font-semibold">Payment Methods</h3>
-                              <div className="mt-4 space-y-4">
-                                  <div className="flex items-center justify-between rounded-lg border p-4">
-                                      <div className="flex items-center gap-3">
-                                          <CreditCard className="h-6 w-6"/>
-                                          <div>
-                                              <p className="font-medium">Visa ending in 1234</p>
-                                              <p className="text-sm text-muted-foreground">Expires 08/2026</p>
-                                          </div>
-                                      </div>
-                                      <Button variant="ghost" size="sm">Remove</Button>
+                    <Card>
+                      <CardHeader>
+                          <CardTitle>Payout Methods</CardTitle>
+                          <CardDescription>Manage your bank accounts for receiving payments.</CardDescription>
+                      </CardHeader>
+                      <CardContent className="space-y-4">
+                          <div className="flex items-center justify-between rounded-lg border p-4">
+                              <div className="flex items-center gap-3">
+                                  <Briefcase className="h-6 w-6"/>
+                                  <div>
+                                      <p className="font-medium">Bank of America</p>
+                                      <p className="text-sm text-muted-foreground">Checking Account ending in 1234</p>
                                   </div>
-                                  <Button>Add Payment Method</Button>
                               </div>
+                              <Button variant="ghost" size="sm">Remove</Button>
                           </div>
+                          <Button>Add Payout Method</Button>
                       </CardContent>
-                  </Card>
+                    </Card>
+
+                    <Card>
+                        <CardHeader className="flex flex-row items-center justify-between">
+                            <div>
+                                <CardTitle>Transaction History</CardTitle>
+                                <CardDescription>View your recent payouts and platform fees.</CardDescription>
+                            </div>
+                            <Button variant="outline" size="sm">
+                                <Download className="mr-2 h-4 w-4"/>
+                                Export
+                            </Button>
+                        </CardHeader>
+                        <CardContent>
+                            <Table>
+                                <TableHeader>
+                                    <TableRow>
+                                        <TableHead>Date</TableHead>
+                                        <TableHead>Description</TableHead>
+                                        <TableHead className="text-right">Amount</TableHead>
+                                    </TableRow>
+                                </TableHeader>
+                                <TableBody>
+                                    {transactionHistory.map(txn => (
+                                        <TableRow key={txn.id}>
+                                            <TableCell>{txn.date}</TableCell>
+                                            <TableCell>{txn.description}</TableCell>
+                                            <TableCell className={`text-right font-medium ${txn.amount.startsWith('+') ? 'text-green-600' : 'text-red-600'}`}>{txn.amount}</TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
+                        </CardContent>
+                    </Card>
+                  </div>
               )}
           </div>
         </div>
