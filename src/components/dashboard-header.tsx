@@ -77,9 +77,6 @@ export function DashboardHeader() {
             <Link href="/profile">
               <DropdownMenuItem>Profile</DropdownMenuItem>
             </Link>
-            <Link href="/profile">
-              <DropdownMenuItem>Settings</DropdownMenuItem>
-            </Link>
             <DropdownMenuSeparator />
              <Link href="/">
               <DropdownMenuItem>Log out</DropdownMenuItem>
