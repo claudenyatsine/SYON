@@ -96,27 +96,9 @@ export default function LandingPage() {
             <Link href="#testimonials" passHref>
                 <Button variant="ghost">Testimonials</Button>
             </Link>
-             <Dialog>
-              <DialogTrigger asChild>
-                 <Button variant="ghost">Sign In</Button>
-              </DialogTrigger>
-              <DialogContent className="max-w-sm p-0">
-                <ScrollArea className="max-h-[90vh]">
-                  <div className="p-6">
-                    <DialogHeader className="flex flex-col items-center text-center">
-                        <Icons.logo className="h-12 w-12 text-primary" />
-                        <DialogTitle className="font-headline text-3xl font-bold tracking-tighter text-foreground mt-4">
-                            Welcome back
-                        </DialogTitle>
-                    <DialogDescription className="mt-2">
-                       Sign in to continue your learning journey.
-                    </DialogDescription>
-                    </DialogHeader>
-                    <LoginForm />
-                  </div>
-                </ScrollArea>
-              </DialogContent>
-             </Dialog>
+             <Link href="/login" passHref>
+                <Button variant="ghost">Sign In</Button>
+             </Link>
            </div>
           <Sheet>
             <SheetTrigger asChild>
@@ -143,27 +125,9 @@ export default function LandingPage() {
                 <Link href="#testimonials" passHref>
                   <Button variant="ghost" className="w-full justify-start">Testimonials</Button>
                 </Link>
-                 <Dialog>
-                  <DialogTrigger asChild>
+                 <Link href="/login" passHref>
                      <Button variant="ghost" className="w-full justify-start">Sign In</Button>
-                  </DialogTrigger>
-                  <DialogContent className="max-w-sm p-0">
-                    <ScrollArea className="max-h-[90vh]">
-                      <div className="p-6">
-                        <DialogHeader className="flex flex-col items-center text-center">
-                            <Icons.logo className="h-12 w-12 text-primary" />
-                            <DialogTitle className="font-headline text-3xl font-bold tracking-tighter text-foreground mt-4">
-                                Welcome back
-                            </DialogTitle>
-                        <DialogDescription className="mt-2">
-                           Sign in to continue your learning journey.
-                        </DialogDescription>
-                        </DialogHeader>
-                        <LoginForm />
-                      </div>
-                    </ScrollArea>
-                  </DialogContent>
-                 </Dialog>
+                 </Link>
               </div>
             </SheetContent>
           </Sheet>
@@ -185,32 +149,14 @@ export default function LandingPage() {
                         <p className="max-w-xl text-lg text-foreground/80">
                         LearnetIQ is your all-in-one platform for academic success, combining AI-powered tutoring with a vibrant community and curated resources.
                         </p>
-                        <Dialog>
                         <div className="flex flex-col gap-4 sm:flex-row sm:justify-center md:justify-start">
-                            <DialogTrigger asChild>
-                            <Button size="lg" className="font-bold">Get Started for Free</Button>
-                            </DialogTrigger>
+                            <Link href="/signup" passHref>
+                              <Button size="lg" className="font-bold">Get Started for Free</Button>
+                            </Link>
                             <Link href="#" passHref>
-                            <Button size="lg" variant="outline">Learn More</Button>
+                              <Button size="lg" variant="outline">Learn More</Button>
                             </Link>
                         </div>
-                        <DialogContent className="max-w-sm p-0">
-                          <ScrollArea className="max-h-[90vh]">
-                            <div className="p-6">
-                              <DialogHeader className="flex flex-col items-center text-center">
-                                  <Icons.logo className="h-12 w-12 text-primary" />
-                                  <DialogTitle className="font-headline text-3xl font-bold tracking-tighter text-foreground mt-4">
-                                  Create your account
-                                  </DialogTitle>
-                              <DialogDescription className="mt-2">
-                                  Get started on your learning journey.
-                              </DialogDescription>
-                              </DialogHeader>
-                              <SignUpForm />
-                            </div>
-                          </ScrollArea>
-                        </DialogContent>
-                        </Dialog>
                     </div>
                     <div className="hidden md:block" />
                     </div>
@@ -384,27 +330,9 @@ export default function LandingPage() {
                       <h2 className="font-headline text-3xl font-bold tracking-tight">Ready to Start Learning?</h2>
                       <p className="mt-4 text-lg text-background/80">Join thousands of students achieving their academic goals.</p>
                       <div className="mt-8">
-                          <Dialog>
-                          <DialogTrigger asChild>
+                          <Link href="/signup" passHref>
                               <Button size="lg" variant="secondary" className="font-bold">Sign Up Now</Button>
-                          </DialogTrigger>
-                          <DialogContent className="max-w-sm p-0">
-                            <ScrollArea className="max-h-[90vh]">
-                              <div className="p-6">
-                                <DialogHeader className="flex flex-col items-center text-center">
-                                <Icons.logo className="h-12 w-12 text-primary" />
-                                <DialogTitle className="font-headline text-3xl font-bold tracking-tighter text-foreground mt-4">
-                                    Create your account
-                                </DialogTitle>
-                                <DialogDescription className="mt-2">
-                                    Get started on your learning journey.
-                                </DialogDescription>
-                                </DialogHeader>
-                                <SignUpForm />
-                              </div>
-                            </ScrollArea>
-                          </DialogContent>
-                          </Dialog>
+                          </Link>
                       </div>
                       </div>
                       <div className="grid grid-cols-2 gap-8 text-sm">
@@ -450,4 +378,5 @@ export default function LandingPage() {
     
 
     
+
 

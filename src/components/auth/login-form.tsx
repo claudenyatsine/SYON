@@ -111,13 +111,7 @@ export function LoginForm() {
           </Button>
           <p className="text-xs text-muted-foreground">
             Don&apos;t have an account?{' '}
-            <Link href="/" className="font-medium text-primary hover:underline" onClick={(e) => {
-              // This is a bit of a hack to prevent page navigation
-              // A more robust solution would use a global state for the modal
-              e.preventDefault();
-              // In a real app, you'd trigger the sign-up modal here
-              alert("Please close this and click 'Get Started' to sign up.");
-            }}>
+            <Link href="/signup" className="font-medium text-primary hover:underline">
               Sign up
             </Link>
           </p>
