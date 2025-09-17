@@ -27,6 +27,7 @@ import {
 import { Button } from './ui/button';
 import { cn } from '@/lib/utils';
 import Image from 'next/image';
+import images from '@/lib/placeholder-images.json';
 
 const features = [
   {
@@ -34,40 +35,40 @@ const features = [
     title: 'Course Management',
     description: 'Course creation and organization by subjects/grade levels, syllabus and curriculum mapping, learning modules with structured content, prerequisite settings and course sequencing.',
     bgColor: 'bg-blue-500',
-    image: 'https://placehold.co/800x600.png',
-    aiHint: 'organizing files',
+    image: images.organizingFiles.src,
+    aiHint: images.organizingFiles.hint,
   },
   {
     icon: ClipboardCheck,
     title: 'Assessment System',
     description: 'Assignment creation and submission portal, exam/quiz builder with various question types, automated grading for objective questions, rubric-based grading for subjective work, plagiarism detection integration.',
     bgColor: 'bg-green-500',
-    image: 'https://placehold.co/800x600.png',
-    aiHint: 'checking test paper',
+    image: images.checkingTestPaper.src,
+    aiHint: images.checkingTestPaper.hint,
   },
   {
     icon: GraduationCap,
     title: 'Gradebook & Analytics',
     description: 'Comprehensive grade tracking, weighted grading systems, progress reports and transcripts, performance analytics and visualizations, comparative analytics (class averages, percentiles).',
     bgColor: 'bg-indigo-500',
-    image: 'https://placehold.co/800x600.png',
-    aiHint: 'data graphs analytics',
+    image: images.dataGraphsAnalytics.src,
+    aiHint: images.dataGraphsAnalytics.hint,
   },
   {
     icon: Presentation,
     title: 'Live Classroom',
     description: 'Virtual classroom with video/audio streaming, interactive whiteboard and screen sharing, breakout rooms for group work, attendance tracking during live sessions, session recording and playback.',
     bgColor: 'bg-purple-500',
-    image: 'https://placehold.co/800x600.png',
-    aiHint: 'online presentation',
+    image: images.onlinePresentation.src,
+    aiHint: images.onlinePresentation.hint,
   },
   {
     icon: Bot,
     title: 'AI Enhancements',
     description: 'Smart tutoring system, automated feedback generation, writing/style suggestions, predictive performance analytics, chatbot for student support.',
     bgColor: 'bg-sky-500',
-    image: 'https://placehold.co/800x600.png',
-    aiHint: 'robot thinking',
+    image: images.robotThinking.src,
+    aiHint: images.robotThinking.hint,
   },
 ];
 

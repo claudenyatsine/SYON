@@ -52,25 +52,26 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
+import images from '@/lib/placeholder-images.json';
 
 const participants = [
-  { name: 'Johnnie B.', avatar: 'https://placehold.co/100x100.png', isPinned: false, isHandRaised: false },
-  { name: 'Ethan C.', avatar: 'https://placehold.co/100x100.png', isPinned: false, isHandRaised: false },
-  { name: 'Andy T.', avatar: 'https://placehold.co/100x100.png', isPinned: false, isHandRaised: false },
-  { name: 'Jordan K.', avatar: 'https://placehold.co/100x100.png', isPinned: true, isHandRaised: false },
-  { name: 'Marta E.', avatar: 'https://placehold.co/100x100.png', isPinned: false, isHandRaised: true },
-  { name: 'Cristina', avatar: 'https://placehold.co/100x100.png', isPinned: false, isHandRaised: false },
-  { name: 'David L.', avatar: 'https://placehold.co/100x100.png', isPinned: false, isHandRaised: false },
-  { name: 'Sophia R.', avatar: 'https://placehold.co/100x100.png', isPinned: false, isHandRaised: false },
+  { name: 'Johnnie B.', avatar: images.avatar1.src, isPinned: false, isHandRaised: false },
+  { name: 'Ethan C.', avatar: images.avatar2.src, isPinned: false, isHandRaised: false },
+  { name: 'Andy T.', avatar: images.avatar3.src, isPinned: false, isHandRaised: false },
+  { name: 'Jordan K.', avatar: images.avatar4.src, isPinned: true, isHandRaised: false },
+  { name: 'Marta E.', avatar: images.avatar5.src, isPinned: false, isHandRaised: true },
+  { name: 'Cristina', avatar: images.avatar6.src, isPinned: false, isHandRaised: false },
+  { name: 'David L.', avatar: images.avatar7.src, isPinned: false, isHandRaised: false },
+  { name: 'Sophia R.', avatar: images.avatar8.src, isPinned: false, isHandRaised: false },
 ];
 
 const chatMessages = [
-    { sender: 'Jonathan Milton', time: '2:30 pm', text: 'Does anyone have the updated presentation? @the_assistant', avatar: 'https://placehold.co/100x100.png' },
-    { sender: 'You', time: '2:31 pm', text: 'I\'ll share it shortly.', isMe: true, avatar: 'https://placehold.co/100x100.png' },
-    { sender: 'AI Assistant', time: '2:31 pm', text: 'Q1_Strategy.pptx', isFile: true, avatar: 'https://placehold.co/100x100.png' },
-    { sender: 'Jonathan Milton', time: '2:33 pm', text: 'Thanks! Let\'s review slide 5 together.', avatar: 'https://placehold.co/100x100.png' },
-    { sender: 'Marta E.', time: '2:34 pm', text: 'We need to update the sales figures.', avatar: 'https://placehold.co/100x100.png' },
-    { sender: 'You', time: '2:35 pm', text: 'Agreed. I\'ll provide the updated data by tomorrow.', isMe: true, avatar: 'https://placehold.co/100x100.png' },
+    { sender: 'Jonathan Milton', time: '2:30 pm', text: 'Does anyone have the updated presentation? @the_assistant', avatar: images.avatar1.src },
+    { sender: 'You', time: '2:31 pm', text: 'I\'ll share it shortly.', isMe: true, avatar: images.avatar2.src },
+    { sender: 'AI Assistant', time: '2:31 pm', text: 'Q1_Strategy.pptx', isFile: true, avatar: images.avatar3.src },
+    { sender: 'Jonathan Milton', time: '2:33 pm', text: 'Thanks! Let\'s review slide 5 together.', avatar: images.avatar4.src },
+    { sender: 'Marta E.', time: '2:34 pm', text: 'We need to update the sales figures.', avatar: images.avatar5.src },
+    { sender: 'You', time: '2:35 pm', text: 'Agreed. I\'ll provide the updated data by tomorrow.', isMe: true, avatar: images.avatar6.src },
 ];
 
 const meetingInsights = [
@@ -319,7 +320,7 @@ export default function LiveClassroomPage() {
                 {!isCameraOn && !isScreenSharing && (
                     <div className="absolute inset-0 flex items-center justify-center bg-black/80">
                         <Avatar className="h-24 w-24">
-                            <AvatarImage src="https://placehold.co/100x100.png" alt="Cristina" />
+                            <AvatarImage src={images.avatar1.src} alt="Cristina" />
                             <AvatarFallback>C</AvatarFallback>
                         </Avatar>
                     </div>
@@ -726,6 +727,7 @@ export default function LiveClassroomPage() {
     
 
     
+
 
 
 

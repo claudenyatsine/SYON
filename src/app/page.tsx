@@ -18,37 +18,38 @@ import { Bar, BarChart, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YA
 import { useIsMobile } from '@/hooks/use-mobile';
 import { FeaturesCarousel } from '@/components/features-carousel';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import images from '@/lib/placeholder-images.json';
 
 
 const testimonials = [
     {
         name: 'Sarah L.',
-        avatar: 'https://placehold.co/100x100.png',
+        avatar: images.avatar1.src,
         title: '11th Grade Student',
         quote: "LearnetIQ's AI assistant helped me finally understand calculus. The personalized resources are a game-changer for my study habits!"
     },
     {
         name: 'David C.',
-        avatar: 'https://placehold.co/100x100.png',
+        avatar: images.avatar2.src,
         title: 'Parent',
         quote: "I've seen a remarkable improvement in my son's grades since he started using LearnetIQ. The platform is intuitive and engaging."
     },
      {
         name: 'Emily R.',
-        avatar: 'https://placehold.co/100x100.png',
+        avatar: images.avatar3.src,
         title: '12th Grade Student',
         quote: "The live classes and community forums made me feel connected. It's like having a study group with you all the time."
     }
 ]
 
 const clients = [
-    { name: 'NASA', hint: 'nasa logo' },
-    { name: 'NIVEA', hint: 'nivea logo' },
-    { name: 'Cricket', hint: 'cricket wireless logo' },
-    { name: 'cloaked', hint: 'cloaked logo' },
-    { name: 'Jeep', hint: 'jeep logo' },
-    { name: 'Ritter Sport', hint: 'ritter sport logo' },
-    { name: 'Vegan Burg', hint: 'vegan burger logo' },
+    { name: 'NASA', hint: images.nasaLogo.hint, src: images.nasaLogo.src, width: images.nasaLogo.width, height: images.nasaLogo.height },
+    { name: 'NIVEA', hint: images.niveaLogo.hint, src: images.niveaLogo.src, width: images.niveaLogo.width, height: images.niveaLogo.height },
+    { name: 'Cricket', hint: images.cricketLogo.hint, src: images.cricketLogo.src, width: images.cricketLogo.width, height: images.cricketLogo.height },
+    { name: 'cloaked', hint: images.cloakedLogo.hint, src: images.cloakedLogo.src, width: images.cloakedLogo.width, height: images.cloakedLogo.height },
+    { name: 'Jeep', hint: images.jeepLogo.hint, src: images.jeepLogo.src, width: images.jeepLogo.width, height: images.jeepLogo.height },
+    { name: 'Ritter Sport', hint: images.ritterSportLogo.hint, src: images.ritterSportLogo.src, width: images.ritterSportLogo.width, height: images.ritterSportLogo.height },
+    { name: 'Vegan Burg', hint: images.veganBurgLogo.hint, src: images.veganBurgLogo.src, width: images.veganBurgLogo.width, height: images.veganBurgLogo.height },
 ]
 
 const clientTeams = [
@@ -96,10 +97,25 @@ export default function LandingPage() {
             <Link href="#testimonials" passHref>
                 <Button variant="ghost">Testimonials</Button>
             </Link>
-             <Link href="/login" passHref>
+             <Dialog>
+              <DialogTrigger asChild>
                 <Button variant="ghost">Sign In</Button>
-             </Link>
-           </div>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-sm">
+                <DialogHeader>
+                  <DialogTitle className="font-headline text-2xl font-bold tracking-tighter">Welcome back</DialogTitle>
+                  <DialogDescription>
+                    Sign in to continue your learning journey.
+                  </DialogDescription>
+                </DialogHeader>
+                <ScrollArea className="max-h-[80vh]">
+                  <div className="p-1">
+                    <LoginForm />
+                  </div>
+                </ScrollArea>
+              </DialogContent>
+            </Dialog>
+          </div>
           <Sheet>
             <SheetTrigger asChild>
               <Button variant="ghost" size="icon" className="md:hidden">
@@ -125,9 +141,24 @@ export default function LandingPage() {
                 <Link href="#testimonials" passHref>
                   <Button variant="ghost" className="w-full justify-start">Testimonials</Button>
                 </Link>
-                 <Link href="/login" passHref>
-                     <Button variant="ghost" className="w-full justify-start">Sign In</Button>
-                 </Link>
+                 <Dialog>
+                  <DialogTrigger asChild>
+                    <Button variant="ghost" className="w-full justify-start">Sign In</Button>
+                  </DialogTrigger>
+                  <DialogContent className="sm:max-w-sm">
+                    <DialogHeader>
+                      <DialogTitle className="font-headline text-2xl font-bold tracking-tighter">Welcome back</DialogTitle>
+                      <DialogDescription>
+                        Sign in to continue your learning journey.
+                      </DialogDescription>
+                    </DialogHeader>
+                     <ScrollArea className="max-h-[80vh]">
+                      <div className="p-1">
+                        <LoginForm />
+                      </div>
+                    </ScrollArea>
+                  </DialogContent>
+                </Dialog>
               </div>
             </SheetContent>
           </Sheet>
@@ -137,7 +168,7 @@ export default function LandingPage() {
       <main className="snap-container">
         {/* Hero Section */}
         <section className="snap-section relative flex items-center justify-center overflow-hidden">
-           <Image src="https://placehold.co/1920x1080.png" alt="Hero background" layout="fill" objectFit="cover" className="z-0" data-ai-hint="modern classroom" />
+           <Image src={images.modernClassroom.src} alt="Hero background" layout="fill" objectFit="cover" className="z-0" data-ai-hint={images.modernClassroom.hint} />
            <div className="absolute inset-0 bg-background/60 dark:bg-background/80" />
            <div className="relative z-10 flex w-full items-center">
                 <div className="container mx-auto px-4 md:px-6">
@@ -150,9 +181,24 @@ export default function LandingPage() {
                         LearnetIQ is your all-in-one platform for academic success, combining AI-powered tutoring with a vibrant community and curated resources.
                         </p>
                         <div className="flex flex-col gap-4 sm:flex-row sm:justify-center md:justify-start">
-                            <Link href="/signup" passHref>
-                              <Button size="lg" className="font-bold">Get Started for Free</Button>
-                            </Link>
+                            <Dialog>
+                              <DialogTrigger asChild>
+                                <Button size="lg" className="font-bold">Get Started for Free</Button>
+                              </DialogTrigger>
+                              <DialogContent className="sm:max-w-sm">
+                                <DialogHeader>
+                                  <DialogTitle className="font-headline text-2xl font-bold tracking-tighter">Create an Account</DialogTitle>
+                                  <DialogDescription>
+                                    Join LearnetIQ and start your learning journey today.
+                                  </DialogDescription>
+                                </DialogHeader>
+                                <ScrollArea className="max-h-[80vh]">
+                                  <div className="p-1">
+                                    <SignUpForm />
+                                  </div>
+                                </ScrollArea>
+                              </DialogContent>
+                            </Dialog>
                             <Link href="#" passHref>
                               <Button size="lg" variant="outline">Learn More</Button>
                             </Link>
@@ -310,7 +356,7 @@ export default function LandingPage() {
                 <div className="mt-12 grid grid-cols-2 place-items-center gap-8 md:grid-cols-4 lg:grid-cols-7">
                     {clients.map((client) => (
                         <div key={client.name} className="flex h-24 w-40 items-center justify-center rounded-lg bg-secondary/50 p-4">
-                        <Image src={`https://placehold.co/128x64.png`} alt={client.name} width={128} height={64} data-ai-hint={client.hint} className="object-contain" />
+                        <Image src={client.src} alt={client.name} width={client.width} height={client.height} data-ai-hint={client.hint} className="object-contain" />
                         </div>
                     ))}
                 </div>
@@ -330,9 +376,24 @@ export default function LandingPage() {
                       <h2 className="font-headline text-3xl font-bold tracking-tight">Ready to Start Learning?</h2>
                       <p className="mt-4 text-lg text-background/80">Join thousands of students achieving their academic goals.</p>
                       <div className="mt-8">
-                          <Link href="/signup" passHref>
+                          <Dialog>
+                            <DialogTrigger asChild>
                               <Button size="lg" variant="secondary" className="font-bold">Sign Up Now</Button>
-                          </Link>
+                            </DialogTrigger>
+                            <DialogContent className="sm:max-w-sm">
+                              <DialogHeader>
+                                  <DialogTitle className="font-headline text-2xl font-bold tracking-tighter">Create an Account</DialogTitle>
+                                  <DialogDescription>
+                                    Join LearnetIQ and start your learning journey today.
+                                  </DialogDescription>
+                                </DialogHeader>
+                                <ScrollArea className="max-h-[80vh]">
+                                  <div className="p-1">
+                                    <SignUpForm />
+                                  </div>
+                                </ScrollArea>
+                            </DialogContent>
+                          </Dialog>
                       </div>
                       </div>
                       <div className="grid grid-cols-2 gap-8 text-sm">
@@ -378,5 +439,6 @@ export default function LandingPage() {
     
 
     
+
 
 

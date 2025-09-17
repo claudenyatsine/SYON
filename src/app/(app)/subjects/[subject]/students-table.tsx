@@ -15,13 +15,14 @@ import { Button } from "@/components/ui/button";
 import { MessageSquare, MoreHorizontal } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Progress } from "@/components/ui/progress";
+import images from '@/lib/placeholder-images.json';
 
 const students = [
-  { name: 'Alex Doe', avatar: 'https://placehold.co/100x100.png', grade: 'A-', attendance: 98, progress: 92, lastLogin: '2 hours ago' },
-  { name: 'Bethany Smith', avatar: 'https://placehold.co/100x100.png', grade: 'B+', attendance: 95, progress: 85, lastLogin: '1 day ago' },
-  { name: 'Charlie Brown', avatar: 'https://placehold.co/100x100.png', grade: 'C', attendance: 85, progress: 70, lastLogin: '3 days ago' },
-  { name: 'Diana Prince', avatar: 'https://placehold.co/100x100.png', grade: 'A', attendance: 100, progress: 95, lastLogin: '5 hours ago' },
-  { name: 'Ethan Hunt', avatar: 'https://placehold.co/100x100.png', grade: 'B', attendance: 92, progress: 80, lastLogin: 'yesterday' },
+  { name: 'Alex Doe', avatar: images.avatar1.src, grade: 'A-', attendance: 98, progress: 92, lastLogin: '2 hours ago' },
+  { name: 'Bethany Smith', avatar: images.avatar2.src, grade: 'B+', attendance: 95, progress: 85, lastLogin: '1 day ago' },
+  { name: 'Charlie Brown', avatar: images.avatar3.src, grade: 'C', attendance: 85, progress: 70, lastLogin: '3 days ago' },
+  { name: 'Diana Prince', avatar: images.avatar4.src, grade: 'A', attendance: 100, progress: 95, lastLogin: '5 hours ago' },
+  { name: 'Ethan Hunt', avatar: images.avatar5.src, grade: 'B', attendance: 92, progress: 80, lastLogin: 'yesterday' },
 ]
 
 export function StudentsTable() {

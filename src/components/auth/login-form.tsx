@@ -44,24 +44,22 @@ export function LoginForm() {
   };
 
   const handleGoogleSignIn = async () => {
-    const user = await signInWithGoogle();
-    if (user) {
-      toast({
-        title: "Signed In Successfully",
-        description: `Welcome back, ${user.displayName}!`,
-      });
-      // Simple role routing for google sign in, in a real app this would be stored with the user profile
-      if (role === 'tutor') {
-        router.push('/tutor/dashboard');
-      } else {
-        router.push('/dashboard');
+    try {
+      const user = await signInWithGoogle();
+      if (user) {
+        toast({
+          title: "Signed In Successfully",
+          description: `Welcome back, ${user.displayName}!`,
+        });
+        // Simple role routing for google sign in, in a real app this would be stored with the user profile
+        if (role === 'tutor') {
+          router.push('/tutor/dashboard');
+        } else {
+          router.push('/dashboard');
+        }
       }
-    } else {
-       toast({
-        variant: 'destructive',
-        title: "Sign In Failed",
-        description: "Could not sign in with Google. Please try again.",
-      });
+    } catch (error) {
+      // The popup-closed-by-user error is handled in firebase.ts, so we only need to toast for other errors.
     }
   }
 

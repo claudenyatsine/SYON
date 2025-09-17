@@ -34,6 +34,7 @@ import Link from 'next/link';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
+import images from '@/lib/placeholder-images.json';
 
 const subjects = [
   { name: 'Mathematics', icon: Calculator, color: 'text-blue-500' },
@@ -157,7 +158,7 @@ export default function DashboardPage() {
                           <FormControl>
                             <SelectTrigger>
                               <SelectValue placeholder="Select a subject" />
-                            </SelectTrigger>
+                            </Trigger>
                           </FormControl>
                           <SelectContent>
                             {subjects.map((s) => (
@@ -195,7 +196,7 @@ export default function DashboardPage() {
             <CardTitle>Upcoming Live Class</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-             <Image src="https://placehold.co/600x400.png" alt="Live class" width={600} height={400} className="rounded-lg" data-ai-hint="online learning" />
+             <Image src={images.onlineLearning.src} alt={images.onlineLearning.alt} width={images.onlineLearning.width} height={images.onlineLearning.height} className="rounded-lg" data-ai-hint={images.onlineLearning.hint} />
             <h3 className="font-semibold">Introduction to Algebra</h3>
             <p className="text-sm text-muted-foreground">Join Mr. Davidson to master the basics of algebraic expressions.</p>
             <div className="text-sm font-medium">Today at 4:00 PM</div>

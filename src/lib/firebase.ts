@@ -20,11 +20,14 @@ const googleProvider = new GoogleAuthProvider();
 const signInWithGoogle = async () => {
     try {
         const result = await signInWithPopup(auth, googleProvider);
-        const user = result.user;
-        return user;
-    } catch (error) {
+        return result.user;
+    } catch (error: any) {
+        // Don't log an error if the user closes the popup
+        if (error.code === 'auth/popup-closed-by-user' || error.code === 'auth/popup-blocked') {
+            return null;
+        }
         console.error("Error during Google sign-in:", error);
-        return null;
+        throw error; // Re-throw other errors to be handled by the caller
     }
 }
 

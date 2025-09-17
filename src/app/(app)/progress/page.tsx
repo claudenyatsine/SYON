@@ -24,6 +24,7 @@ import { ArrowUp, BookCheck, Clock, Target, Award, TrendingUp } from 'lucide-rea
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import images from '@/lib/placeholder-images.json';
 
 const overallProgressData = [
   { month: 'Jan', progress: 20 },
@@ -43,16 +44,16 @@ const subjectPerformanceData = [
 ];
 
 const topStudents = {
-    topPerformer: { name: 'Diana Prince', avatar: 'https://placehold.co/100x100.png', grade: 'A', subject: 'Overall' },
-    risingStar: { name: 'Charlie Brown', avatar: 'https://placehold.co/100x100.png', improvement: '+15%', subject: 'Physics' },
+    topPerformer: { name: 'Diana Prince', avatar: images.avatar1.src, grade: 'A', subject: 'Overall' },
+    risingStar: { name: 'Charlie Brown', avatar: images.avatar2.src, improvement: '+15%', subject: 'Physics' },
 }
 
 const recentAchievements = [
-    { student: 'Alex Doe', avatar: 'https://placehold.co/100x100.png', action: 'completed', task: 'Algebra Assignment', score: '98%', time: '2m ago' },
-    { student: 'Bethany Smith', avatar: 'https://placehold.co/100x100.png', action: 'scored 100% on', task: 'History Pop Quiz', score: '100%', time: '15m ago' },
-    { student: 'Diana Prince', avatar: 'https://placehold.co/100x100.png', action: 'achieved a new high score in', task: 'Physics Simulation', score: '95%', time: '1h ago' },
-    { student: 'Ethan Hunt', avatar: 'https://placehold.co/100x100.png', action: 'completed', task: 'English Essay', score: '88%', time: '3h ago' },
-     { student: 'Charlie Brown', avatar: 'https://placehold.co/100x100.png', action: 'improved their grade in', task: 'Calculus', score: 'to B-', time: '5h ago' },
+    { student: 'Alex Doe', avatar: images.avatar3.src, action: 'completed', task: 'Algebra Assignment', score: '98%', time: '2m ago' },
+    { student: 'Bethany Smith', avatar: images.avatar4.src, action: 'scored 100% on', task: 'History Pop Quiz', score: '100%', time: '15m ago' },
+    { student: 'Diana Prince', avatar: images.avatar1.src, action: 'achieved a new high score in', task: 'Physics Simulation', score: '95%', time: '1h ago' },
+    { student: 'Ethan Hunt', avatar: images.avatar5.src, action: 'completed', task: 'English Essay', score: '88%', time: '3h ago' },
+     { student: 'Charlie Brown', avatar: images.avatar2.src, action: 'improved their grade in', task: 'Calculus', score: 'to B-', time: '5h ago' },
 ]
 
 export default function ProgressPage() {

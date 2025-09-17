@@ -10,13 +10,14 @@ import { cn } from '@/lib/utils';
 import { ArrowLeft, Paperclip, SendHorizonal, Search, PlusCircle } from 'lucide-react';
 import { useState } from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import images from '@/lib/placeholder-images.json';
 
 const contacts = [
-  { name: 'Dr. Evelyn Reed', subject: 'Physics Tutor', avatar: 'https://placehold.co/100x100.png', online: true, type: 'tutor' },
-  { name: 'Mr. John Carter', subject: 'History Tutor', avatar: 'https://placehold.co/100x100.png', online: false, type: 'tutor' },
-  { name: 'Ms. Anya Sharma', subject: 'Mathematics Tutor', avatar: 'https://placehold.co/100x100.png', online: true, type: 'tutor' },
-  { name: 'Alice Johnson', subject: 'Classmate', avatar: 'https://placehold.co/100x100.png', online: false, type: 'peer' },
-  { name: 'Bob Williams', subject: 'Classmate', avatar: 'https://placehold.co/100x100.png', online: true, type: 'peer' },
+  { name: 'Dr. Evelyn Reed', subject: 'Physics Tutor', avatar: images.avatar1.src, online: true, type: 'tutor' },
+  { name: 'Mr. John Carter', subject: 'History Tutor', avatar: images.avatar2.src, online: false, type: 'tutor' },
+  { name: 'Ms. Anya Sharma', subject: 'Mathematics Tutor', avatar: images.avatar3.src, online: true, type: 'tutor' },
+  { name: 'Alice Johnson', subject: 'Classmate', avatar: images.avatar4.src, online: false, type: 'peer' },
+  { name: 'Bob Williams', subject: 'Classmate', avatar: images.avatar5.src, online: true, type: 'peer' },
 ];
 
 const messages = [

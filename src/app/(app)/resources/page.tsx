@@ -6,6 +6,7 @@ import Image from 'next/image';
 import { Badge } from '@/components/ui/badge';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { FileText, Film } from 'lucide-react';
+import images from '@/lib/placeholder-images.json';
 
 const resources = [
   {
@@ -13,48 +14,48 @@ const resources = [
     subject: 'Mathematics',
     type: 'Video',
     description: 'A comprehensive video series covering all topics in Calculus I, from limits to integration.',
-    image: 'https://placehold.co/600x400.png',
-    aiHint: 'mathematics textbook',
+    image: images.mathematicsTextbook.src,
+    aiHint: images.mathematicsTextbook.hint,
   },
   {
     title: 'The Feynman Lectures on Physics',
     subject: 'Physics',
     type: 'Book',
     description: 'Iconic lectures by Richard Feynman, offering deep insights into the world of physics.',
-    image: 'https://placehold.co/600x400.png',
-    aiHint: 'physics equation',
+    image: images.physicsEquation.src,
+    aiHint: images.physicsEquation.hint,
   },
   {
     title: 'Crash Course World History',
     subject: 'History',
     type: 'Video Series',
     description: 'John Green teaches you the history of the world in a fast-paced, entertaining series.',
-    image: 'https://placehold.co/600x400.png',
-    aiHint: 'history map',
+    image: images.historyMap.src,
+    aiHint: images.historyMap.hint,
   },
   {
     title: 'Shakespeare\'s Complete Works',
     subject: 'English',
     type: 'Book',
     description: 'Explore the timeless plays and sonnets of William Shakespeare.',
-    image: 'https://placehold.co/600x400.png',
-    aiHint: 'literature book',
+    image: images.literatureBook.src,
+    aiHint: images.literatureBook.hint,
   },
   {
     title: 'Organic Chemistry Practice Problems',
     subject: 'Chemistry',
     type: 'Worksheet',
     description: 'A collection of practice problems to help you master organic chemistry concepts.',
-    image: 'https://placehold.co/600x400.png',
-    aiHint: 'chemistry lab',
+    image: images.chemistryLab.src,
+    aiHint: images.chemistryLab.hint,
   },
     {
     title: 'Introduction to Python Programming',
     subject: 'Computer Science',
     type: 'Interactive Tutorial',
     description: 'Learn the fundamentals of Python with hands-on coding exercises.',
-    image: 'https://placehold.co/600x400.png',
-    aiHint: 'programming code',
+    image: images.programmingCode.src,
+    aiHint: images.programmingCode.hint,
   },
 ];
 

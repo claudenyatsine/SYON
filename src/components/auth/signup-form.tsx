@@ -101,26 +101,24 @@ export function SignUpForm() {
   }
 
   const handleGoogleSignUp = async () => {
-    const user = await signInWithGoogle();
     const role = form.getValues('role');
-    if (user) {
-      toast({
-        title: "Account Created Successfully",
-        description: `Welcome, ${user.displayName}!`,
-      });
-      // In a real app, you might want to send a welcome email here too.
-      // And role would be part of the user profile, not just form state.
-      if (role === 'tutor') {
-        router.push('/tutor/dashboard');
-      } else {
-        router.push('/dashboard');
+    try {
+      const user = await signInWithGoogle();
+      if (user) {
+        toast({
+          title: "Account Created Successfully",
+          description: `Welcome, ${user.displayName}!`,
+        });
+        // In a real app, you might want to send a welcome email here too.
+        // And role would be part of the user profile, not just form state.
+        if (role === 'tutor') {
+          router.push('/tutor/dashboard');
+        } else {
+          router.push('/dashboard');
+        }
       }
-    } else {
-       toast({
-        variant: 'destructive',
-        title: "Sign Up Failed",
-        description: "Could not create account with Google. Please try again.",
-      });
+    } catch (error) {
+        // The popup-closed-by-user error is handled in firebase.ts, so we only need to toast for other errors.
     }
   }
 

@@ -10,12 +10,13 @@ import { useParams } from 'next/navigation';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
+import images from '@/lib/placeholder-images.json';
 
 const mockPosts = [
   {
     id: 1,
     author: 'Alice Johnson',
-    avatar: 'https://placehold.co/100x100.png',
+    avatar: images.avatar1.src,
     handle: 'ajohnson',
     time: '2 hours ago',
     content: "I'm having a hard time understanding the concept of derivatives in calculus. Can anyone explain it in a simple way or recommend a good video tutorial?",
@@ -28,7 +29,7 @@ const mockPosts = [
             id: 101,
             author: 'Anya Sharma',
             isTutor: true,
-            avatar: 'https://placehold.co/100x100.png',
+            avatar: images.avatar2.src,
             handle: 'asharma',
             time: '1 hour ago',
             content: "Great question, Alice! Think of a derivative as the instantaneous rate of change, or the slope of a curve at a single point. For videos, Khan Academy has an excellent series on the topic. I've linked it in the main resources tab!",
@@ -38,7 +39,7 @@ const mockPosts = [
             id: 102,
             author: 'Bob Williams',
             isTutor: false,
-            avatar: 'https://placehold.co/100x100.png',
+            avatar: images.avatar3.src,
             handle: 'bwilliams',
             time: '45 minutes ago',
             content: "That video series really helped me too. The product rule section was super clear.",
@@ -49,7 +50,7 @@ const mockPosts = [
   {
     id: 2,
     author: 'Bob Williams',
-    avatar: 'https://placehold.co/100x100.png',
+    avatar: images.avatar3.src,
     handle: 'bwilliams',
     time: '5 hours ago',
     content: 'What are the most significant long-term effects of the Industrial Revolution on modern society? I\'m working on a paper and need some ideas.',
@@ -62,7 +63,7 @@ const mockPosts = [
    {
     id: 3,
     author: 'Charlie Davis',
-    avatar: 'https://placehold.co/100x100.png',
+    avatar: images.avatar4.src,
     handle: 'cdavis',
     time: '1 day ago',
     content: 'Is there a practice sheet for the upcoming physics quiz? I want to get some extra reps in on the kinematics problems.',
@@ -112,7 +113,7 @@ export default function SubjectForumPage() {
         <CardContent className="p-4 md:p-6">
           <div className="flex items-start gap-4">
             <Avatar className="hidden sm:flex">
-              <AvatarImage src="https://placehold.co/100x100.png" alt="Tutor Avatar" />
+              <AvatarImage src={images.avatar5.src} alt="Tutor Avatar" />
               <AvatarFallback>T</AvatarFallback>
             </Avatar>
             <div className="w-full space-y-2">

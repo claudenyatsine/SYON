@@ -11,6 +11,7 @@ import { Switch } from '@/components/ui/switch';
 import { Shield, User, Bell, CreditCard, KeyRound, Briefcase, DollarSign, Banknote, Download } from 'lucide-react';
 import { useState } from 'react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import images from '@/lib/placeholder-images.json';
 
 const transactionHistory = [
     { id: 'txn_1', date: '2024-07-20', description: 'Payout to Bank Account', amount: '+$1,200.00', status: 'Completed' },
@@ -65,7 +66,7 @@ export default function ProfilePage() {
                       <CardContent className="space-y-6">
                           <div className="flex items-center gap-6">
                               <Avatar className="h-20 w-20">
-                                  <AvatarImage src="https://placehold.co/100x100.png" alt="User avatar" />
+                                  <AvatarImage src={images.avatar1.src} alt="User avatar" />
                                   <AvatarFallback>A</AvatarFallback>
                               </Avatar>
                               <div className="flex gap-2">
