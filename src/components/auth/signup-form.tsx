@@ -16,7 +16,6 @@ import {
 } from '../ui/form';
 import { Input } from '../ui/input';
 import { useToast } from '@/hooks/use-toast';
-import { sendWelcomeEmail } from '@/ai/flows/send-welcome-email';
 import { useState } from 'react';
 import {
   Select,
@@ -25,10 +24,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '../ui/select';
-import { signInWithGoogle } from '@/lib/firebase';
 import { useRouter } from 'next/navigation';
-import { Alert, AlertDescription, AlertTitle } from '../ui/alert';
-import { Terminal } from 'lucide-react';
 
 
 function GoogleIcon(props: React.SVGProps<SVGSVGElement>) {
@@ -60,7 +56,6 @@ export function SignUpForm() {
   const { toast } = useToast();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
-  const isFirebaseConfigured = process.env.NEXT_PUBLIC_FIREBASE_API_KEY && process.env.NEXT_PUBLIC_FIREBASE_API_KEY !== 'YOUR_API_KEY_HERE';
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -75,55 +70,30 @@ export function SignUpForm() {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setLoading(true);
-    try {
-      await sendWelcomeEmail({
-        fullname: values.fullname,
-        email: values.email,
-      });
-
-      toast({
-        title: 'Registration Successful!',
-        description: 'Please check your email to verify your account.',
-      });
-      
-      if (values.role === 'tutor') {
-        router.push('/tutor/dashboard');
-      } else {
-        router.push('/dashboard');
-      }
-
-    } catch (error) {
-      console.error('Failed to send welcome email:', error);
-      toast({
-        variant: 'destructive',
-        title: 'Registration Failed',
-        description: 'Something went wrong. Please try again.',
-      });
-    } finally {
-      setLoading(false);
+    // Simulate a successful registration
+    toast({
+      title: 'Registration Successful!',
+      description: 'You are now being redirected to the dashboard.',
+    });
+    
+    if (values.role === 'tutor') {
+      router.push('/tutor/dashboard');
+    } else {
+      router.push('/dashboard');
     }
+    setLoading(false);
   }
 
-  const handleGoogleSignUp = async () => {
-    if (!isFirebaseConfigured) return;
+  const handleGoogleSignUp = () => {
     const role = form.getValues('role');
-    try {
-      const user = await signInWithGoogle();
-      if (user) {
-        toast({
-          title: "Account Created Successfully",
-          description: `Welcome, ${user.displayName}!`,
-        });
-        // In a real app, you might want to send a welcome email here too.
-        // And role would be part of the user profile, not just form state.
-        if (role === 'tutor') {
-          router.push('/tutor/dashboard');
-        } else {
-          router.push('/dashboard');
-        }
-      }
-    } catch (error) {
-        // The popup-closed-by-user error is handled in firebase.ts, so we only need to toast for other errors.
+    toast({
+      title: "Account Created Successfully",
+      description: `Welcome! You are being redirected.`,
+    });
+    if (role === 'tutor') {
+      router.push('/tutor/dashboard');
+    } else {
+      router.push('/dashboard');
     }
   }
 
@@ -132,18 +102,7 @@ export function SignUpForm() {
       <form onSubmit={form.handleSubmit(onSubmit)}>
         <Card className="border-none shadow-none">
           <CardContent className="space-y-4 pt-6">
-             {!isFirebaseConfigured && (
-              <Alert variant="destructive">
-                <Terminal className="h-4 w-4" />
-                <AlertTitle>Firebase Not Configured</AlertTitle>
-                <AlertDescription>
-                  Your Firebase API keys are missing. Please add your keys to the 
-                  <code className="relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold">.env</code> 
-                  file and restart the server.
-                </AlertDescription>
-              </Alert>
-            )}
-            <Button variant="outline" className="w-full" type="button" onClick={handleGoogleSignUp} disabled={!isFirebaseConfigured}>
+            <Button variant="outline" className="w-full" type="button" onClick={handleGoogleSignUp}>
               <GoogleIcon className="mr-2 h-4 w-4" />
               Continue with Google
             </Button>
@@ -157,7 +116,7 @@ export function SignUpForm() {
                 </span>
               </div>
             </div>
-            <fieldset disabled={!isFirebaseConfigured} className="space-y-4">
+            <fieldset className="space-y-4">
               <FormField
                 control={form.control}
                 name="fullname"
@@ -235,7 +194,7 @@ export function SignUpForm() {
             </fieldset>
           </CardContent>
           <CardFooter className="flex flex-col gap-4">
-            <Button type="submit" className="w-full font-bold" disabled={loading || !isFirebaseConfigured}>
+            <Button type="submit" className="w-full font-bold" disabled={loading}>
               {loading ? "Creating Account..." : "Create Account"}
             </Button>
             <p className="text-xs text-muted-foreground">
