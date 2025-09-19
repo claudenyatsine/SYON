@@ -158,7 +158,7 @@ export default function DashboardPage() {
                           <FormControl>
                             <SelectTrigger>
                               <SelectValue placeholder="Select a subject" />
-                            </Trigger>
+                            </SelectTrigger>
                           </FormControl>
                           <SelectContent>
                             {subjects.map((s) => (
