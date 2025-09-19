@@ -16,6 +16,8 @@ import {
 import { signInWithGoogle } from '@/lib/firebase';
 import { useToast } from '@/hooks/use-toast';
 import { useState } from 'react';
+import { Alert, AlertDescription, AlertTitle } from '../ui/alert';
+import { Terminal } from 'lucide-react';
 
 function GoogleIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
@@ -33,6 +35,7 @@ export function LoginForm() {
   const router = useRouter();
   const { toast } = useToast();
   const [role, setRole] = useState('');
+  const isFirebaseConfigured = process.env.NEXT_PUBLIC_FIREBASE_API_KEY && process.env.NEXT_PUBLIC_FIREBASE_API_KEY !== 'YOUR_API_KEY_HERE';
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -44,6 +47,7 @@ export function LoginForm() {
   };
 
   const handleGoogleSignIn = async () => {
+    if (!isFirebaseConfigured) return;
     try {
       const user = await signInWithGoogle();
       if (user) {
@@ -67,7 +71,18 @@ export function LoginForm() {
     <form onSubmit={handleSubmit}>
       <Card className="border-none shadow-none">
         <CardContent className="space-y-4 pt-6">
-           <Button variant="outline" className="w-full" type="button" onClick={handleGoogleSignIn}>
+          {!isFirebaseConfigured && (
+            <Alert variant="destructive">
+              <Terminal className="h-4 w-4" />
+              <AlertTitle>Firebase Not Configured</AlertTitle>
+              <AlertDescription>
+                Your Firebase API keys are missing. Please add your keys to the 
+                <code className="relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold">.env</code> 
+                file and restart the server.
+              </AlertDescription>
+            </Alert>
+          )}
+           <Button variant="outline" className="w-full" type="button" onClick={handleGoogleSignIn} disabled={!isFirebaseConfigured}>
               <GoogleIcon className="mr-2 h-4 w-4" />
               Continue with Google
             </Button>
@@ -83,15 +98,15 @@ export function LoginForm() {
             </div>
           <div className="space-y-2">
             <Label htmlFor="email">Email</Label>
-            <Input id="email" type="email" placeholder="name@example.com" required />
+            <Input id="email" type="email" placeholder="name@example.com" required disabled={!isFirebaseConfigured}/>
           </div>
           <div className="space-y-2">
             <Label htmlFor="password">Password</Label>
-            <Input id="password" type="password" required />
+            <Input id="password" type="password" required disabled={!isFirebaseConfigured}/>
           </div>
            <div className="space-y-2">
             <Label htmlFor="role">I am a</Label>
-            <Select required onValueChange={setRole}>
+            <Select required onValueChange={setRole} disabled={!isFirebaseConfigured}>
               <SelectTrigger id="role">
                 <SelectValue placeholder="Select your role" />
               </SelectTrigger>
@@ -104,7 +119,7 @@ export function LoginForm() {
           </div>
         </CardContent>
         <CardFooter className="flex flex-col gap-4">
-          <Button type="submit" className="w-full font-bold">
+          <Button type="submit" className="w-full font-bold" disabled={!isFirebaseConfigured}>
             Sign In
           </Button>
           <p className="text-xs text-muted-foreground">
