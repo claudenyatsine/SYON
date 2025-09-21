@@ -25,8 +25,9 @@ import {
   SelectValue,
 } from '../ui/select';
 import { useRouter } from 'next/navigation';
-import { auth } from '@/lib/firebase';
+import { auth, db } from '@/lib/firebase';
 import { createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, updateProfile } from 'firebase/auth';
+import { doc, setDoc } from "firebase/firestore"; 
 import { sendWelcomeEmail } from '@/ai/flows/send-welcome-email';
 import { Alert, AlertDescription, AlertTitle } from '../ui/alert';
 import { Terminal } from 'lucide-react';
@@ -81,8 +82,18 @@ export function SignUpForm() {
 
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, values.email, values.password);
-      await updateProfile(userCredential.user, { displayName: values.fullname });
+      const user = userCredential.user;
+      await updateProfile(user, { displayName: values.fullname });
       
+      // Create a document in Firestore
+      await setDoc(doc(db, "users", user.uid), {
+        uid: user.uid,
+        fullname: values.fullname,
+        email: values.email,
+        role: values.role,
+        createdAt: new Date(),
+      });
+
       // Send welcome email via Genkit flow (no need to await)
       sendWelcomeEmail({ fullname: values.fullname, email: values.email });
 
@@ -124,10 +135,21 @@ export function SignUpForm() {
     const provider = new GoogleAuthProvider();
     try {
       const result = await signInWithPopup(auth, provider);
+      const user = result.user;
       
+      // Create a document in Firestore for the new user
+      await setDoc(doc(db, "users", user.uid), {
+        uid: user.uid,
+        fullname: user.displayName,
+        email: user.email,
+        role: role,
+        createdAt: new Date(),
+        photoURL: user.photoURL,
+      });
+
       // Send welcome email
-      if (result.user.email && result.user.displayName) {
-        sendWelcomeEmail({ fullname: result.user.displayName, email: result.user.email });
+      if (user.email && user.displayName) {
+        sendWelcomeEmail({ fullname: user.displayName, email: user.email });
       }
 
       toast({
@@ -247,7 +269,7 @@ export function SignUpForm() {
                 name="confirmPassword"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Confirm Password</Label>
+                    <FormLabel>Confirm Password</FormLabel>
                     <FormControl>
                       <Input type="password" {...field} />
                     </FormControl>

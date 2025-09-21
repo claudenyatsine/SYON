@@ -1,6 +1,7 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp, getApps, getApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
+import { getFirestore } from "firebase/firestore";
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
@@ -14,7 +15,7 @@ const firebaseConfig = {
 };
 
 // Check if the API key is a placeholder
-if (firebaseConfig.apiKey === "YOUR_API_KEY_HERE") {
+if (!firebaseConfig.apiKey || firebaseConfig.apiKey === "YOUR_API_KEY_HERE") {
   console.warn(`
     *************************************************************************
     * FIREBASE IS NOT CONFIGURED!                                           *
@@ -34,5 +35,6 @@ if (firebaseConfig.apiKey === "YOUR_API_KEY_HERE") {
 // Initialize Firebase
 const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
 const auth = getAuth(app);
+const db = getFirestore(app);
 
-export { app, auth };
+export { app, auth, db };
