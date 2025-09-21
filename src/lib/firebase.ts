@@ -25,7 +25,7 @@ if (firebaseConfig.apiKey === "YOUR_API_KEY_HERE") {
     * 1. Create a project at https://console.firebase.google.com/           *
     * 2. Add a web app to your project.                                     *
     * 3. Copy the 'firebaseConfig' object.                                  *
-    * 4. Paste the values into the .env.local file.                         *
+    * 4. Paste the values into the .env file.                         *
     * 5. Restart the development server.                                    *
     *************************************************************************
   `);

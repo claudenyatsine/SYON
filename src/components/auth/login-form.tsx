@@ -107,7 +107,7 @@ export function LoginForm() {
                 <Terminal className="h-4 w-4" />
                 <AlertTitle>Firebase Not Configured</AlertTitle>
                 <AlertDescription>
-                  Please add your Firebase credentials to `.env.local` and restart the server to enable authentication.
+                  Please add your Firebase credentials to `.env` and restart the server to enable authentication.
                 </AlertDescription>
               </Alert>
            )}
