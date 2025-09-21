@@ -26,9 +26,8 @@ import {
 } from '../ui/select';
 import { useRouter } from 'next/navigation';
 import { auth, db } from '@/lib/firebase';
-import { createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, updateProfile } from 'firebase/auth';
+import { createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, updateProfile, sendEmailVerification } from 'firebase/auth';
 import { doc, setDoc } from "firebase/firestore"; 
-import { sendWelcomeEmail } from '@/ai/flows/send-welcome-email';
 import { Alert, AlertDescription, AlertTitle } from '../ui/alert';
 import { Terminal } from 'lucide-react';
 
@@ -83,7 +82,11 @@ export function SignUpForm() {
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, values.email, values.password);
       const user = userCredential.user;
+      
       await updateProfile(user, { displayName: values.fullname });
+      
+      // Send verification email
+      await sendEmailVerification(user);
       
       // Create a document in Firestore
       await setDoc(doc(db, "users", user.uid), {
@@ -94,12 +97,9 @@ export function SignUpForm() {
         createdAt: new Date(),
       });
 
-      // Send welcome email via Genkit flow (no need to await)
-      sendWelcomeEmail({ fullname: values.fullname, email: values.email });
-
       toast({
         title: 'Registration Successful!',
-        description: 'Welcome to LearnetIQ. You are being redirected.',
+        description: 'A verification email has been sent. Please check your inbox.',
       });
       
       if (values.role === 'tutor') {
@@ -145,16 +145,11 @@ export function SignUpForm() {
         role: role,
         createdAt: new Date(),
         photoURL: user.photoURL,
-      });
-
-      // Send welcome email
-      if (user.email && user.displayName) {
-        sendWelcomeEmail({ fullname: user.displayName, email: user.email });
-      }
+      }, { merge: true }); // Use merge to avoid overwriting if user exists
 
       toast({
         title: "Account Created Successfully",
-        description: `Welcome! You are being redirected.`,
+        description: `Welcome, ${user.displayName}! You are being redirected.`,
       });
 
       if (role === 'tutor') {
