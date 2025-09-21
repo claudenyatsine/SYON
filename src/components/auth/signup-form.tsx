@@ -25,11 +25,18 @@ import {
   SelectValue,
 } from '../ui/select';
 import { useRouter } from 'next/navigation';
+import { auth } from '@/lib/firebase';
+import { createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, updateProfile } from 'firebase/auth';
+import { sendWelcomeEmail } from '@/ai/flows/send-welcome-email';
+import { Alert, AlertDescription, AlertTitle } from '../ui/alert';
+import { Terminal } from 'lucide-react';
+
+const isFirebaseConfigured = process.env.NEXT_PUBLIC_FIREBASE_API_KEY && process.env.NEXT_PUBLIC_FIREBASE_API_KEY !== 'YOUR_API_KEY_HERE';
 
 
 function GoogleIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" {...props}>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24" {...props}>
       <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" />
       <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
       <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05" />
@@ -69,31 +76,79 @@ export function SignUpForm() {
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
+    if (!isFirebaseConfigured) return;
     setLoading(true);
-    // Simulate a successful registration
-    toast({
-      title: 'Registration Successful!',
-      description: 'You are now being redirected to the dashboard.',
-    });
-    
-    if (values.role === 'tutor') {
-      router.push('/tutor/dashboard');
-    } else {
-      router.push('/dashboard');
+
+    try {
+      const userCredential = await createUserWithEmailAndPassword(auth, values.email, values.password);
+      await updateProfile(userCredential.user, { displayName: values.fullname });
+      
+      // Send welcome email via Genkit flow (no need to await)
+      sendWelcomeEmail({ fullname: values.fullname, email: values.email });
+
+      toast({
+        title: 'Registration Successful!',
+        description: 'Welcome to LearnetIQ. You are being redirected.',
+      });
+      
+      if (values.role === 'tutor') {
+        router.push('/tutor/dashboard');
+      } else {
+        router.push('/dashboard');
+      }
+    } catch (error: any) {
+      console.error(error);
+      toast({
+        variant: 'destructive',
+        title: 'Registration Failed',
+        description: error.message,
+      });
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   }
 
-  const handleGoogleSignUp = () => {
+  const handleGoogleSignUp = async () => {
+    if (!isFirebaseConfigured) return;
     const role = form.getValues('role');
-    toast({
-      title: "Account Created Successfully",
-      description: `Welcome! You are being redirected.`,
-    });
-    if (role === 'tutor') {
-      router.push('/tutor/dashboard');
-    } else {
-      router.push('/dashboard');
+    if (!role) {
+      toast({
+        variant: 'destructive',
+        title: 'Role not selected',
+        description: 'Please select a role before signing up with Google.',
+      });
+      return;
+    }
+
+    setLoading(true);
+    const provider = new GoogleAuthProvider();
+    try {
+      const result = await signInWithPopup(auth, provider);
+      
+      // Send welcome email
+      if (result.user.email && result.user.displayName) {
+        sendWelcomeEmail({ fullname: result.user.displayName, email: result.user.email });
+      }
+
+      toast({
+        title: "Account Created Successfully",
+        description: `Welcome! You are being redirected.`,
+      });
+
+      if (role === 'tutor') {
+        router.push('/tutor/dashboard');
+      } else {
+        router.push('/dashboard');
+      }
+    } catch (error: any) {
+      console.error(error);
+      toast({
+        variant: 'destructive',
+        title: 'Google Sign Up Failed',
+        description: error.message,
+      });
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -102,7 +157,38 @@ export function SignUpForm() {
       <form onSubmit={form.handleSubmit(onSubmit)}>
         <Card className="border-none shadow-none">
           <CardContent className="space-y-4 pt-6">
-            <Button variant="outline" className="w-full" type="button" onClick={handleGoogleSignUp}>
+            {!isFirebaseConfigured && (
+              <Alert variant="destructive">
+                <Terminal className="h-4 w-4" />
+                <AlertTitle>Firebase Not Configured</AlertTitle>
+                <AlertDescription>
+                  Please add your Firebase credentials to `.env.local` and restart the server to enable authentication.
+                </AlertDescription>
+              </Alert>
+            )}
+            <FormField
+                control={form.control}
+                name="role"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>I am a</FormLabel>
+                    <Select onValueChange={field.onChange} defaultValue={field.value} disabled={!isFirebaseConfigured || loading}>
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select your role" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="student">Student</SelectItem>
+                        <SelectItem value="tutor">Tutor</SelectItem>
+                        <SelectItem value="parent">Parent</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            <Button variant="outline" className="w-full" type="button" onClick={handleGoogleSignUp} disabled={!isFirebaseConfigured || loading}>
               <GoogleIcon className="mr-2 h-4 w-4" />
               Continue with Google
             </Button>
@@ -116,7 +202,7 @@ export function SignUpForm() {
                 </span>
               </div>
             </div>
-            <fieldset className="space-y-4">
+            <fieldset className="space-y-4" disabled={!isFirebaseConfigured || loading}>
               <FormField
                 control={form.control}
                 name="fullname"
@@ -169,32 +255,10 @@ export function SignUpForm() {
                   </FormItem>
                 )}
               />
-              <FormField
-                control={form.control}
-                name="role"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>I am a</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select your role" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        <SelectItem value="student">Student</SelectItem>
-                        <SelectItem value="tutor">Tutor</SelectItem>
-                        <SelectItem value="parent">Parent</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
             </fieldset>
           </CardContent>
           <CardFooter className="flex flex-col gap-4">
-            <Button type="submit" className="w-full font-bold" disabled={loading}>
+            <Button type="submit" className="w-full font-bold" disabled={!isFirebaseConfigured || loading}>
               {loading ? "Creating Account..." : "Create Account"}
             </Button>
             <p className="text-xs text-muted-foreground">

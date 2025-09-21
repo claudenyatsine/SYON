@@ -14,6 +14,14 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { useState } from 'react';
+import { auth } from '@/lib/firebase';
+import { signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+import { useToast } from '@/hooks/use-toast';
+import { Alert, AlertDescription, AlertTitle } from '../ui/alert';
+import { Terminal } from 'lucide-react';
+
+const isFirebaseConfigured = process.env.NEXT_PUBLIC_FIREBASE_API_KEY && process.env.NEXT_PUBLIC_FIREBASE_API_KEY !== 'YOUR_API_KEY_HERE';
+
 
 function GoogleIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
@@ -29,23 +37,64 @@ function GoogleIcon(props: React.SVGProps<SVGSVGElement>) {
 
 export function LoginForm() {
   const router = useRouter();
+  const { toast } = useToast();
   const [role, setRole] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (role === 'tutor') {
-      router.push('/tutor/dashboard');
-    } else {
-      router.push('/dashboard');
+    if (!isFirebaseConfigured) return;
+    setLoading(true);
+
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      toast({
+        title: 'Sign In Successful',
+        description: 'Welcome back!',
+      });
+      if (role === 'tutor') {
+        router.push('/tutor/dashboard');
+      } else {
+        router.push('/dashboard');
+      }
+    } catch (error: any) {
+      console.error(error);
+      toast({
+        variant: 'destructive',
+        title: 'Sign In Failed',
+        description: error.message,
+      });
+    } finally {
+      setLoading(false);
     }
   };
 
-  const handleGoogleSignIn = () => {
-    // Mock sign in and redirect
-     if (role === 'tutor') {
-      router.push('/tutor/dashboard');
-    } else {
-      router.push('/dashboard');
+  const handleGoogleSignIn = async () => {
+    if (!isFirebaseConfigured) return;
+    setLoading(true);
+    const provider = new GoogleAuthProvider();
+    try {
+      await signInWithPopup(auth, provider);
+       toast({
+        title: 'Sign In Successful',
+        description: 'Welcome back!',
+      });
+      if (role === 'tutor') {
+        router.push('/tutor/dashboard');
+      } else {
+        router.push('/dashboard');
+      }
+    } catch (error: any) {
+       console.error(error);
+      toast({
+        variant: 'destructive',
+        title: 'Google Sign In Failed',
+        description: error.message,
+      });
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -53,7 +102,16 @@ export function LoginForm() {
     <form onSubmit={handleSubmit}>
       <Card className="border-none shadow-none">
         <CardContent className="space-y-4 pt-6">
-           <Button variant="outline" className="w-full" type="button" onClick={handleGoogleSignIn}>
+           {!isFirebaseConfigured && (
+              <Alert variant="destructive">
+                <Terminal className="h-4 w-4" />
+                <AlertTitle>Firebase Not Configured</AlertTitle>
+                <AlertDescription>
+                  Please add your Firebase credentials to `.env.local` and restart the server to enable authentication.
+                </AlertDescription>
+              </Alert>
+           )}
+           <Button variant="outline" className="w-full" type="button" onClick={handleGoogleSignIn} disabled={!isFirebaseConfigured || loading}>
               <GoogleIcon className="mr-2 h-4 w-4" />
               Continue with Google
             </Button>
@@ -69,15 +127,15 @@ export function LoginForm() {
             </div>
           <div className="space-y-2">
             <Label htmlFor="email">Email</Label>
-            <Input id="email" type="email" placeholder="name@example.com" required />
+            <Input id="email" type="email" placeholder="name@example.com" required value={email} onChange={(e) => setEmail(e.target.value)} disabled={!isFirebaseConfigured || loading} />
           </div>
           <div className="space-y-2">
             <Label htmlFor="password">Password</Label>
-            <Input id="password" type="password" required />
+            <Input id="password" type="password" required value={password} onChange={(e) => setPassword(e.target.value)} disabled={!isFirebaseConfigured || loading} />
           </div>
            <div className="space-y-2">
             <Label htmlFor="role">I am a</Label>
-            <Select required onValueChange={setRole} >
+            <Select required onValueChange={setRole} value={role} disabled={!isFirebaseConfigured || loading}>
               <SelectTrigger id="role">
                 <SelectValue placeholder="Select your role" />
               </SelectTrigger>
@@ -90,8 +148,8 @@ export function LoginForm() {
           </div>
         </CardContent>
         <CardFooter className="flex flex-col gap-4">
-          <Button type="submit" className="w-full font-bold">
-            Sign In
+          <Button type="submit" className="w-full font-bold" disabled={!isFirebaseConfigured || loading || !role}>
+            {loading ? 'Signing In...' : 'Sign In'}
           </Button>
           <p className="text-xs text-muted-foreground">
             Don&apos;t have an account?{' '}
