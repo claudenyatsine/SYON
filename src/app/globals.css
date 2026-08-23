@@ -1,0 +1,116 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── Global density: scale every rem-based utility down ── */
+html {
+  font-size: 11.5px; /* 13px → 11.5px (another ~10% reduction) */
+}
+
+@layer base {
+  :root {
+    --background: 210 20% 98%; /* soft off-white to make cards pop */
+    --foreground: 220 20% 10%; /* very dark gray for high readability */
+    --card: 0 0% 100%; /* pure white */
+    --card-foreground: 220 20% 10%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 20% 10%;
+    --primary: 45 93% 47%; /* gold #eab308 */
+    --primary-foreground: 0 0% 0%; /* true black text on gold buttons for max contrast */
+    --secondary: 0 100% 25%; /* burgundy */
+    --secondary-foreground: 0 0% 100%; /* pure white text on dark burgundy */
+    --muted: 220 14% 94%; /* distinct light gray */
+    --muted-foreground: 220 10% 40%; /* dark enough muted text */
+    --accent: 220 14% 94%; /* light gray hover for accent elements */
+    --accent-foreground: 220 20% 10%;
+    --destructive: 0 84% 60%; /* standardized red */
+    --destructive-foreground: 0 0% 100%;
+    --border: 220 15% 88%; /* slightly more visible border */
+    --input: 220 15% 88%;
+    --ring: 45 93% 47%;
+    --radius: 0.625rem;
+    --sidebar-background: 210 20% 98%;
+    --sidebar-foreground: 220 20% 10%;
+    --sidebar-primary: 45 93% 47%;
+    --sidebar-primary-foreground: 0 0% 0%;
+    --sidebar-accent: 220 14% 94%;
+    --sidebar-accent-foreground: 220 20% 10%;
+    --sidebar-border: 220 15% 88%;
+    --sidebar-ring: 45 93% 47%;
+  }
+
+  .dark {
+    --background: 240 6% 6%; /* #0f0f11 */
+    --foreground: 220 14% 96%; /* gray-50 */
+    --card: 240 5% 10%; /* #18181b */
+    --card-foreground: 220 14% 96%;
+    --popover: 240 5% 10%;
+    --popover-foreground: 220 14% 96%;
+    --primary: 43 65% 52%;
+    --primary-foreground: 220 14% 96%;
+    --secondary: 0 100% 25%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: 240 4% 16%; /* zinc-800 */
+    --muted-foreground: 240 5% 65%; /* zinc-400 */
+    --accent: 45 93% 47%; /* gold #eab308 */
+    --accent-foreground: 0 0% 0%; /* #000000 */
+    --destructive: 0 100% 25%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 240 4% 16%; /* zinc-800 */
+    --input: 240 4% 16%;
+    --ring: 45 93% 47%;
+    --sidebar-background: 240 6% 6%;
+    --sidebar-foreground: 220 14% 96%;
+    --sidebar-primary: 45 93% 47%;
+    --sidebar-primary-foreground: 0 0% 0%;
+    --sidebar-accent: 240 5% 10%; /* fallback if opacity modifier fails, but we'll use bg-accent/10 */
+    --sidebar-accent-foreground: 45 93% 47%; /* gold text */
+    --sidebar-border: 240 4% 16%;
+    --sidebar-ring: 45 93% 47%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground font-body antialiased;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-headline;
+  }
+}
+
+::-webkit-scrollbar {
+  width: 5px;
+}
+::-webkit-scrollbar-track {
+  @apply bg-background;
+}
+::-webkit-scrollbar-thumb {
+  @apply bg-burgundy rounded-full border border-gold/20;
+}
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-[#990000];
+}
+
+input[type='range'] {
+  -webkit-appearance: none;
+  background: transparent;
+}
+input[type='range']::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  height: 18px;
+  width: 18px;
+  border-radius: 50%;
+  @apply bg-background border-[3px] border-gold;
+  cursor: pointer;
+  margin-top: -11px;
+}
+input[type='range']::-webkit-slider-runnable-track {
+  width: 100%;
+  height: 2px;
+  @apply bg-white/10;
+  border-radius: 999px;
+}

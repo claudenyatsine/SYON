@@ -1,0 +1,92 @@
+version: "3.8"
+
+services:
+  db:
+    image: supabase/postgres:15.3.0
+    container_name: supabase_db
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+  gotrue:
+    image: supabase/gotrue:latest
+    container_name: supabase_gotrue
+    restart: unless-stopped
+    ports:
+      - "9999:9999"
+    environment:
+      GOTRUE_DB_DRIVER: pg
+      GOTRUE_DB_DATABASE_URL: postgres://postgres:postgres@db:5432/postgres
+      GOTRUE_SITE_URL: http://localhost:9002
+      GOTRUE_API_EXTERNAL_URL: http://localhost:9999
+      GOTRUE_JWT_SECRET: super-secret-jwt
+      GOTRUE_EXTERNAL_EMAIL_ENABLED: "true"
+    depends_on:
+      - db
+
+  realtime:
+    image: supabase/realtime:latest
+    container_name: supabase_realtime
+    restart: unless-stopped
+    ports:
+      - "4000:4000"
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      DB_NAME: postgres
+      PORT: 4000
+    depends_on:
+      - db
+
+  storage:
+    image: supabase/storage-api:latest
+    container_name: supabase_storage
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    environment:
+      POSTGRES_HOST: db
+      POSTGRES_PORT: 5432
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+      ANON_KEY: ${NEXT_PUBLIC_SUPABASE_ANON_KEY}
+      SERVICE_KEY: ${SUPABASE_SERVICE_ROLE_KEY}
+      FILE_SIZE_LIMIT: 52428800
+      REGION: us-east-1
+    depends_on:
+      - db
+
+  studio:
+    image: supabase/studio:latest
+    container_name: supabase_studio
+    restart: unless-stopped
+    ports:
+      - "54323:3000"
+    environment:
+      SUPABASE_URL: http://localhost:9999
+      SUPABASE_ANON_KEY: sb_publishable_7zX9YkCP_7TWHEflx8ooWQ_-ANLZiHD
+    depends_on:
+      - gotrue
+  mcp_server:
+    build: ./server
+    container_name: supabase_mcp_server
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      SUPABASE_URL: ${NEXT_PUBLIC_SUPABASE_URL}
+      SUPABASE_ANON_KEY: ${NEXT_PUBLIC_SUPABASE_ANON_KEY}
+      SUPABASE_SERVICE_ROLE: ${SUPABASE_SERVICE_ROLE}
+      NODE_ENV: development
+    depends_on:
+      - db
+
+volumes:
+  db_data:

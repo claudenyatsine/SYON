@@ -1,0 +1,52 @@
+{
+  "placeholderImages": [
+    {
+      "id": "student-avatar-1",
+      "description": "Avatar for a student at Dr Max online school",
+      "imageUrl": "https://picsum.photos/seed/101/100/100",
+      "imageHint": "student portrait"
+    },
+    {
+      "id": "tutor-avatar-1",
+      "description": "Avatar for a tutor at Dr Max online school",
+      "imageUrl": "https://picsum.photos/seed/102/100/100",
+      "imageHint": "teacher portrait"
+    },
+    {
+      "id": "math-course-thumb",
+      "description": "Thumbnail for a math course",
+      "imageUrl": "https://picsum.photos/seed/201/400/225",
+      "imageHint": "mathematics chalkboard"
+    },
+    {
+      "id": "science-course-thumb",
+      "description": "Thumbnail for a science course",
+      "imageUrl": "https://picsum.photos/seed/202/400/225",
+      "imageHint": "science laboratory"
+    },
+    {
+      "id": "history-course-thumb",
+      "description": "Thumbnail for a history course",
+      "imageUrl": "https://picsum.photos/seed/203/400/225",
+      "imageHint": "historical artifacts"
+    },
+    {
+      "id": "english-course-thumb",
+      "description": "Thumbnail for an english course",
+      "imageUrl": "https://picsum.photos/seed/204/400/225",
+      "imageHint": "books library"
+    },
+    {
+      "id": "forum-post-image",
+      "description": "Image for a forum post",
+      "imageUrl": "https://picsum.photos/seed/301/800/400",
+      "imageHint": "discussion collaboration"
+    },
+    {
+      "id": "school-logo",
+      "description": "Logo for Dr Max online school",
+      "imageUrl": "https://picsum.photos/seed/drmax-logo/100/100",
+      "imageHint": "school logo"
+    }
+  ]
+}

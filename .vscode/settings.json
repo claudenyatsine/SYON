@@ -1,0 +1,22 @@
+{
+    "piny.project_settings": {
+        "open-pages": [
+            "pinyfakepage.html"
+        ],
+        "component-settings": {
+            "src/app/layout.tsx:::Temp": {
+                "route": "/admin"
+            }
+        },
+        "urls": {
+            "pinyfakepage.html": {
+                "open-page-views": [
+                    {
+                        "w": 1280,
+                        "h": 800
+                    }
+                ]
+            }
+        }
+    }
+}

@@ -1,0 +1,797 @@
+{
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\.vscode\\settings.json": {
+    "mtime": 1778579160.550045,
+    "ast_hash": "9fb317850009b07974c8f919c4a97384",
+    "semantic_hash": "9fb317850009b07974c8f919c4a97384"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\check-columns.js": {
+    "mtime": 1779891240.0811079,
+    "ast_hash": "23158a988379c39dae976416caad06f7",
+    "semantic_hash": "23158a988379c39dae976416caad06f7"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\check_policies.js": {
+    "mtime": 1779802724.9522226,
+    "ast_hash": "646c11a8ac9007d37c0a688e65965a14",
+    "semantic_hash": "646c11a8ac9007d37c0a688e65965a14"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\components.json": {
+    "mtime": 1778579116.9475114,
+    "ast_hash": "1bddba27dcaadf1ddd5959717236300b",
+    "semantic_hash": "1bddba27dcaadf1ddd5959717236300b"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\fetch_columns.js": {
+    "mtime": 1779799898.114253,
+    "ast_hash": "69df7b798b59dc32d4ccc78118ba27a9",
+    "semantic_hash": "69df7b798b59dc32d4ccc78118ba27a9"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\fetch_profiles.js": {
+    "mtime": 1779801059.2103913,
+    "ast_hash": "8811b10f4a986724b79d7f1e6a665737",
+    "semantic_hash": "8811b10f4a986724b79d7f1e6a665737"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\fetch_schema.js": {
+    "mtime": 1779799947.8026686,
+    "ast_hash": "fb6c50b885922938de9013527171cfcc",
+    "semantic_hash": "fb6c50b885922938de9013527171cfcc"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\next.config.ts": {
+    "mtime": 1778661474.6167183,
+    "ast_hash": "87e4e53bf08e3bd0ce57618a4decc675",
+    "semantic_hash": "87e4e53bf08e3bd0ce57618a4decc675"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\package.json": {
+    "mtime": 1779096822.6332235,
+    "ast_hash": "46414cbef5ca5a5b91914adbd8ef159e",
+    "semantic_hash": "46414cbef5ca5a5b91914adbd8ef159e"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\postcss.config.mjs": {
+    "mtime": 1778579116.980785,
+    "ast_hash": "3507368dae6e94b0070b0a10efa15a05",
+    "semantic_hash": "3507368dae6e94b0070b0a10efa15a05"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\scratch\\debug_classes.mjs": {
+    "mtime": 1779805034.0682776,
+    "ast_hash": "c3fb887802f616b88c9c7b4f59db0d92",
+    "semantic_hash": "c3fb887802f616b88c9c7b4f59db0d92"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\scratch\\fetch_schema_debug.mjs": {
+    "mtime": 1779805241.8234112,
+    "ast_hash": "475373bcd3a1aa436df4fe6ae49110e4",
+    "semantic_hash": "475373bcd3a1aa436df4fe6ae49110e4"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\scratch\\fetch_schema_keys.mjs": {
+    "mtime": 1779805327.878723,
+    "ast_hash": "461f6d4d3d8bdcca5a67fd3e5fa6329e",
+    "semantic_hash": "461f6d4d3d8bdcca5a67fd3e5fa6329e"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\scratch\\request.js": {
+    "mtime": 1779111349.5473676,
+    "ast_hash": "ad344a643301de60ba58fa40c61dc8f4",
+    "semantic_hash": "ad344a643301de60ba58fa40c61dc8f4"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\scratch\\test_tutor_insert.mjs": {
+    "mtime": 1779805590.7765596,
+    "ast_hash": "22d0424224d410f888957cc0f04c39f2",
+    "semantic_hash": "22d0424224d410f888957cc0f04c39f2"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\ai\\flows\\ai-tutor-resource-prompting.ts": {
+    "mtime": 1779123693.2903051,
+    "ast_hash": "fff6f70541dbedb06ed2049eb012c481",
+    "semantic_hash": "fff6f70541dbedb06ed2049eb012c481"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\app\\actions\\lms.ts": {
+    "mtime": 1780057801.7515626,
+    "ast_hash": "4a92184813467aca6a8ad07c7dc541cd",
+    "semantic_hash": "4a92184813467aca6a8ad07c7dc541cd"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\app\\actions\\resources.ts": {
+    "mtime": 1780162905.339536,
+    "ast_hash": "b23d9ae2e50fadf292cf6b5e920776fe",
+    "semantic_hash": "b23d9ae2e50fadf292cf6b5e920776fe"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\app\\actions\\student.ts": {
+    "mtime": 1778579161.0954812,
+    "ast_hash": "7a2f4c088b437a71b0a98dd0c3f567ac",
+    "semantic_hash": "7a2f4c088b437a71b0a98dd0c3f567ac"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\app\\admin\\ActionButtons.tsx": {
+    "mtime": 1780057903.421279,
+    "ast_hash": "f49d111a6d981813876e1a439b05834d",
+    "semantic_hash": "f49d111a6d981813876e1a439b05834d"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\app\\admin\\admins\\page.tsx": {
+    "mtime": 1779883101.773903,
+    "ast_hash": "ace1e37763b4440fa414a7d88492232b",
+    "semantic_hash": "ace1e37763b4440fa414a7d88492232b"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\app\\admin\\billing\\page.tsx": {
+    "mtime": 1778579161.699351,
+    "ast_hash": "5a2825853245c67067e30d9bfc2aef97",
+    "semantic_hash": "5a2825853245c67067e30d9bfc2aef97"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\app\\admin\\enrollments\\page.tsx": {
+    "mtime": 1780057923.2948909,
+    "ast_hash": "a5f18c8a070779b51ec569edf5f40168",
+    "semantic_hash": "a5f18c8a070779b51ec569edf5f40168"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\app\\admin\\layout.tsx": {
+    "mtime": 1778579161.9224398,
+    "ast_hash": "3d0782f075f3384d5ae2fefdff8f2b35",
+    "semantic_hash": "3d0782f075f3384d5ae2fefdff8f2b35"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\app\\admin\\page.tsx": {
+    "mtime": 1779805830.8170924,
+    "ast_hash": "68e805c18514bd8c887b8b1b35bb8815",
+    "semantic_hash": "68e805c18514bd8c887b8b1b35bb8815"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\app\\admin\\settings\\page.tsx": {
+    "mtime": 1779031151.3908803,
+    "ast_hash": "6000981735833cb3d2f89e94af24fb4b",
+    "semantic_hash": "6000981735833cb3d2f89e94af24fb4b"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\app\\admin\\students\\page.tsx": {
+    "mtime": 1779554515.7741532,
+    "ast_hash": "21815129836d70935b7b1968218fbf8c",
+    "semantic_hash": "21815129836d70935b7b1968218fbf8c"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\app\\admin\\tutors\\page.tsx": {
+    "mtime": 1779883086.1052573,
+    "ast_hash": "13dae691f1acb93c2c79aa5667b48d26",
+    "semantic_hash": "13dae691f1acb93c2c79aa5667b48d26"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\app\\admin\\validations\\page.tsx": {
+    "mtime": 1779554366.2654378,
+    "ast_hash": "65eec14b8967011c1b3e7f6813afb2f1",
+    "semantic_hash": "65eec14b8967011c1b3e7f6813afb2f1"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\app\\api\\agora\\convo-ai\\route.ts": {
+    "mtime": 1779098303.6193955,
+    "ast_hash": "abb3e73db88bbc280021b9da7690c352",
+    "semantic_hash": "abb3e73db88bbc280021b9da7690c352"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\app\\api\\agora\\route.ts": {
+    "mtime": 1779121409.7851646,
+    "ast_hash": "3c4735d713aa48744f6214040847fe5a",
+    "semantic_hash": "3c4735d713aa48744f6214040847fe5a"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\app\\auth\\actions.ts": {
+    "mtime": 1778611306.5239084,
+    "ast_hash": "de75eac179154d235482d4b7b3c73c72",
+    "semantic_hash": "de75eac179154d235482d4b7b3c73c72"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\app\\auth\\callback\\route.ts": {
+    "mtime": 1779021560.2291136,
+    "ast_hash": "94690fa9858baddc003dbd23cacc0932",
+    "semantic_hash": "94690fa9858baddc003dbd23cacc0932"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\app\\classroom\\[meetingId]\\page.tsx": {
+    "mtime": 1779121419.0360818,
+    "ast_hash": "e1da48cd33903877b46f75f9c0977e9c",
+    "semantic_hash": "e1da48cd33903877b46f75f9c0977e9c"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\app\\layout.tsx": {
+    "mtime": 1778661355.5716255,
+    "ast_hash": "311075e4f77a911e607283b64b548610",
+    "semantic_hash": "311075e4f77a911e607283b64b548610"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\app\\library\\page.tsx": {
+    "mtime": 1780162907.7311697,
+    "ast_hash": "7f7f378ef9c28c6ce8765c56113565d8",
+    "semantic_hash": "7f7f378ef9c28c6ce8765c56113565d8"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\app\\login\\[role]\\page.tsx": {
+    "mtime": 1779123665.6865299,
+    "ast_hash": "cb73f93b60cf0337b2891a0ca204d3bf",
+    "semantic_hash": "cb73f93b60cf0337b2891a0ca204d3bf"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\app\\login\\page.tsx": {
+    "mtime": 1779123509.0314705,
+    "ast_hash": "112867f4d078ef36ccef8d2144507b69",
+    "semantic_hash": "112867f4d078ef36ccef8d2144507b69"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\app\\page.tsx": {
+    "mtime": 1778611307.4345334,
+    "ast_hash": "5fd74162f41cb10e5d35a21ab46e8195",
+    "semantic_hash": "5fd74162f41cb10e5d35a21ab46e8195"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\app\\parent\\layout.tsx": {
+    "mtime": 1778579162.728773,
+    "ast_hash": "ff492b1ff9d8a68e54dc51cd3d8b4e45",
+    "semantic_hash": "ff492b1ff9d8a68e54dc51cd3d8b4e45"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\app\\parent\\page.tsx": {
+    "mtime": 1779880722.7421823,
+    "ast_hash": "929573b9758c1cd47c2fc7a34ad3fe08",
+    "semantic_hash": "929573b9758c1cd47c2fc7a34ad3fe08"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\app\\parent\\settings\\page.tsx": {
+    "mtime": 1779031246.9464185,
+    "ast_hash": "01ed323f7741fe0fcadae3e4fb97f23a",
+    "semantic_hash": "01ed323f7741fe0fcadae3e4fb97f23a"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\app\\robots.ts": {
+    "mtime": 1778662752.0922644,
+    "ast_hash": "595ade4cd8cda7de7868a0621b431883",
+    "semantic_hash": "595ade4cd8cda7de7868a0621b431883"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\app\\signup\\page.tsx": {
+    "mtime": 1779014067.8180285,
+    "ast_hash": "a8191dfa5d573eacc9bc34a82e455973",
+    "semantic_hash": "a8191dfa5d573eacc9bc34a82e455973"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\app\\student\\community\\[communityId]\\[postId]\\page.tsx": {
+    "mtime": 1779800269.6393106,
+    "ast_hash": "2b4dc0a4271eacddeb12fd31fe370323",
+    "semantic_hash": "2b4dc0a4271eacddeb12fd31fe370323"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\app\\student\\community\\[communityId]\\page.tsx": {
+    "mtime": 1779800248.13295,
+    "ast_hash": "873361acbaaf0a150ee3118d8e607b6e",
+    "semantic_hash": "873361acbaaf0a150ee3118d8e607b6e"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\app\\student\\community\\page.tsx": {
+    "mtime": 1780163567.9600613,
+    "ast_hash": "9464d2e4a5e20738948c4a4cee0fec27",
+    "semantic_hash": "9464d2e4a5e20738948c4a4cee0fec27"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\app\\student\\courses\\EnrollButton.tsx": {
+    "mtime": 1780057866.527338,
+    "ast_hash": "43578b1b22534a681f53553072cd32f1",
+    "semantic_hash": "43578b1b22534a681f53553072cd32f1"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\app\\student\\courses\\[subjectId]\\[courseId]\\page.tsx": {
+    "mtime": 1778611307.640585,
+    "ast_hash": "ea2339e514deea77c390f04b8c4a4ed0",
+    "semantic_hash": "ea2339e514deea77c390f04b8c4a4ed0"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\app\\student\\courses\\[subjectId]\\page.tsx": {
+    "mtime": 1780063190.0214486,
+    "ast_hash": "c3dfd355c01cf097bb0374ece152d4a0",
+    "semantic_hash": "c3dfd355c01cf097bb0374ece152d4a0"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\app\\student\\courses\\page.tsx": {
+    "mtime": 1780057884.0981157,
+    "ast_hash": "77976005b26adc9f41e9f95fb424e721",
+    "semantic_hash": "77976005b26adc9f41e9f95fb424e721"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\app\\student\\layout.tsx": {
+    "mtime": 1779899782.4004524,
+    "ast_hash": "7123b820aba97dfe9a2060cc38983d74",
+    "semantic_hash": "7123b820aba97dfe9a2060cc38983d74"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\app\\student\\live-classes\\[classId]\\page.tsx": {
+    "mtime": 1779892025.6783133,
+    "ast_hash": "c3e61e875eb85b1ac7d0927fc76343ec",
+    "semantic_hash": "c3e61e875eb85b1ac7d0927fc76343ec"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\app\\student\\live-classes\\page.tsx": {
+    "mtime": 1779892453.6919613,
+    "ast_hash": "6c96a910c42d24bb6d10bad443c0bb13",
+    "semantic_hash": "6c96a910c42d24bb6d10bad443c0bb13"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\app\\student\\loading.tsx": {
+    "mtime": 1778661410.3324301,
+    "ast_hash": "f22059b7e7f02c0b2c8eba359100ddb7",
+    "semantic_hash": "f22059b7e7f02c0b2c8eba359100ddb7"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\app\\student\\page.tsx": {
+    "mtime": 1779899836.706531,
+    "ast_hash": "fb9daf361cb57849347849e12903f591",
+    "semantic_hash": "fb9daf361cb57849347849e12903f591"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\app\\student\\progress\\page.tsx": {
+    "mtime": 1780161165.8388698,
+    "ast_hash": "888b1e7466839c46f07449b2ad8bf7b5",
+    "semantic_hash": "888b1e7466839c46f07449b2ad8bf7b5"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\app\\student\\resources\\page.tsx": {
+    "mtime": 1778611308.4718273,
+    "ast_hash": "1f829193e9765577c0f88fac87a30c59",
+    "semantic_hash": "1f829193e9765577c0f88fac87a30c59"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\app\\student\\settings\\page.tsx": {
+    "mtime": 1779031002.3255577,
+    "ast_hash": "503f88bc8ac4f62bb5374035df7673be",
+    "semantic_hash": "503f88bc8ac4f62bb5374035df7673be"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\app\\student\\sidebar.tsx": {
+    "mtime": 1778611308.8033416,
+    "ast_hash": "387dda8eff2ae0bc4a9d21f1f9976255",
+    "semantic_hash": "387dda8eff2ae0bc4a9d21f1f9976255"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\app\\student\\study-panel\\page.tsx": {
+    "mtime": 1780066004.720114,
+    "ast_hash": "8924a8c04e09dcbd50946c7e0bcf2dab",
+    "semantic_hash": "8924a8c04e09dcbd50946c7e0bcf2dab"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\app\\tutor\\assignments\\page.tsx": {
+    "mtime": 1778611309.0871994,
+    "ast_hash": "a6c3f26e1727d45eb23421e2192be17b",
+    "semantic_hash": "a6c3f26e1727d45eb23421e2192be17b"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\app\\tutor\\courses\\page.tsx": {
+    "mtime": 1778611309.102351,
+    "ast_hash": "326c7ec17e9c35f88808e31fabdfe550",
+    "semantic_hash": "326c7ec17e9c35f88808e31fabdfe550"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\app\\tutor\\layout.tsx": {
+    "mtime": 1779552756.482432,
+    "ast_hash": "71d331e7bda22649b4db51c9549c1916",
+    "semantic_hash": "71d331e7bda22649b4db51c9549c1916"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\app\\tutor\\live-classes\\page.tsx": {
+    "mtime": 1779891996.3120606,
+    "ast_hash": "d74b9900362ef201de2207a6a814462b",
+    "semantic_hash": "d74b9900362ef201de2207a6a814462b"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\app\\tutor\\loading.tsx": {
+    "mtime": 1778661408.2330194,
+    "ast_hash": "895f64be0c011086110194ee7b82d279",
+    "semantic_hash": "895f64be0c011086110194ee7b82d279"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\app\\tutor\\messages\\page.tsx": {
+    "mtime": 1778579163.5597725,
+    "ast_hash": "5b5d742efd1791886d5e2c18e50b6afa",
+    "semantic_hash": "5b5d742efd1791886d5e2c18e50b6afa"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\app\\tutor\\page.tsx": {
+    "mtime": 1779765507.156598,
+    "ast_hash": "5f4e40eac24abbb2fa2561a5f1ce7bde",
+    "semantic_hash": "5f4e40eac24abbb2fa2561a5f1ce7bde"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\app\\tutor\\settings\\page.tsx": {
+    "mtime": 1779031021.7953582,
+    "ast_hash": "9ef37e45dd2ca22586f1f8b359adf90b",
+    "semantic_hash": "9ef37e45dd2ca22586f1f8b359adf90b"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\app\\tutor\\students\\page.tsx": {
+    "mtime": 1778579163.8493083,
+    "ast_hash": "7dc9dbefe179c318fe8c03a6cb753f93",
+    "semantic_hash": "7dc9dbefe179c318fe8c03a6cb753f93"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\app\\tutor\\tutors\\page.tsx": {
+    "mtime": 1778579163.8543234,
+    "ast_hash": "e08e6823d6575d61e9fbbe412dcece52",
+    "semantic_hash": "e08e6823d6575d61e9fbbe412dcece52"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\check-columns.ts": {
+    "mtime": 1778611310.6049635,
+    "ast_hash": "c7f1d397a3557d3812b67169480ed82d",
+    "semantic_hash": "c7f1d397a3557d3812b67169480ed82d"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\components\\app\\admin\\manage-student-dialog.tsx": {
+    "mtime": 1780065285.9263103,
+    "ast_hash": "5d163bae109caa2222ceaed546c4717b",
+    "semantic_hash": "5d163bae109caa2222ceaed546c4717b"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\components\\app\\community\\create-post-dialog.tsx": {
+    "mtime": 1779800227.220932,
+    "ast_hash": "94875b9935417cab14104a65bbbc67ab",
+    "semantic_hash": "94875b9935417cab14104a65bbbc67ab"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\components\\app\\landing\\features-carousel.tsx": {
+    "mtime": 1778579163.8568277,
+    "ast_hash": "2dad75286fb1e3ec8a42f0afaf129d8d",
+    "semantic_hash": "2dad75286fb1e3ec8a42f0afaf129d8d"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\components\\app\\landing\\statistics-section.tsx": {
+    "mtime": 1778579163.8724556,
+    "ast_hash": "a1e9558c8d8fea3a3b2f92d9d2289cb6",
+    "semantic_hash": "a1e9558c8d8fea3a3b2f92d9d2289cb6"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\components\\app\\landing\\testimonials-section.tsx": {
+    "mtime": 1778579163.8919964,
+    "ast_hash": "7e8dd192b912e4d71dff92ce6655630f",
+    "semantic_hash": "7e8dd192b912e4d71dff92ce6655630f"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\components\\app\\placeholder-dashboard.tsx": {
+    "mtime": 1778579163.8919964,
+    "ast_hash": "dd6e87e8359cb04bec8564ac6fdd0a4f",
+    "semantic_hash": "dd6e87e8359cb04bec8564ac6fdd0a4f"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\components\\app\\preview-banner.tsx": {
+    "mtime": 1779552696.2983894,
+    "ast_hash": "12fc1bbe963cf089fb6513839b6c4a34",
+    "semantic_hash": "12fc1bbe963cf089fb6513839b6c4a34"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\components\\app\\profile-settings.tsx": {
+    "mtime": 1779031744.5567946,
+    "ast_hash": "f4a163dc26e85e76f7d32faa34148e8a",
+    "semantic_hash": "f4a163dc26e85e76f7d32faa34148e8a"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\components\\app\\role-selection.tsx": {
+    "mtime": 1778579163.9418545,
+    "ast_hash": "1b0fa9edc6af05575779d6f4ed5ab5fd",
+    "semantic_hash": "1b0fa9edc6af05575779d6f4ed5ab5fd"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\components\\app\\school-header.tsx": {
+    "mtime": 1778611310.7568545,
+    "ast_hash": "6f798fdf27ecc62cf654fd34b9a604d7",
+    "semantic_hash": "6f798fdf27ecc62cf654fd34b9a604d7"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\components\\app\\security-settings.tsx": {
+    "mtime": 1778579164.0680046,
+    "ast_hash": "b2462c78dbb1c8d9c54904cd33792e87",
+    "semantic_hash": "b2462c78dbb1c8d9c54904cd33792e87"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\components\\app\\student\\bottom-nav.tsx": {
+    "mtime": 1779899756.3737066,
+    "ast_hash": "1376ef1087a5ed01ecd7653e7f40c242",
+    "semantic_hash": "1376ef1087a5ed01ecd7653e7f40c242"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\components\\app\\student\\community\\comment-thread.tsx": {
+    "mtime": 1778687633.5329297,
+    "ast_hash": "b188faa2527fe8522338f59b8daca276",
+    "semantic_hash": "b188faa2527fe8522338f59b8daca276"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\components\\app\\student\\courses\\CalendarCard.tsx": {
+    "mtime": 1778611310.769043,
+    "ast_hash": "bed1665281bd352ca45661a2f391e0fc",
+    "semantic_hash": "bed1665281bd352ca45661a2f391e0fc"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\components\\app\\student\\courses\\CourseListItem.tsx": {
+    "mtime": 1778579164.165724,
+    "ast_hash": "f44b89710f8a3801617d0a7765c0caf9",
+    "semantic_hash": "f44b89710f8a3801617d0a7765c0caf9"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\components\\app\\student\\courses\\OnlineUsers.tsx": {
+    "mtime": 1778611310.7804534,
+    "ast_hash": "cc42481893e32fc93c58035e1b91b2f5",
+    "semantic_hash": "cc42481893e32fc93c58035e1b91b2f5"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\components\\app\\student\\dashboard\\subject-progress-card.tsx": {
+    "mtime": 1779899883.7632658,
+    "ast_hash": "87786fb2bd8c092137aff937b745ef3c",
+    "semantic_hash": "87786fb2bd8c092137aff937b745ef3c"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\components\\app\\student\\progress\\progress-charts.tsx": {
+    "mtime": 1780161219.975218,
+    "ast_hash": "14adb398ab2244282f98ee0529a7856c",
+    "semantic_hash": "14adb398ab2244282f98ee0529a7856c"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\components\\app\\student\\sidebar.tsx": {
+    "mtime": 1779898703.050447,
+    "ast_hash": "17ff370229324823b507140eb11132f8",
+    "semantic_hash": "17ff370229324823b507140eb11132f8"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\components\\app\\tutor\\create-course-dialog.tsx": {
+    "mtime": 1779804064.264264,
+    "ast_hash": "760b2584f2a4983d3b0d9fb7892ad0e1",
+    "semantic_hash": "760b2584f2a4983d3b0d9fb7892ad0e1"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\components\\app\\tutor\\dashboard\\class-performance.tsx": {
+    "mtime": 1779765189.7937102,
+    "ast_hash": "e9e39cd3eab61006d90a629c2104e8b1",
+    "semantic_hash": "e9e39cd3eab61006d90a629c2104e8b1"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\components\\app\\tutor\\dashboard\\recent-activity.tsx": {
+    "mtime": 1779804032.0805242,
+    "ast_hash": "de94d66531787dba61291b74ebe0fc54",
+    "semantic_hash": "de94d66531787dba61291b74ebe0fc54"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\components\\app\\tutor\\dashboard\\upcoming-classes.tsx": {
+    "mtime": 1778611311.2235332,
+    "ast_hash": "7140264405045464e578f1fd5556848a",
+    "semantic_hash": "7140264405045464e578f1fd5556848a"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\components\\app\\tutor\\schedule-class-dialog.tsx": {
+    "mtime": 1779805771.8536477,
+    "ast_hash": "b7309084fb01becad19ea2c3c952d696",
+    "semantic_hash": "b7309084fb01becad19ea2c3c952d696"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\components\\app\\tutor\\tutor-sidebar.tsx": {
+    "mtime": 1779805822.301126,
+    "ast_hash": "41cf3b73ca14758725639da1c1d43aa0",
+    "semantic_hash": "41cf3b73ca14758725639da1c1d43aa0"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\components\\classroom\\AgoraClassroom.tsx": {
+    "mtime": 1779892045.9993136,
+    "ast_hash": "b8e22b60c2792fd40627eae67a8c7160",
+    "semantic_hash": "b8e22b60c2792fd40627eae67a8c7160"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\components\\classroom\\AgoraWhiteboard.tsx": {
+    "mtime": 1779483374.827407,
+    "ast_hash": "4a29c76bc92c391808fa2a91a2e0fe5d",
+    "semantic_hash": "4a29c76bc92c391808fa2a91a2e0fe5d"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\components\\classroom\\JoinClassButton.tsx": {
+    "mtime": 1778611312.0506678,
+    "ast_hash": "70ec34b2c190daaac9262cd44883cd95",
+    "semantic_hash": "70ec34b2c190daaac9262cd44883cd95"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\components\\landing\\landing-client.tsx": {
+    "mtime": 1779028665.39844,
+    "ast_hash": "735fa1ccba242fd72bce3fdaaf419b7b",
+    "semantic_hash": "735fa1ccba242fd72bce3fdaaf419b7b"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\components\\providers\\user-context.tsx": {
+    "mtime": 1779804015.9596584,
+    "ast_hash": "060731fd331450ad1650bfa070f35d18",
+    "semantic_hash": "060731fd331450ad1650bfa070f35d18"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\components\\theme-provider.tsx": {
+    "mtime": 1778579164.4046335,
+    "ast_hash": "4e38111c7fde12c8c0c3791f7ea7ebb5",
+    "semantic_hash": "4e38111c7fde12c8c0c3791f7ea7ebb5"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\components\\ui\\accordion.tsx": {
+    "mtime": 1778579117.0104568,
+    "ast_hash": "569ca301be6e361d95386c49e6c1a6d8",
+    "semantic_hash": "569ca301be6e361d95386c49e6c1a6d8"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\components\\ui\\alert-dialog.tsx": {
+    "mtime": 1778579117.0214937,
+    "ast_hash": "747a0c604004e46ee8e9dd4891a35cce",
+    "semantic_hash": "747a0c604004e46ee8e9dd4891a35cce"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\components\\ui\\alert.tsx": {
+    "mtime": 1778579117.0214937,
+    "ast_hash": "59e3895ea793fed08d8d9f0f83ad13df",
+    "semantic_hash": "59e3895ea793fed08d8d9f0f83ad13df"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\components\\ui\\avatar.tsx": {
+    "mtime": 1778579117.0214937,
+    "ast_hash": "89f1b4ec930c44c54ad1e9ac169d7020",
+    "semantic_hash": "89f1b4ec930c44c54ad1e9ac169d7020"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\components\\ui\\badge.tsx": {
+    "mtime": 1778579117.0214937,
+    "ast_hash": "2ba8b44541085f725b216267f9feb892",
+    "semantic_hash": "2ba8b44541085f725b216267f9feb892"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\components\\ui\\button.tsx": {
+    "mtime": 1778579117.037121,
+    "ast_hash": "55bae00127c054032e205b63a62802db",
+    "semantic_hash": "55bae00127c054032e205b63a62802db"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\components\\ui\\calendar.tsx": {
+    "mtime": 1778579117.1987827,
+    "ast_hash": "8280b0b2c6c5d85780bfb25046d47ee6",
+    "semantic_hash": "8280b0b2c6c5d85780bfb25046d47ee6"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\components\\ui\\card.tsx": {
+    "mtime": 1778579117.3712347,
+    "ast_hash": "b6df38eb58a41ec0235a0024dec73e8e",
+    "semantic_hash": "b6df38eb58a41ec0235a0024dec73e8e"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\components\\ui\\carousel.tsx": {
+    "mtime": 1778579117.5427792,
+    "ast_hash": "b050d2c1ba497c641ad7c4c538a0bd95",
+    "semantic_hash": "b050d2c1ba497c641ad7c4c538a0bd95"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\components\\ui\\chart.tsx": {
+    "mtime": 1778579117.5850353,
+    "ast_hash": "1c36a79c1ee208a2726ea4b34a8bf5cf",
+    "semantic_hash": "1c36a79c1ee208a2726ea4b34a8bf5cf"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\components\\ui\\checkbox.tsx": {
+    "mtime": 1778579117.625776,
+    "ast_hash": "c6c1095ad2efdd82babcdeda23454c46",
+    "semantic_hash": "c6c1095ad2efdd82babcdeda23454c46"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\components\\ui\\collapsible.tsx": {
+    "mtime": 1778579117.681049,
+    "ast_hash": "cb66adfc183b69da16a00c9e5ddf1fb2",
+    "semantic_hash": "cb66adfc183b69da16a00c9e5ddf1fb2"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\components\\ui\\dialog.tsx": {
+    "mtime": 1778579117.7348015,
+    "ast_hash": "08591310866072cdbdda0457d9ad510c",
+    "semantic_hash": "08591310866072cdbdda0457d9ad510c"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\components\\ui\\dropdown-menu.tsx": {
+    "mtime": 1778579117.7505877,
+    "ast_hash": "d048be0171f160f4faa01ee87e17ce28",
+    "semantic_hash": "d048be0171f160f4faa01ee87e17ce28"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\components\\ui\\form.tsx": {
+    "mtime": 1778579117.7505877,
+    "ast_hash": "972653ffab598d32299cc6467dc90a62",
+    "semantic_hash": "972653ffab598d32299cc6467dc90a62"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\components\\ui\\input.tsx": {
+    "mtime": 1778579164.4936862,
+    "ast_hash": "179ac2b4defed6cb4072611af275e480",
+    "semantic_hash": "179ac2b4defed6cb4072611af275e480"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\components\\ui\\label.tsx": {
+    "mtime": 1778579117.7505877,
+    "ast_hash": "a82ec35cf363a42512246117aeb61897",
+    "semantic_hash": "a82ec35cf363a42512246117aeb61897"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\components\\ui\\menubar.tsx": {
+    "mtime": 1778579117.7658486,
+    "ast_hash": "4ea324bf925bfac1d0e17370b369c67c",
+    "semantic_hash": "4ea324bf925bfac1d0e17370b369c67c"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\components\\ui\\pagination.tsx": {
+    "mtime": 1778579164.6313286,
+    "ast_hash": "b617bd2cf73dcba64c5ef2db77b201d6",
+    "semantic_hash": "b617bd2cf73dcba64c5ef2db77b201d6"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\components\\ui\\popover.tsx": {
+    "mtime": 1778579117.770272,
+    "ast_hash": "8f2a759975424d02d19f702277c7d14f",
+    "semantic_hash": "8f2a759975424d02d19f702277c7d14f"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\components\\ui\\progress.tsx": {
+    "mtime": 1779120871.6557298,
+    "ast_hash": "6daaf02c65f1e459f48424b3626561d5",
+    "semantic_hash": "6daaf02c65f1e459f48424b3626561d5"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\components\\ui\\radio-group.tsx": {
+    "mtime": 1778579117.7742505,
+    "ast_hash": "f3f0779a8db9be7ef9c5f0f0c5e17cd1",
+    "semantic_hash": "f3f0779a8db9be7ef9c5f0f0c5e17cd1"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\components\\ui\\scroll-area.tsx": {
+    "mtime": 1778579117.7764502,
+    "ast_hash": "3087f329a403714a59102c681d82a182",
+    "semantic_hash": "3087f329a403714a59102c681d82a182"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\components\\ui\\select.tsx": {
+    "mtime": 1778579117.7764502,
+    "ast_hash": "07f2301f393f867e06a0d64c34a23dd4",
+    "semantic_hash": "07f2301f393f867e06a0d64c34a23dd4"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\components\\ui\\separator.tsx": {
+    "mtime": 1778579117.7842324,
+    "ast_hash": "a554485146f11e2f99567142c3eea40a",
+    "semantic_hash": "a554485146f11e2f99567142c3eea40a"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\components\\ui\\sheet.tsx": {
+    "mtime": 1778579117.7872524,
+    "ast_hash": "fc637f79433ea9d829e8c6b1d4df983a",
+    "semantic_hash": "fc637f79433ea9d829e8c6b1d4df983a"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\components\\ui\\sidebar.tsx": {
+    "mtime": 1778579164.7308633,
+    "ast_hash": "8fbe2b1f3f39ba6da27d3d62ccae2f6b",
+    "semantic_hash": "8fbe2b1f3f39ba6da27d3d62ccae2f6b"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\components\\ui\\skeleton.tsx": {
+    "mtime": 1778579117.794767,
+    "ast_hash": "0166abaa35206d438bd5ac705fb5dfb7",
+    "semantic_hash": "0166abaa35206d438bd5ac705fb5dfb7"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\components\\ui\\slider.tsx": {
+    "mtime": 1778579117.794767,
+    "ast_hash": "bdf76093fc0ce4bc0fa48177275f5167",
+    "semantic_hash": "bdf76093fc0ce4bc0fa48177275f5167"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\components\\ui\\switch.tsx": {
+    "mtime": 1778579117.794767,
+    "ast_hash": "6ad4b53d64d8c73798cb71f1c6f3e1ba",
+    "semantic_hash": "6ad4b53d64d8c73798cb71f1c6f3e1ba"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\components\\ui\\table.tsx": {
+    "mtime": 1778579117.8186722,
+    "ast_hash": "554e91a3c4302c898342d712f80c3718",
+    "semantic_hash": "554e91a3c4302c898342d712f80c3718"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\components\\ui\\tabs.tsx": {
+    "mtime": 1778579117.8580718,
+    "ast_hash": "757304383216f297885d99adc3205f99",
+    "semantic_hash": "757304383216f297885d99adc3205f99"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\components\\ui\\textarea.tsx": {
+    "mtime": 1778579117.8932576,
+    "ast_hash": "17f1c7192a56c7436d208794ae889b1c",
+    "semantic_hash": "17f1c7192a56c7436d208794ae889b1c"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\components\\ui\\toast.tsx": {
+    "mtime": 1778579117.8932576,
+    "ast_hash": "5c7c1ac18b49d8e42f0c0c400e242a86",
+    "semantic_hash": "5c7c1ac18b49d8e42f0c0c400e242a86"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\components\\ui\\toaster.tsx": {
+    "mtime": 1778579117.9134645,
+    "ast_hash": "5a2732f0e35bf8887a394ad57c86ef0f",
+    "semantic_hash": "5a2732f0e35bf8887a394ad57c86ef0f"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\components\\ui\\tooltip.tsx": {
+    "mtime": 1778579117.9134645,
+    "ast_hash": "bc2e2a293268aa7f49c511658c4f3190",
+    "semantic_hash": "bc2e2a293268aa7f49c511658c4f3190"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\hooks\\use-chat.ts": {
+    "mtime": 1778611312.0857487,
+    "ast_hash": "fc7d904594bbeea8c8602d1b41ce7f7d",
+    "semantic_hash": "fc7d904594bbeea8c8602d1b41ce7f7d"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\hooks\\use-mobile.tsx": {
+    "mtime": 1778579117.9134645,
+    "ast_hash": "654e2ca2e9fddc27eb7e3954900dc48e",
+    "semantic_hash": "654e2ca2e9fddc27eb7e3954900dc48e"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\hooks\\use-toast.ts": {
+    "mtime": 1778579117.9134645,
+    "ast_hash": "4fd00028cb181c44efb5b049c470426c",
+    "semantic_hash": "4fd00028cb181c44efb5b049c470426c"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\hooks\\useAgoraChat.ts": {
+    "mtime": 1779032530.5805948,
+    "ast_hash": "3551aefa78f81853e42a33d9ba7e8fbb",
+    "semantic_hash": "3551aefa78f81853e42a33d9ba7e8fbb"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\hooks\\useAgoraManualJoin.ts": {
+    "mtime": 1778692804.8131611,
+    "ast_hash": "8fb1ab0db4fe93e0ee708615a030428b",
+    "semantic_hash": "8fb1ab0db4fe93e0ee708615a030428b"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\hooks\\useAgoraRTM.ts": {
+    "mtime": 1779123052.1196704,
+    "ast_hash": "5bb8fa3cfc710c67886aaa4f41a5da26",
+    "semantic_hash": "5bb8fa3cfc710c67886aaa4f41a5da26"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\hooks\\useConvoAI.ts": {
+    "mtime": 1779032502.4258645,
+    "ast_hash": "1f260eaaf69a07b5a9d9dc447f52cef2",
+    "semantic_hash": "1f260eaaf69a07b5a9d9dc447f52cef2"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\lib\\placeholder-images.json": {
+    "mtime": 1778579164.861855,
+    "ast_hash": "731dbe624ddfa50dea950857bf3e1acc",
+    "semantic_hash": "731dbe624ddfa50dea950857bf3e1acc"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\lib\\placeholder-images.ts": {
+    "mtime": 1778579117.9290893,
+    "ast_hash": "445a90d112652e11bc569e3f9bc71b33",
+    "semantic_hash": "445a90d112652e11bc569e3f9bc71b33"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\lib\\server-polyfill.ts": {
+    "mtime": 1778579164.942676,
+    "ast_hash": "cac83263e56614680f3e7990796bd3ae",
+    "semantic_hash": "cac83263e56614680f3e7990796bd3ae"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\lib\\types.ts": {
+    "mtime": 1779892004.075118,
+    "ast_hash": "bb268b52596d24a1193dfa5d7945c74a",
+    "semantic_hash": "bb268b52596d24a1193dfa5d7945c74a"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\lib\\utils.ts": {
+    "mtime": 1778579117.9387667,
+    "ast_hash": "1d8011eb18769078bf77502b220daa5e",
+    "semantic_hash": "1d8011eb18769078bf77502b220daa5e"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\lib\\webrtc.ts": {
+    "mtime": 1779123394.2816763,
+    "ast_hash": "fa186920d17982f45cd5b66634ddaf71",
+    "semantic_hash": "fa186920d17982f45cd5b66634ddaf71"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\middleware.ts": {
+    "mtime": 1778611312.1342716,
+    "ast_hash": "96f62d9757d4b56582e03e12160c3891",
+    "semantic_hash": "96f62d9757d4b56582e03e12160c3891"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\utils\\supabase\\client.ts": {
+    "mtime": 1778611312.1562188,
+    "ast_hash": "1b496a8adc19bd452201dd130c344e76",
+    "semantic_hash": "1b496a8adc19bd452201dd130c344e76"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\utils\\supabase\\middleware.ts": {
+    "mtime": 1779112156.322457,
+    "ast_hash": "1cfb6d22b04f83974097fca840ac3c9b",
+    "semantic_hash": "1cfb6d22b04f83974097fca840ac3c9b"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\src\\utils\\supabase\\server.ts": {
+    "mtime": 1778611312.355634,
+    "ast_hash": "dfd4fa5f8d547d8c24cbd058257c852b",
+    "semantic_hash": "dfd4fa5f8d547d8c24cbd058257c852b"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\supabase\\schema.sql": {
+    "mtime": 1780163490.3664832,
+    "ast_hash": "a5d6f995aabde45a0d6ee91187be93c3",
+    "semantic_hash": "a5d6f995aabde45a0d6ee91187be93c3"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\tailwind.config.ts": {
+    "mtime": 1779028472.4867413,
+    "ast_hash": "94c1fc261f09de1225d4e09bac7119c3",
+    "semantic_hash": "94c1fc261f09de1225d4e09bac7119c3"
+  },
+  "C:\\Users\\mbare-chm\\Private Documents\\Pelaiah\\fullprojects\\DRMAX\\lms\\tsconfig.json": {
+    "mtime": 1778579117.9482734,
+    "ast_hash": "cfa4afed07c91fd928be2e6da3c8a2a6",
+    "semantic_hash": "cfa4afed07c91fd928be2e6da3c8a2a6"
+  }
+}
