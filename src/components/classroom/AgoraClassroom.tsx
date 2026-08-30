@@ -618,8 +618,17 @@ function ClassroomInner({
 
   const teacherUser = useMemo(() => {
     if (iAmTutor) return 'local';
-    return remoteUsers.find(u => Number(u.uid) >= 1000 && Number(u.uid) <= 2000);
-  }, [remoteUsers, iAmTutor]);
+    return remoteUsers.find(u => {
+      const info = participantMap[Number(u.uid)];
+      if (info?.role === 'tutor' || info?.role === 'host' || info?.role === 'admin') return true;
+      if (teacherUid && Number(u.uid) === Number(teacherUid)) return true;
+      return Number(u.uid) >= 1000 && Number(u.uid) <= 2000;
+    });
+  }, [remoteUsers, iAmTutor, participantMap, teacherUid]);
+
+  const isLocalOnStage = iAmTutor && videoOn && !!localCameraTrack && !showWhiteboard && !(isScreenSharing && screenTrack) && !remoteScreenUid;
+
+  const isTeacherOnStage = !iAmTutor && !!teacherUser && teacherUser !== 'local' && (teacherUser as any).hasVideo && !showWhiteboard && !(isScreenSharing && screenTrack) && !remoteScreenUid;
 
   const studentUsers = useMemo(() => {
     return remoteUsers.filter(u => !(Number(u.uid) >= 1000 && Number(u.uid) <= 2000));
@@ -1011,12 +1020,12 @@ function ClassroomInner({
               <div className="flex gap-4 overflow-x-auto pb-4 custom-scrollbar">
                  {/* Local user (always visible) */}
                  <div className="w-44 shrink-0 aspect-[4/3] rounded-3xl overflow-hidden border border-border bg-muted relative group cursor-pointer">
-                   {videoOn && localCameraTrack ? (
+                   {videoOn && localCameraTrack && !isLocalOnStage ? (
                      <div className="absolute inset-0 transition-transform group-hover:scale-110">
                        <LocalVideoTrack
                          track={localCameraTrack}
                          play
-                         style={{ width: '100%', height: '100%' }}
+                         style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                        />
                      </div>
                    ) : (
@@ -1025,7 +1034,9 @@ function ClassroomInner({
                          <AvatarImage src={profile?.avatar_url || `https://api.dicebear.com/7.x/avataaars/svg?seed=${profile?.full_name || userName}`} />
                          <AvatarFallback className="text-lg">{(profile?.full_name || userName)[0]}</AvatarFallback>
                        </Avatar>
-                       <span className="text-[9px] text-foreground/ uppercase tracking-widest">Camera off</span>
+                       <span className="text-[9px] text-foreground/ uppercase tracking-widest font-semibold">
+                         {isLocalOnStage ? "Live on Stage" : "Camera off"}
+                       </span>
                      </div>
                    )}
                    <div className="absolute bottom-3 left-3 flex items-center gap-2 px-2 py-1 bg-background/60 backdrop-blur-md rounded-lg border border-border">
@@ -1046,11 +1057,25 @@ function ClassroomInner({
                      (Number(user.uid) >= 1000 && Number(user.uid) <= 2000);
                    const displayName = info?.name || `User ${user.uid}`;
                    const hasHandRaised = !!raisedHands.find(h => h.uid === Number(user.uid));
+                   const isThisUserOnMainStage = isUserTutor && isTeacherOnStage;
+
                    return (
                     <div key={user.uid} className="w-44 shrink-0 aspect-[4/3] rounded-3xl overflow-hidden border border-border bg-muted relative group cursor-pointer">
-                      <div className="absolute inset-0 transition-transform group-hover:scale-110">
-                        <RemoteUser user={user} playVideo playAudio style={{ width: '100%', height: '100%' }} />
-                      </div>
+                      {user.hasVideo && !isThisUserOnMainStage ? (
+                        <div className="absolute inset-0 transition-transform group-hover:scale-110">
+                          <RemoteUser user={user} playVideo playAudio style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                        </div>
+                      ) : (
+                        <div className="absolute inset-0 flex flex-col items-center justify-center bg-background/30">
+                          <Avatar className="w-16 h-16 border-2 border-border mb-2">
+                            <AvatarImage src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${displayName}`} />
+                            <AvatarFallback className="text-lg">{displayName[0]}</AvatarFallback>
+                          </Avatar>
+                          <span className="text-[9px] text-foreground/ uppercase tracking-widest font-semibold">
+                            {isThisUserOnMainStage ? "Live on Stage" : user.hasVideo ? "Video Playing" : "Camera off"}
+                          </span>
+                        </div>
+                      )}
                       <div className="absolute bottom-3 left-3 flex items-center gap-2 px-2 py-1 bg-background/60 backdrop-blur-md rounded-lg border border-border">
                         <div className={cn("w-1.5 h-1.5 rounded-full", user.hasAudio ? 'bg-gold animate-pulse' : 'bg-muted')} />
                         <span className="text-[10px] font-medium tracking-tight">{displayName}</span>
