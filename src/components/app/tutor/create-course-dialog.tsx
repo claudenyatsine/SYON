@@ -5,6 +5,7 @@ import { PlusCircle, Loader2, Upload, Trash2, Calendar, Clock, BookOpen, Video, 
 import { Button } from "@/components/ui/button";
 import { createClient } from "@/utils/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { uploadCourseBannerAction } from "@/app/actions/storage";
 import {
     Sheet,
     SheetContent,
@@ -86,21 +87,20 @@ export function CreateCourseDialog({ tutorId, onCourseCreated, trigger }: {
         setImageUrl(localUrl);
 
         try {
-            const fileName = `${tutorId}/${Date.now()}.jpg`;
-            const { error } = await supabase.storage
-                .from('course-banners')
-                .upload(fileName, file, { upsert: false });
-            
-            if (error) throw error;
+            const formData = new FormData();
+            formData.append('file', file);
 
-            const { data } = supabase.storage.from('course-banners').getPublicUrl(fileName);
-            if (data?.publicUrl) {
-                setImageUrl(data.publicUrl);
+            const result = await uploadCourseBannerAction(formData);
+            if (result.error) throw new Error(result.error);
+
+            if (result.publicUrl) {
+                setImageUrl(result.publicUrl);
                 URL.revokeObjectURL(localUrl);
             }
         } catch (err: any) {
             console.error("Upload failed:", err);
             setImageUrl(""); // Revert on failure
+            toast({ title: 'Upload failed', description: err.message, variant: 'destructive' });
         } finally {
             setUploading(false);
         }

@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Upload, FileText, Loader2, CheckCircle, X, Plus } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import jsPDF from 'jspdf';
+import { uploadSubmissionAction } from '@/app/actions/submissions';
 
 export function AssignmentUploader({ 
   assignmentId, 
@@ -98,33 +99,24 @@ export function AssignmentUploader({
           throw new Error("Please combine your PDFs into one file before uploading, or upload individual images to have us combine them automatically.");
         }
         finalFile = files[0];
-        const fileExt = files[0].name.split('.').pop();
-        finalFileName = `${assignmentId}/${user.id}_${Date.now()}.${fileExt}`;
       }
 
-      // 1. Upload to storage
-      const { data: uploadData, error: uploadError } = await supabase.storage
-        .from('student_submissions')
-        .upload(finalFileName, finalFile, { contentType: finalFile.type || 'application/pdf' });
+      // Convert finalFile blob to File object with valid name
+      const uploadPayload = new File(
+        [finalFile],
+        files[0]?.name?.endsWith('.pdf') ? files[0].name : `assignment_${assignmentId}.pdf`,
+        { type: finalFile.type || 'application/pdf' }
+      );
 
-      if (uploadError) throw uploadError;
+      const formData = new FormData();
+      formData.append('assignmentId', assignmentId);
+      formData.append('file', uploadPayload);
 
-      // 2. Get public URL
-      const { data: { publicUrl } } = supabase.storage
-        .from('student_submissions')
-        .getPublicUrl(finalFileName);
+      const result = await uploadSubmissionAction(formData);
 
-      // 3. Insert into submissions table
-      const { error: dbError } = await supabase
-        .from('submissions')
-        .insert({
-          assignment_id: assignmentId,
-          student_id: user.id,
-          file_url: publicUrl,
-          status: 'submitted'
-        });
-
-      if (dbError) throw dbError;
+      if (result.error) {
+        throw new Error(result.error);
+      }
 
       setIsSuccess(true);
       toast({

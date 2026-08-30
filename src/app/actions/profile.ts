@@ -49,7 +49,7 @@ export async function uploadAvatarAction(formData: FormData) {
       if (!bucketData) {
         await adminClient.storage.createBucket('avatars', {
           public: true,
-          fileSizeBytesLimit: 5 * 1024 * 1024,
+          fileSizeLimit: 5 * 1024 * 1024,
         });
       }
 
