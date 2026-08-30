@@ -1506,7 +1506,7 @@ function LobbyScreen(props: {
             <div className="w-full h-full bg-gradient-to-br from-[#07120C] via-[#0a1a12] to-[#132E1B] flex flex-col items-center justify-center gap-6 relative overflow-hidden">
                {/* Background futuristic accents */}
                <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-10" />
-               <div className="absolute -top-1/2 -left-1/2 w-full h-full bg-gold/5 rounded-full blur-[100px] pointer-events-none animate-pulse duration-[10000ms]" />
+               <div className="absolute -top-1/2 -left-1/2 w-full h-full bg-gold/5 rounded-full blur-[100px] pointer-events-none animate-pulse [animation-duration:10000ms]" />
                <div className="absolute -bottom-1/2 -right-1/2 w-full h-full bg-[#800000]/10 rounded-full blur-[100px] pointer-events-none" />
                
                <div className="relative w-20 h-20 rounded-3xl bg-background/40 backdrop-blur-md border border-white/10 flex items-center justify-center shadow-[0_0_30px_rgba(212,175,55,0.15)] transition-transform group-hover:scale-110 duration-500 group-hover:shadow-[0_0_50px_rgba(212,175,55,0.3)]">

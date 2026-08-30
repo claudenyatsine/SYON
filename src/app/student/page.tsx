@@ -341,14 +341,6 @@ export default function StudentDashboardPage() {
               <p className="text-xs sm:text-sm text-foreground/ dark:text-foreground/">"The capacity to learn is a gift; the ability to learn is a skill; the willingness to learn is a choice."</p>
             </div>
             <div className="flex items-center gap-2 mt-4">
-              <GlobalChatDrawer 
-                trigger={
-                  <Button variant="outline" size="sm" className="rounded-full gap-2 border-gold/30 hover:border-gold hover:bg-gold/10 text-foreground transition-all shadow-sm">
-                    <MessageCircle className="w-4 h-4 text-[#D4AF37]" />
-                    <span className="text-xs font-semibold">Messages</span>
-                  </Button>
-                } 
-              />
               <NotificationBell />
             </div>
           </motion.header>

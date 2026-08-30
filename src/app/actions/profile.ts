@@ -43,12 +43,31 @@ export async function uploadAvatarAction(formData: FormData) {
 
     if (serviceKey && supabaseUrl) {
       const adminClient = createAdminClient(supabaseUrl, serviceKey);
-      const { error: uploadError } = await adminClient.storage
+      
+      // Ensure avatars bucket exists (self-healing)
+      const { data: bucketData } = await adminClient.storage.getBucket('avatars');
+      if (!bucketData) {
+        await adminClient.storage.createBucket('avatars', {
+          public: true,
+          fileSizeBytesLimit: 5 * 1024 * 1024,
+        });
+      }
+
+      let { error: uploadError } = await adminClient.storage
         .from('avatars')
         .upload(filePath, buffer, {
           contentType: file.type,
           upsert: true,
         });
+
+      if (uploadError && uploadError.message.toLowerCase().includes('bucket not found')) {
+        await adminClient.storage.createBucket('avatars', { public: true });
+        const retry = await adminClient.storage.from('avatars').upload(filePath, buffer, {
+          contentType: file.type,
+          upsert: true,
+        });
+        uploadError = retry.error;
+      }
 
       if (uploadError) {
         return { error: uploadError.message };
