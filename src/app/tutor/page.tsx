@@ -118,9 +118,8 @@ function TutorStats() {
                 supabase
                     .from('live_classes')
                     .select('start_time, title')
-                    .eq('tutor_id', profile.id)
-                    .or('status.eq.upcoming,status.eq.ongoing,status.eq.scheduled')
-                    .order('start_time', { ascending: true })
+                    .or(`tutor_id.eq.${profile.id},proposed_by.eq.${profile.id}`)
+                    .order('start_time', { ascending: false })
                     .limit(1)
                     .maybeSingle(),
                 assignmentIds.length > 0 
