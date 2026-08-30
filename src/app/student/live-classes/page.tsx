@@ -34,15 +34,15 @@ export default function StudentLiveClassesPage() {
 
     const fetchClasses = useCallback(async () => {
         const { data, error } = await supabase
-            .from('classes')
+            .from('live_classes')
             .select(`
                 *,
-                tutor:profiles!classes_tutor_id_fkey (
+                tutor:profiles!live_classes_tutor_id_fkey (
                     full_name,
                     avatar_url
                 )
             `)
-            .order('schedule', { ascending: true });
+            .order('start_time', { ascending: true });
 
         if (data && !error) {
             setClasses(data as any);
@@ -53,12 +53,12 @@ export default function StudentLiveClassesPage() {
     useEffect(() => {
         fetchClasses();
 
-        // Subscribe to real-time changes in the classes table
+        // Subscribe to real-time changes in the live_classes table
         const subscription = supabase
             .channel('live-classes-status')
             .on(
                 'postgres_changes',
-                { event: '*', schema: 'public', table: 'classes' },
+                { event: '*', schema: 'public', table: 'live_classes' },
                 fetchClasses
             )
             .subscribe();
@@ -118,9 +118,9 @@ export default function StudentLiveClassesPage() {
                                     {liveClass.status}
                                 </Badge>
                                 <div className="relative aspect-[3/2] w-full bg-background/20">
-                                    {liveClass.image_url ? (
+                                    {(liveClass.image_url || liveClass.presentation_url) ? (
                                         <Image
-                                            src={liveClass.image_url}
+                                            src={liveClass.image_url || liveClass.presentation_url || ''}
                                             alt={liveClass.title}
                                             fill
                                             className="object-cover"
@@ -143,7 +143,7 @@ export default function StudentLiveClassesPage() {
                                 </div>
                                 <h3 className="text-lg font-bold text-foreground/">{liveClass.title}</h3>
                                 <p className="text-sm text-foreground/">
-                                    {liveClass.schedule ? new Date(liveClass.schedule).toLocaleString() : 'TBD'}
+                                    {(liveClass.start_time || liveClass.schedule) ? new Date(liveClass.start_time || liveClass.schedule || '').toLocaleString() : 'TBD'}
                                 </p>
                             </CardContent>
                             <CardFooter className="p-6 pt-0">

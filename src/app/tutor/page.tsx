@@ -116,13 +116,13 @@ function TutorStats() {
             // 3. Run other queries in parallel
             const [{ data: upcomingClass }, { count: unmarkedCount }, { data: tutorEnrollments }] = await Promise.all([
                 supabase
-                    .from('classes')
-                    .select('schedule, title')
+                    .from('live_classes')
+                    .select('start_time, title')
                     .eq('tutor_id', profile.id)
-                    .or('status.eq.upcoming,status.eq.ongoing')
-                    .order('schedule', { ascending: true })
+                    .or('status.eq.upcoming,status.eq.ongoing,status.eq.scheduled')
+                    .order('start_time', { ascending: true })
                     .limit(1)
-                    .single(),
+                    .maybeSingle(),
                 assignmentIds.length > 0 
                     ? supabase
                         .from('submissions')
@@ -164,14 +164,16 @@ function TutorStats() {
             const calculatedRate = totalE > 0 ? Math.round((activeE / totalE) * 100) : 0;
             const changeNum = totalE > 0 ? Math.round((recentActiveE / totalE) * 100) : 0;
 
+            const sessionDate = upcomingClass ? (upcomingClass.start_time || (upcomingClass as any).schedule) : null;
+
             setStats({
                 totalStudents: uniqueStudentCount.toString() || "0",
                 engagementRate: `${calculatedRate}%`,
                 engagementChange: changeNum > 0 ? `+${changeNum}% from last week` : "0% from last week",
                 engagementChangeType: changeNum > 0 ? "increase" : "neutral",
                 assignmentsToGrade: unmarkedCount?.toString() || "0",
-                upcomingSession: upcomingClass
-                    ? `${new Date(upcomingClass.schedule).toLocaleDateString()}, ${new Date(upcomingClass.schedule).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`
+                upcomingSession: sessionDate
+                    ? `${new Date(sessionDate).toLocaleDateString()}, ${new Date(sessionDate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`
                     : "None scheduled"
             });
         } catch (err) {
@@ -191,7 +193,7 @@ function TutorStats() {
             .on('postgres_changes', {
                 event: '*',
                 schema: 'public',
-                table: 'classes',
+                table: 'live_classes',
                 filter: `tutor_id=eq.${profile.id}`
             }, () => {
                 fetchTutorStats();

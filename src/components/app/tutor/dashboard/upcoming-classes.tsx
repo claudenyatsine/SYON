@@ -20,15 +20,14 @@ export function UpcomingClasses({ tutorId }: { tutorId?: string }) {
 
             try {
                 const { data, error } = await supabase
-                    .from('classes')
+                    .from('live_classes')
                     .select('*')
                     .eq('tutor_id', tutorId)
-                    .or('status.eq.upcoming,status.eq.ongoing')
-                    .order('schedule', { ascending: true })
+                    .or('status.eq.upcoming,status.eq.ongoing,status.eq.scheduled')
+                    .order('start_time', { ascending: true })
                     .limit(5);
 
                 if (data && !error) {
-                    console.log('DEBUG: Classes Table Columns:', data[0] ? Object.keys(data[0]) : 'No data found in table');
                     setUpcomingClasses(data);
                 }
             } catch (err) {
@@ -82,7 +81,7 @@ export function UpcomingClasses({ tutorId }: { tutorId?: string }) {
                                 <div className="flex items-center gap-4 text-xs text-muted-foreground">
                                     <div className="flex items-center gap-1">
                                         <Clock className="w-3.5 h-3.5" />
-                                        {cls.schedule ? new Date(cls.schedule).toLocaleString() : 'TBD'}
+                                        {(cls.start_time || cls.schedule) ? new Date(cls.start_time || cls.schedule).toLocaleString() : 'TBD'}
                                     </div>
                                     {cls.students_count !== undefined && (
                                         <div className="flex items-center gap-1">

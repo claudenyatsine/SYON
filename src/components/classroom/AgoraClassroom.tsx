@@ -397,14 +397,14 @@ function ClassroomInner({
   // Fetch Class Data
   useEffect(() => {
     if (!channelName) return;
-    supabase.from('classes').select('*').eq('id', channelName).single()
+    supabase.from('live_classes').select('*').eq('id', channelName).maybeSingle()
       .then(({ data }) => { if (data) setClassData(data); });
   }, [channelName, supabase]);
 
   // Update class status to ongoing when tutor joins
   useEffect(() => {
     if (isJoined && iAmTutor && channelName) {
-      supabase.from('classes').update({ status: 'ongoing' }).eq('id', channelName)
+      supabase.from('live_classes').update({ status: 'ongoing' }).eq('id', channelName)
         .then(({ error }) => {
           if (error) console.error('[Classroom] Failed to set status to ongoing:', error);
           else console.log('[Classroom] Class status set to ongoing');
@@ -519,7 +519,7 @@ function ClassroomInner({
       console.log('[Finalize] Starting. subjectId:', subjectId, 'channelName:', channelName, 'profile:', profile?.id);
 
       // 1. Update Class Status
-      const { error: classError } = await supabase.from('classes').update({ status: 'completed' }).eq('id', channelName);
+      const { error: classError } = await supabase.from('live_classes').update({ status: 'completed' }).eq('id', channelName);
       if (classError) console.warn('[Finalize] Class status update failed:', classError);
       
       // 2. Export Notes as a Resource

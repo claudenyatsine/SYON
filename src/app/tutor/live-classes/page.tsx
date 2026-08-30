@@ -43,7 +43,7 @@ function FinalizeClassDialog({
     try {
       // 1. Update the live class status
       const { error: classError } = await supabase
-        .from('classes')
+        .from('live_classes')
         .update({ 
             status: 'completed'
         })
@@ -126,8 +126,8 @@ function LiveClassList({ status, classes, onUpdate, onDelete }: { status: string
                             {liveClass.status}
                         </Badge>
                         <div className="relative aspect-[3/2] w-full bg-muted">
-                            {liveClass.image_url ? (
-                                <Image src={liveClass.image_url} alt={liveClass.title} fill className="object-cover" />
+                            {(liveClass.image_url || liveClass.presentation_url) ? (
+                                <Image src={liveClass.image_url || liveClass.presentation_url} alt={liveClass.title} fill className="object-cover" />
                             ) : (
                                 <div className="w-full h-full flex items-center justify-center">
                                     <Video className="w-12 h-12 text-muted-foreground/20" />
@@ -139,7 +139,7 @@ function LiveClassList({ status, classes, onUpdate, onDelete }: { status: string
                         <h3 className="text-lg font-bold truncate">{liveClass.title}</h3>
                         <p className="text-sm text-muted-foreground flex items-center gap-2">
                             <CalendarPlus className="w-4 h-4" />
-                            {liveClass.schedule ? new Date(liveClass.schedule).toLocaleString() : 'TBD'}
+                            {(liveClass.start_time || liveClass.schedule) ? new Date(liveClass.start_time || liveClass.schedule).toLocaleString() : 'TBD'}
                         </p>
                     </CardContent>
                      <CardFooter className="p-4 pt-0 flex-col gap-2">
@@ -212,7 +212,7 @@ export default function TutorLiveClassesPage() {
 
     const deleteClass = async (classId: string) => {
         if (!confirm('Are you sure you want to delete this class?')) return;
-        const { error } = await supabase.from('classes').delete().eq('id', classId);
+        const { error } = await supabase.from('live_classes').delete().eq('id', classId);
         if (error) {
             console.error('Delete error', error);
             toast({ title: 'Error', description: 'Failed to delete class', variant: 'destructive' });
@@ -227,13 +227,14 @@ export default function TutorLiveClassesPage() {
         setLoading(true);
         try {
             const { data, error } = await supabase
-                .from('classes')
+                .from('live_classes')
                 .select(`
                     *,
-                    tutor:profiles!classes_tutor_id_fkey (*)
+                    tutor:profiles!live_classes_tutor_id_fkey (*),
+                    subject:subjects (*)
                 `)
                 .eq('tutor_id', profile.id)
-                .order('schedule', { ascending: true });
+                .order('start_time', { ascending: true });
 
             if (error) {
                 console.error('Fetch classes error:', error);
@@ -261,7 +262,7 @@ export default function TutorLiveClassesPage() {
                 {
                     event: '*',
                     schema: 'public',
-                    table: 'classes',
+                    table: 'live_classes',
                     filter: `tutor_id=eq.${profile.id}`
                 },
                 () => {

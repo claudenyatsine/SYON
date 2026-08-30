@@ -6,6 +6,7 @@ import { format } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { createClient } from "@/utils/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { uploadCourseBannerAction } from "@/app/actions/storage";
 import {
     Dialog,
     DialogContent,
@@ -114,9 +115,6 @@ export function ScheduleClassDialog({ tutorId, onClassScheduled, trigger }: {
             const compressed = await compressImage(file);
             setUploadProgress(20);
 
-            const fileName = `${tutorId}/${Date.now()}.jpg`;
-            const filePath = `class-thumbnails/${fileName}`;
-
             let currentFakeProgress = 20;
             progressInterval = setInterval(() => {
                 currentFakeProgress += Math.floor(Math.random() * 5) + 3;
@@ -124,29 +122,24 @@ export function ScheduleClassDialog({ tutorId, onClassScheduled, trigger }: {
                 setUploadProgress(currentFakeProgress);
             }, 100);
 
-            const { error: uploadErr } = await supabase.storage
-                .from('course-banners')
-                .upload(filePath, compressed, { upsert: false, contentType: 'image/jpeg' });
+            const formData = new FormData();
+            formData.append('file', compressed);
+
+            const result = await uploadCourseBannerAction(formData);
             
             clearInterval(progressInterval);
 
-            if (uploadErr) throw uploadErr;
-            setUploadProgress(95);
-
-            const { data } = supabase.storage
-                .from('course-banners')
-                .getPublicUrl(filePath);
-
-            if (!data?.publicUrl) throw new Error("Could not retrieve public URL.");
+            if (result.error) throw new Error(result.error);
+            if (!result.publicUrl) throw new Error("Could not retrieve public URL.");
 
             setUploadProgress(100);
-            setImageUrl(data.publicUrl);
+            setImageUrl(result.publicUrl);
             URL.revokeObjectURL(localUrl);
         } catch (err: any) {
             console.error("Upload failed:", err);
             setUploadError(err.message || "Upload failed. Please try again.");
         } finally {
-            clearInterval(progressInterval);
+            if (progressInterval) clearInterval(progressInterval);
             setUploading(false);
             setUploadProgress(0);
         }
@@ -175,14 +168,16 @@ export function ScheduleClassDialog({ tutorId, onClassScheduled, trigger }: {
         if (onClassScheduled) onClassScheduled();
 
         supabase
-            .from('classes')
+            .from('live_classes')
             .insert({
                 title: insertTitle,
-                schedule: fullDate.toISOString(),
+                start_time: fullDate.toISOString(),
                 status: insertStatus,
                 tutor_id: tutorId,
                 subject_id: insertSubjectId,
-                image_url: imageUrl
+                presentation_url: imageUrl || null,
+                approval_status: 'approved',
+                proposed_by: tutorId
             })
             .then(({ error }) => {
                 if (error) {

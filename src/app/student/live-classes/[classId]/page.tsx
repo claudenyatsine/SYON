@@ -15,8 +15,11 @@ interface LiveClassDetail {
   title: string;
   status: 'upcoming' | 'ongoing' | 'completed';
   schedule?: string;
+  start_time?: string;
   recording_url?: string;
   imageUrl?: string;
+  image_url?: string;
+  presentation_url?: string;
   imageHint?: string;
   agora_channel_name?: string;
   tutor?: {
@@ -40,10 +43,10 @@ export default function LiveClassDetailPage() {
     const fetchClassDetails = async () => {
       try {
         const { data, error } = await supabase
-          .from('classes')
+          .from('live_classes')
           .select(`
             *,
-            tutor:profiles!classes_tutor_id_fkey (
+            tutor:profiles!live_classes_tutor_id_fkey (
               full_name,
               avatar_url
             )
@@ -151,7 +154,7 @@ export default function LiveClassDetailPage() {
           </div>
           <div className="flex items-center gap-1.5">
             <Calendar className="w-4 h-4 text-gold" />
-            <span>Scheduled: {liveClass.schedule ? new Date(liveClass.schedule).toLocaleString() : 'TBD'}</span>
+            <span>Scheduled: {(liveClass.start_time || liveClass.schedule) ? new Date(liveClass.start_time || liveClass.schedule || '').toLocaleString() : 'TBD'}</span>
           </div>
           <span className="capitalize px-2.5 py-0.5 rounded-full text-xs font-semibold bg-muted border border-border text-foreground/">
             {liveClass.status}
