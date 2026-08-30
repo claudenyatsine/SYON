@@ -1,4 +1,5 @@
 {
+    "json.schemaDownload.enable": false,
     "piny.project_settings": {
         "open-pages": [
             "pinyfakepage.html"

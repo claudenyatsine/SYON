@@ -114,14 +114,21 @@ export default function RoleLoginPage() {
     setIsLoading(true);
     formData.append('role', role);
     
-    const result = await login(formData);
-    
-    if (result?.error) {
-      toast({
-        variant: 'destructive',
-        title: 'Login failed',
-        description: result.error,
-      });
+    try {
+      const result = await login(formData);
+      if (result?.error) {
+        toast({
+          variant: 'destructive',
+          title: 'Login failed',
+          description: result.error,
+        });
+        setErrorMessage(result.error);
+      }
+    } catch (err: any) {
+      if (err?.message !== 'NEXT_REDIRECT') {
+        console.error('[Login Error]:', err);
+      }
+    } finally {
       setIsLoading(false);
     }
   };
@@ -358,7 +365,7 @@ export default function RoleLoginPage() {
             </div>
 
             <Button variant="outline" className="w-full bg-transparent border-border hover:bg-muted text-foreground h-10 rounded-xl font-medium" asChild>
-              <Link href="/signup">Create New Account</Link>
+              <Link href={`/login?role=${role}&mode=signup`}>Create New Account</Link>
             </Button>
 
             <div className="text-center text-xs pt-4">

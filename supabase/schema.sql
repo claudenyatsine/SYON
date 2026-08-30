@@ -58,14 +58,19 @@ DROP FUNCTION IF EXISTS public.handle_new_user() CASCADE;
 CREATE OR REPLACE FUNCTION public.handle_new_user()
 RETURNS trigger AS $$
 BEGIN
-  INSERT INTO public.profiles (id, role, email, is_approved, full_name)
+  INSERT INTO public.profiles (id, role, email, is_approved, full_name, avatar_url)
   VALUES (
     new.id, 
-    'student', 
+    COALESCE((new.raw_user_meta_data->>'role')::user_role, 'student'::user_role), 
     new.email, 
     false, 
-    COALESCE(new.raw_user_meta_data->>'full_name', initcap(replace(split_part(new.email, '@', 1), '.', ' ')))
-  );
+    COALESCE(new.raw_user_meta_data->>'full_name', new.raw_user_meta_data->>'name', initcap(replace(split_part(new.email, '@', 1), '.', ' '))),
+    COALESCE(new.raw_user_meta_data->>'avatar_url', new.raw_user_meta_data->>'picture', NULL)
+  )
+  ON CONFLICT (id) DO UPDATE SET
+    email = EXCLUDED.email,
+    full_name = COALESCE(EXCLUDED.full_name, public.profiles.full_name),
+    avatar_url = COALESCE(EXCLUDED.avatar_url, public.profiles.avatar_url);
   RETURN new;
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;

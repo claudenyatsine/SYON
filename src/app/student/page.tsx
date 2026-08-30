@@ -10,7 +10,7 @@ import {
 } from '@/components/ui/card';
 import { 
   BrainCircuit, Lightbulb, Video, Calendar, Clock, Shield, Search, Bell, Sparkles, 
-  ChevronRight, BookOpen, ShieldAlert, X, MoreVertical
+  ChevronRight, BookOpen, ShieldAlert, X, MoreVertical, MessageCircle
 } from 'lucide-react';
 import Link from 'next/link';
 import { DetailedProgressCard } from "@/components/app/student/dashboard/subject-progress-card";
@@ -26,6 +26,7 @@ import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { NotificationBell } from "@/components/app/notification-bell";
 import { CurriculumOnboardingModal } from "@/components/app/student/curriculum-onboarding-modal";
+import { GlobalChatDrawer } from "@/components/chat/global-chat-drawer";
 
 function AiStudyPanel() {
   return (
@@ -219,36 +220,44 @@ export default function StudentDashboardPage() {
 
         const enrollments = enrollmentsResult.data;
         if (enrollments) {
-          const formatted = enrollments
-            .map(e => e.subject)
-            .filter(Boolean)
-            .map((subject: any) => {
-              let overallProgress = 0;
-              let fetchedTopics: any[] = [];
-              
-              if (subject.modules && subject.modules.length > 0) {
-                 fetchedTopics = subject.modules.map((m: any) => {
-                    const progressRec = m.student_module_progress && m.student_module_progress.length > 0 
-                      ? m.student_module_progress[0] 
-                      : null;
-                    const progressValue = progressRec?.is_completed ? 100 : (progressRec?.score || 0);
-                    return { name: m.title, progress: progressValue };
-                 });
-                 overallProgress = Math.round(fetchedTopics.reduce((acc: number, curr: any) => acc + curr.progress, 0) / fetchedTopics.length);
-              } else {
-                 fetchedTopics = [
-                    { name: "Introduction to " + subject.name, progress: 15 },
-                    { name: "Core Concepts", progress: 0 }
-                 ];
-                 overallProgress = 0;
-              }
-              
-              return {
-                name: subject.name,
-                overallProgress: overallProgress,
-                topics: fetchedTopics
-              };
-            });
+          const rawSubjects = enrollments.map(e => e.subject).filter(Boolean);
+          // De-duplicate by subject ID or name to prevent duplicate cards/keys
+          const uniqueSubjectsMap = new Map<string, any>();
+          rawSubjects.forEach((sub: any) => {
+            const key = sub.id || sub.name;
+            if (!uniqueSubjectsMap.has(key)) {
+              uniqueSubjectsMap.set(key, sub);
+            }
+          });
+
+          const formatted = Array.from(uniqueSubjectsMap.values()).map((subject: any, idx: number) => {
+            let overallProgress = 0;
+            let fetchedTopics: any[] = [];
+            
+            if (subject.modules && subject.modules.length > 0) {
+               fetchedTopics = subject.modules.map((m: any) => {
+                  const progressRec = m.student_module_progress && m.student_module_progress.length > 0 
+                    ? m.student_module_progress[0] 
+                    : null;
+                  const progressValue = progressRec?.is_completed ? 100 : (progressRec?.score || 0);
+                  return { name: m.title, progress: progressValue };
+               });
+               overallProgress = Math.round(fetchedTopics.reduce((acc: number, curr: any) => acc + curr.progress, 0) / fetchedTopics.length);
+            } else {
+               fetchedTopics = [
+                  { name: "Introduction to " + subject.name, progress: 15 },
+                  { name: "Core Concepts", progress: 0 }
+               ];
+               overallProgress = 0;
+            }
+            
+            return {
+              id: subject.id || `sub-${idx}`,
+              name: subject.name,
+              overallProgress: overallProgress,
+              topics: fetchedTopics
+            };
+          });
           setCourses(formatted);
         }
 
@@ -309,6 +318,13 @@ export default function StudentDashboardPage() {
               <Button variant="ghost" size="icon" className="rounded-full bg-secondary/50">
                 <Search className="w-4 h-4 text-muted-foreground" />
               </Button>
+              <GlobalChatDrawer 
+                trigger={
+                  <Button variant="ghost" size="icon" className="rounded-full bg-secondary/50 relative hover:bg-secondary transition-colors" title="Open Messages">
+                    <MessageCircle className="w-4 h-4 text-muted-foreground hover:text-foreground" />
+                  </Button>
+                } 
+              />
               <NotificationBell />
             </div>
           </div>
@@ -325,6 +341,14 @@ export default function StudentDashboardPage() {
               <p className="text-xs sm:text-sm text-foreground/ dark:text-foreground/">"The capacity to learn is a gift; the ability to learn is a skill; the willingness to learn is a choice."</p>
             </div>
             <div className="flex items-center gap-2 mt-4">
+              <GlobalChatDrawer 
+                trigger={
+                  <Button variant="outline" size="sm" className="rounded-full gap-2 border-gold/30 hover:border-gold hover:bg-gold/10 text-foreground transition-all shadow-sm">
+                    <MessageCircle className="w-4 h-4 text-[#D4AF37]" />
+                    <span className="text-xs font-semibold">Messages</span>
+                  </Button>
+                } 
+              />
               <NotificationBell />
             </div>
           </motion.header>
@@ -345,7 +369,7 @@ export default function StudentDashboardPage() {
                 ) : courses.length > 0 ? (
                   courses.map((course, index) => (
                       <DetailedProgressCard 
-                          key={course.name} 
+                          key={course.id ? `${course.id}-${index}` : `${course.name}-${index}`} 
                           subject={course.name}
                           overallProgress={course.overallProgress}
                           topics={course.topics}

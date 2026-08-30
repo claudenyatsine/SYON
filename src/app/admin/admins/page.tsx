@@ -12,6 +12,7 @@ import * as React from "react";
 import { createClient } from "@/utils/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { Copy, ShieldAlert } from "lucide-react";
+import { toggleUserApproval } from "@/app/actions/lms";
 
 const INVITE_LINK = `${typeof window !== 'undefined' ? window.location.origin : 'http://localhost:3000'}/invite/admin-x9y8-z7w6`;
 
@@ -92,28 +93,34 @@ function AdminList() {
     };
 
     const toggleApproveAdmin = async (adminId: string, currentStatus: boolean) => {
+        const newStatus = !currentStatus;
         // Optimistic update — instant UI response, no waiting for refetch
         setAdmins(prev =>
-            prev.map(a => a.id === adminId ? { ...a, is_approved: !currentStatus } : a)
+            prev.map(a => a.id === adminId ? { ...a, is_approved: newStatus } : a)
         );
 
-        const { error } = await supabase
-            .from('profiles')
-            .update({ is_approved: !currentStatus })
-            .eq('id', adminId);
+        const result = await toggleUserApproval(adminId, newStatus);
 
-        if (error) {
-            // Revert on error
-            setAdmins(prev =>
-                prev.map(a => a.id === adminId ? { ...a, is_approved: currentStatus } : a)
-            );
-            toast({ title: "Error updating status", description: error.message, variant: "destructive" });
-        } else {
-            toast({
-                title: !currentStatus ? "Admin Approved" : "Admin Access Suspended",
-                description: `Successfully updated the administrator's access status.`,
-            });
+        if (result?.error) {
+            const { error } = await supabase
+                .from('profiles')
+                .update({ is_approved: newStatus, updated_at: new Date().toISOString() })
+                .eq('id', adminId);
+
+            if (error) {
+                // Revert on error
+                setAdmins(prev =>
+                    prev.map(a => a.id === adminId ? { ...a, is_approved: currentStatus } : a)
+                );
+                toast({ title: "Error updating status", description: result.error || error.message, variant: "destructive" });
+                return;
+            }
         }
+
+        toast({
+            title: newStatus ? "Admin Approved" : "Admin Access Suspended",
+            description: `Successfully updated the administrator's access status.`,
+        });
     };
 
     const filteredAdmins = React.useMemo(() => admins.filter(admin => {

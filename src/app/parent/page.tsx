@@ -139,8 +139,8 @@ async function StudentDashboard({ student }: { student: any }) {
                         {courseProgress.length === 0 ? (
                             <p className="text-sm text-muted-foreground">Not enrolled in any courses yet.</p>
                         ) : (
-                            courseProgress.map(course => (
-                                <div key={course.name}>
+                            courseProgress.map((course, idx) => (
+                                <div key={`${course.name}-${idx}`}>
                                     <div className="flex justify-between items-center mb-1">
                                         <span className="font-medium">{course.name}</span>
                                         <span className="text-sm text-muted-foreground">{course.grade} ({course.progress}%)</span>

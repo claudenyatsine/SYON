@@ -11,47 +11,55 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { useRouter } from 'next/navigation';
 import { GlobalChatDrawer } from '@/components/chat/global-chat-drawer';
 
+import { createClient } from '@/utils/supabase/client';
+
 function ParentSidebar() {
     const [userName, setUserName] = React.useState('Parent');
     const [userInitials, setUserInitials] = React.useState('P');
+    const [avatarUrl, setAvatarUrl] = React.useState<string | null>(null);
     const { setTheme } = useTheme()
     const router = useRouter();
 
-    const handleLogout = (e: React.MouseEvent) => {
+    const handleLogout = async (e: React.MouseEvent) => {
         e.preventDefault();
+        const supabase = createClient();
+        await supabase.auth.signOut();
         if (typeof window !== 'undefined') {
-        localStorage.removeItem('loggedInUser');
+            localStorage.removeItem('loggedInUser');
         }
         router.push('/login');
     };
 
     React.useEffect(() => {
-        if (typeof window !== 'undefined') {
-            const email = localStorage.getItem('loggedInUser');
-            if (email) {
-                const namePart = email.split('@')[0];
-                try {
-                    let nameGuess = namePart.charAt(0).toUpperCase() + namePart.slice(1);
-                    if (namePart.includes('.')) {
-                        const parts = namePart.split('.');
-                        const firstName = parts[0].charAt(0).toUpperCase() + parts[0].slice(1);
-                        const lastName = parts[1].charAt(0).toUpperCase() + parts[1].slice(1);
-                        nameGuess = `${firstName} ${lastName}`;
+        const fetchUser = async () => {
+            const supabase = createClient();
+            const { data: { user } } = await supabase.auth.getUser();
+
+            if (user) {
+                const { data } = await supabase.from('profiles').select('full_name, avatar_url').eq('id', user.id).single();
+                if (data) {
+                    if (data.avatar_url) setAvatarUrl(data.avatar_url);
+                    if (data.full_name) {
+                        setUserName(data.full_name);
+                        const nameParts = data.full_name.trim().split(/\s+/);
+                        if (nameParts.length > 1) {
+                            setUserInitials(`${nameParts[0][0]}${nameParts[nameParts.length - 1][0]}`.toUpperCase());
+                        } else {
+                            setUserInitials(data.full_name.substring(0, 2).toUpperCase());
+                        }
                     }
-                    setUserName(nameGuess);
-                    
-                    const nameParts = nameGuess.split(' ');
-                    if (nameParts.length > 1) {
-                        setUserInitials(`${nameParts[0].charAt(0)}${nameParts[1].charAt(0)}`);
-                    } else {
-                        setUserInitials(nameGuess.substring(0, 2).toUpperCase());
-                    }
-                } catch(e) {
-                    setUserName('Parent');
-                    setUserInitials('P');
+                }
+            } else if (typeof window !== 'undefined') {
+                const email = localStorage.getItem('loggedInUser');
+                if (email) {
+                    const namePart = email.split('@')[0];
+                    setUserName(namePart.charAt(0).toUpperCase() + namePart.slice(1));
+                    setUserInitials(namePart.substring(0, 2).toUpperCase());
                 }
             }
-        }
+        };
+
+        fetchUser();
     }, []);
 
   return (
@@ -59,7 +67,7 @@ function ParentSidebar() {
       <SidebarHeader>
         <div className="flex items-center gap-3">
             <Avatar className="h-10 w-10">
-                <AvatarImage src="https://picsum.photos/seed/parent-avatar/100/100" alt="Parent" data-ai-hint="person portrait" />
+                <AvatarImage src={avatarUrl || `https://api.dicebear.com/7.x/avataaars/svg?seed=${userName}`} alt={userName} data-ai-hint="person portrait" />
                 <AvatarFallback>{userInitials}</AvatarFallback>
             </Avatar>
             <div className="flex flex-col group-data-[collapsible=icon]:hidden">

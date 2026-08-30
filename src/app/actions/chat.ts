@@ -5,7 +5,7 @@ import { createClient } from '@/utils/supabase/server'
 export async function getGlobalChatMessages(userId: string, partnerId: string) {
   const supabase = await createClient()
   const { data, error } = await supabase
-    .from('global_messages')
+    .from('student_tutor_messages')
     .select('*')
     .or(`and(sender_id.eq.${userId},receiver_id.eq.${partnerId}),and(sender_id.eq.${partnerId},receiver_id.eq.${userId})`)
     .order('created_at', { ascending: true })
@@ -21,7 +21,7 @@ export async function getGlobalChatMessages(userId: string, partnerId: string) {
 export async function sendGlobalChatMessage(senderId: string, receiverId: string, message: string) {
   const supabase = await createClient()
   const { data, error } = await supabase
-    .from('global_messages')
+    .from('student_tutor_messages')
     .insert({
       sender_id: senderId,
       receiver_id: receiverId,
@@ -43,8 +43,8 @@ export async function getRecentChatContacts(userId: string) {
   
   // This gets all messages where user is sender or receiver
   const { data, error } = await supabase
-    .from('global_messages')
-    .select('sender_id, receiver_id, message, created_at, is_read')
+    .from('student_tutor_messages')
+    .select('sender_id, receiver_id, message, created_at')
     .or(`sender_id.eq.${userId},receiver_id.eq.${userId}`)
     .order('created_at', { ascending: false })
 
@@ -63,7 +63,7 @@ export async function getRecentChatContacts(userId: string) {
         partnerId,
         lastMessage: msg.message,
         lastMessageTime: msg.created_at,
-        unread: msg.receiver_id === userId && !msg.is_read
+        unread: false
       });
     }
   }
@@ -97,18 +97,7 @@ export async function getRecentChatContacts(userId: string) {
 }
 
 export async function markMessagesAsRead(userId: string, partnerId: string) {
-  const supabase = await createClient()
-  const { error } = await supabase
-    .from('global_messages')
-    .update({ is_read: true })
-    .eq('receiver_id', userId)
-    .eq('sender_id', partnerId)
-    .eq('is_read', false)
-
-  if (error) {
-    console.error('Error marking messages as read:', error)
-    return { error: error.message }
-  }
+  // If is_read column is implemented, can update here
   return { success: true }
 }
 

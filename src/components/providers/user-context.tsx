@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState, useCallback, useRef } from 'react';
 import { createClient } from '@/utils/supabase/client';
 import { User } from '@supabase/supabase-js';
 
@@ -27,11 +27,11 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
-  const supabase = createClient();
-  const lastFetchedUserIdRef = React.useRef<string | null>(null);
-  const isFetchingRef = React.useRef<string | null>(null);
+  const supabase = React.useMemo(() => createClient(), []);
+  const lastFetchedUserIdRef = useRef<string | null>(null);
+  const isFetchingRef = useRef<string | null>(null);
 
-  const fetchProfile = async (userId: string, userMetadata?: any, force = false) => {
+  const fetchProfile = useCallback(async (userId: string, userMetadata?: any, force = false) => {
     if (!force && lastFetchedUserIdRef.current === userId) {
       return;
     }
@@ -52,20 +52,28 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
           ...data,
           full_name: data.full_name || userMetadata?.full_name || userMetadata?.name || '',
           avatar_url: data.avatar_url || userMetadata?.avatar_url || userMetadata?.picture || '',
+          is_approved: Boolean(data.is_approved),
         });
         lastFetchedUserIdRef.current = userId;
       } else if (userMetadata) {
-        // Fallback to metadata if record is missing
-        setProfile({
-          id: userId,
-          full_name: userMetadata.full_name || userMetadata.name || '',
-          role: userMetadata.role || 'student',
-          avatar_url: userMetadata.avatar_url || userMetadata.picture || '',
-          is_approved: userMetadata.is_approved ?? false,
-          curriculum_board: userMetadata.curriculum_board || undefined,
-          student_level: userMetadata.student_level || undefined,
+        // Fallback to metadata if record is missing or transient error
+        setProfile((prev) => {
+          if (prev && prev.id === userId) {
+            return prev;
+          }
+          return {
+            id: userId,
+            full_name: userMetadata.full_name || userMetadata.name || '',
+            role: userMetadata.role || 'student',
+            avatar_url: userMetadata.avatar_url || userMetadata.picture || '',
+            is_approved: Boolean(userMetadata.is_approved),
+            curriculum_board: userMetadata.curriculum_board || undefined,
+            student_level: userMetadata.student_level || undefined,
+          };
         });
-        lastFetchedUserIdRef.current = userId;
+        if (!error) {
+          lastFetchedUserIdRef.current = userId;
+        }
       }
     } catch (err) {
       console.error('Error fetching profile:', err);
@@ -73,13 +81,13 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
       isFetchingRef.current = null;
       setLoading(false);
     }
-  };
+  }, [supabase]);
 
-  const refreshProfile = async () => {
+  const refreshProfile = useCallback(async () => {
     if (user) {
       await fetchProfile(user.id, user.user_metadata, true);
     }
-  };
+  }, [user, fetchProfile]);
 
   useEffect(() => {
     const initialize = async () => {
@@ -101,7 +109,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
       setUser(currentUser);
       
       if (currentUser) {
-        await fetchProfile(currentUser.id, currentUser.user_metadata);
+        await fetchProfile(currentUser.id, currentUser.user_metadata, true);
       } else {
         setProfile(null);
         lastFetchedUserIdRef.current = null;
@@ -112,7 +120,60 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     return () => {
       subscription.unsubscribe();
     };
-  }, []);
+  }, [supabase, fetchProfile]);
+
+  // Real-time synchronization on the profile table for the current user
+  useEffect(() => {
+    if (!user?.id) return;
+
+    const channel = supabase
+      .channel(`user-profile-sync-${user.id}`)
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'profiles',
+          filter: `id=eq.${user.id}`,
+        },
+        (payload) => {
+          if (payload.eventType === 'UPDATE' || payload.eventType === 'INSERT') {
+            const updated = payload.new as any;
+            setProfile((prev) => ({
+              ...(prev || {}),
+              ...updated,
+              full_name: updated.full_name || prev?.full_name || '',
+              avatar_url: updated.avatar_url || prev?.avatar_url || '',
+              is_approved: Boolean(updated.is_approved),
+            }));
+          } else if (payload.eventType === 'DELETE') {
+            setProfile(null);
+          }
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [user?.id, supabase]);
+
+  // Sync profile on window focus / tab visibility change
+  useEffect(() => {
+    if (!user?.id) return;
+
+    const handleFocus = () => {
+      fetchProfile(user.id, user.user_metadata, true);
+    };
+
+    window.addEventListener('focus', handleFocus);
+    document.addEventListener('visibilitychange', handleFocus);
+
+    return () => {
+      window.removeEventListener('focus', handleFocus);
+      document.removeEventListener('visibilitychange', handleFocus);
+    };
+  }, [user?.id, user?.user_metadata, fetchProfile]);
 
   return (
     <UserContext.Provider value={{ user, profile, loading, refreshProfile }}>

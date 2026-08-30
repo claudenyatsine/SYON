@@ -15,6 +15,7 @@ import { GlobalChatDrawer } from '@/components/chat/global-chat-drawer';
 function AdminSidebar() {
   const [userName, setUserName] = React.useState('Admin User');
   const [userInitial, setUserInitial] = React.useState('AD');
+  const [avatarUrl, setAvatarUrl] = React.useState<string | null>(null);
   const { setTheme } = useTheme()
   const router = useRouter();
 
@@ -32,15 +33,20 @@ function AdminSidebar() {
       const { data: { user } } = await supabase.auth.getUser();
       
       if (user) {
-        const { data } = await supabase.from('profiles').select('full_name').eq('id', user.id).single();
-        if (data?.full_name) {
-          setUserName(data.full_name);
-          
-          const nameParts = data.full_name.trim().split(/\s+/);
-          if (nameParts.length > 1) {
-            setUserInitial(`${nameParts[0][0]}${nameParts[nameParts.length - 1][0]}`.toUpperCase());
-          } else {
-            setUserInitial(data.full_name.substring(0, 2).toUpperCase());
+        const { data } = await supabase.from('profiles').select('full_name, avatar_url').eq('id', user.id).single();
+        if (data) {
+          if (data.avatar_url) {
+            setAvatarUrl(data.avatar_url);
+          }
+          if (data.full_name) {
+            setUserName(data.full_name);
+            
+            const nameParts = data.full_name.trim().split(/\s+/);
+            if (nameParts.length > 1) {
+              setUserInitial(`${nameParts[0][0]}${nameParts[nameParts.length - 1][0]}`.toUpperCase());
+            } else {
+              setUserInitial(data.full_name.substring(0, 2).toUpperCase());
+            }
           }
         }
       } else if (typeof window !== 'undefined') {
@@ -62,7 +68,7 @@ function AdminSidebar() {
       <SidebarHeader>
         <div className="flex items-center gap-3">
             <Avatar className="h-10 w-10">
-                <AvatarImage src="https://picsum.photos/seed/admin-avatar/100/100" alt="Admin" data-ai-hint="person portrait" />
+                <AvatarImage src={avatarUrl || `https://api.dicebear.com/7.x/avataaars/svg?seed=${userName}`} alt={userName} data-ai-hint="person portrait" />
                 <AvatarFallback>{userInitial}</AvatarFallback>
             </Avatar>
             <div className="flex flex-col group-data-[collapsible=icon]:hidden">

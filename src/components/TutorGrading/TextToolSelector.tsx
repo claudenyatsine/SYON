@@ -88,10 +88,7 @@ export default function TextToolSelector({ onAction, manualMode, isVisible: exte
           <button
             key={index}
             onClick={() => handleAction(btn.action)}
-            className="absolute pointer-events-auto flex items-center justify-center w-10 h-10 
-                       bg-zinc-950 border border-zinc-800 rounded-full shadow-xl 
-                       hover:bg-zinc-900 hover:border-zinc-700 transition-all duration-200 ease-out
-                       transform -translate-x-1/12 -translate-y-1/2 group"
+            className="absolute pointer-events-auto flex items-center justify-center w-10 h-10 bg-zinc-950 border border-zinc-800 rounded-full shadow-xl hover:bg-zinc-900 hover:border-zinc-700 transition-all duration-200 ease-out transform -translate-x-1/12 -translate-y-1/2 group"
             style={{
               left: `${offsetX}px`,
               top: `${offsetY}px`,

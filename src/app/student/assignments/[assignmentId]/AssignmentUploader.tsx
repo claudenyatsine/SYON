@@ -7,7 +7,13 @@ import { Upload, FileText, Loader2, CheckCircle, X, Plus } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import jsPDF from 'jspdf';
 
-export function AssignmentUploader({ assignmentId }: { assignmentId: string }) {
+export function AssignmentUploader({ 
+  assignmentId, 
+  initialStatus = 'not_submitted' 
+}: { 
+  assignmentId: string; 
+  initialStatus?: string; 
+}) {
   const [files, setFiles] = useState<File[]>([]);
   const [isUploading, setIsUploading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);

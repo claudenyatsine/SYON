@@ -246,7 +246,7 @@ export default function AdminValidationPanel() {
                     <h1 className="text-3xl font-bold tracking-tight">Admin Validation Panel</h1>
                     <p className="text-muted-foreground">Review and approve curriculum submissions from tutors.</p>
                 </div>
-                <Button onClick={fetchPendingValidations} disabled={loading} variant="outline">
+                <Button onClick={() => fetchPendingValidations()} disabled={loading} variant="outline">
                     {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
                     Refresh Queue
                 </Button>

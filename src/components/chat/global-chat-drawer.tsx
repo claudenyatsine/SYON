@@ -105,7 +105,7 @@ export function GlobalChatDrawer({ trigger }: { trigger: React.ReactNode }) {
       .on('postgres_changes', {
         event: 'INSERT',
         schema: 'public',
-        table: 'global_messages'
+        table: 'student_tutor_messages'
       }, (payload) => {
         const newMsg = payload.new;
         console.log('Realtime payload received in Drawer:', payload);

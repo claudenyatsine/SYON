@@ -5,7 +5,7 @@ import { Textarea } from "@/components/ui/textarea";
 
 export interface Annotation {
   id: string;
-  type: 'highlight' | 'comment' | 'strikeout' | 'insert' | 'replace' | 'resource';
+  type: 'highlight' | 'comment' | 'strikeout' | 'insert' | 'replace' | 'resource' | 'strikethrough';
   selected_text?: string;
   content?: string;
   marker_number?: number;

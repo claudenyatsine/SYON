@@ -77,12 +77,12 @@ export function StudentSidebar() {
   return (
     <Sidebar variant="floating" collapsible="icon" className="bg-background backdrop-blur-xl border-gold/20 shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
       <SidebarHeader>
-        <div className="flex items-center gap-3 w-full overflow-hidden">
+        <div className="flex items-center gap-3">
             <Avatar className="h-9 w-9 shrink-0">
                 <AvatarImage src={profile?.avatar_url || `https://api.dicebear.com/7.x/avataaars/svg?seed=${profile?.full_name || 'Student'}`} alt={userName} data-ai-hint="student portrait" />
                 <AvatarFallback>{userInitials}</AvatarFallback>
             </Avatar>
-            <div className="flex flex-col group-data-[collapsible=icon]:hidden min-w-0">
+            <div className="flex flex-col flex-1 min-w-0 group-data-[collapsible=icon]:hidden">
                 <span className="text-[10px] text-muted-foreground leading-tight">Welcome back,</span>
                 <span className="text-sm font-semibold truncate" title={userName}>{userName}</span>
             </div>

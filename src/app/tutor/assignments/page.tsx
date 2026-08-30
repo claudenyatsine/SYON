@@ -62,8 +62,8 @@ export default function TutorAssignmentsPage() {
                   
                   if (dbData) {
                       dbSubmissions = dbData.map((sub: any) => {
-                          const assignment = tutorAssignments.find((a: any) => a.id === sub.assignment_id);
-                          const item = tutorItems.find((i: any) => i.id === assignment?.module_item_id);
+                          const assignment = tutorAssignments?.find((a: any) => a.id === sub.assignment_id);
+                          const item = tutorItems?.find((i: any) => i.id === assignment?.module_item_id);
                           const mod = tutorModules?.find((m: any) => m.id === item?.module_id);
                           
                           // Handle array mapping issues for relationships

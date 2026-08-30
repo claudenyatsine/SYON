@@ -48,7 +48,7 @@ type StatCardProps = {
     value: string;
     icon: React.ElementType;
     change?: string;
-    changeType?: 'increase' | 'decrease';
+    changeType?: 'increase' | 'decrease' | 'neutral';
 }
 
 function StatCard({ title, value, icon: Icon, change, changeType }: StatCardProps) {
@@ -61,7 +61,7 @@ function StatCard({ title, value, icon: Icon, change, changeType }: StatCardProp
             <CardContent>
                 <div className="text-2xl font-bold">{value}</div>
                 {change && (
-                    <p className={`text-xs ${changeType === 'increase' ? 'text-gold' : 'text-burgundy'}`}>
+                    <p className={`text-xs ${changeType === 'increase' ? 'text-gold' : changeType === 'decrease' ? 'text-burgundy' : 'text-muted-foreground'}`}>
                         {change} from last week
                     </p>
                 )}

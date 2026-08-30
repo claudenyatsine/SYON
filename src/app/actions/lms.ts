@@ -1,6 +1,7 @@
 "use server"
 
 import { createClient } from '@/utils/supabase/server'
+import { createClient as createAdminClient } from '@supabase/supabase-js'
 import { revalidatePath } from 'next/cache'
 
 // --- Subjects ---
@@ -164,10 +165,29 @@ export async function toggleUserApproval(userId: string, isApproved: boolean) {
     return { error: error.message }
   }
 
+  // Also update user_metadata in auth.users if service role key is configured
+  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  if (serviceKey && supabaseUrl) {
+    try {
+      const adminClient = createAdminClient(supabaseUrl, serviceKey);
+      await adminClient.auth.admin.updateUserById(userId, {
+        user_metadata: { is_approved: isApproved }
+      });
+    } catch (adminErr) {
+      console.warn('Could not sync user_metadata in auth.admin:', adminErr);
+    }
+  }
+
+  revalidatePath('/', 'layout')
   revalidatePath('/admin')
   revalidatePath('/admin/students')
   revalidatePath('/admin/tutors')
   revalidatePath('/admin/admins')
+  revalidatePath('/student')
+  revalidatePath('/student', 'layout')
+  revalidatePath('/tutor')
+  revalidatePath('/tutor', 'layout')
   return { success: true }
 }
 

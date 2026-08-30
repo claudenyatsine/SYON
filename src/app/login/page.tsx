@@ -69,6 +69,11 @@ function LoginForm() {
     const error = searchParams.get('error');
     const message = searchParams.get('message');
     const mode = searchParams.get('mode');
+    const roleParam = searchParams.get('role');
+
+    if (roleParam && ['student', 'tutor', 'parent', 'admin'].includes(roleParam)) {
+      setRole(roleParam);
+    }
 
     if (mode === 'signup') {
       setIsLogin(false);
@@ -114,35 +119,54 @@ function LoginForm() {
     setIsLoading(true);
     setErrorMessage(null);
     
-    const formData = new FormData(e.currentTarget);
-    formData.append('role', role);
-    
-    if (isLogin) {
-      const result = await login(formData);
-      if (result?.error) {
-        toast({
-          variant: 'destructive',
-          title: 'Login failed',
-          description: result.error,
-        });
-        setErrorMessage(result.error);
-        setIsLoading(false);
-      }
-    } else {
-      const firstName = formData.get('first-name') as string;
-      const lastName = formData.get('last-name') as string;
-      formData.append('fullName', `${firstName} ${lastName}`);
+    try {
+      const formData = new FormData(e.currentTarget);
+      formData.append('role', role);
       
-      const result = await signup(formData);
-      if (result?.error) {
-        toast({
-          variant: 'destructive',
-          title: 'Signup failed',
-          description: result.error,
-        });
-        setErrorMessage(result.error);
-        setIsLoading(false);
+      if (isLogin) {
+        const result = await login(formData);
+        if (result?.error) {
+          toast({
+            variant: 'destructive',
+            title: 'Login failed',
+            description: result.error,
+          });
+          setErrorMessage(result.error);
+        }
+      } else {
+        const firstName = formData.get('first-name') as string;
+        const lastName = formData.get('last-name') as string;
+        formData.append('fullName', `${firstName} ${lastName}`.trim());
+        
+        const result = await signup(formData);
+        if (result?.error) {
+          toast({
+            variant: 'destructive',
+            title: 'Signup failed',
+            description: result.error,
+          });
+          setErrorMessage(result.error);
+        } else if (result?.redirect) {
+          toast({
+            title: 'Account created!',
+            description: result.message || 'Redirecting to your dashboard...',
+          });
+          router.push(result.redirect);
+        } else if (result?.success) {
+          toast({
+            title: 'Account Created Successfully!',
+            description: result.message || 'Please check your email to confirm your account, then log in.',
+          });
+          setIsLogin(true);
+          setErrorMessage(null);
+        }
       }
+    } catch (err: any) {
+      if (err?.message !== 'NEXT_REDIRECT') {
+        console.error('[Auth Error]:', err);
+      }
+    } finally {
+      setIsLoading(false);
     }
   };
 

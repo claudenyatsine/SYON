@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
-import { WhiteWebSdk, Room, DeviceType, ApplianceNames } from 'white-web-sdk';
+import { WhiteWebSdk, Room, DeviceType } from 'white-web-sdk';
 import { Loader2, Palette, Eraser, Trash2, Edit3, ShieldAlert, Sparkles } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -60,13 +60,13 @@ export default function AgoraWhiteboard({
       if (!whiteboardRef.current) return;
 
       try {
-        const whiteWebSdk = new WhiteWebSdk({
+        const whiteWebSdk = new (WhiteWebSdk as any)({
           appIdentifier: appIdentifier,
           region: 'us-sv',
           deviceType: DeviceType.Desktop,
         });
 
-        const newRoom = await whiteWebSdk.joinRoom({
+        const newRoom = await (whiteWebSdk as any).joinRoom({
           uuid: uuid,
           roomToken: roomToken,
           uid: uid,
@@ -359,7 +359,7 @@ export default function AgoraWhiteboard({
 
           {/* Clear board */}
           <button
-            onClick={useLocalFallback ? clearCanvas : () => room?.cleanCurrentScene()}
+            onClick={useLocalFallback ? clearCanvas : () => (room as any)?.cleanCurrentScene?.()}
             className="w-10 h-10 rounded-full flex items-center justify-center text-burgundy/80 hover:bg-burgundy/10 hover:text-burgundy/80 transition-all active:scale-95"
             title="Clear Board"
           >

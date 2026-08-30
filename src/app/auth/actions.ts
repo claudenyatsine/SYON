@@ -98,16 +98,17 @@ export async function signup(formData: FormData) {
   revalidatePath('/', 'layout')
   
   // If a session exists, the user is already logged in (email confirmation disabled)
-  // Redirect them directly to their dashboard
   if (data.session) {
-    if (role === 'tutor') return redirect('/tutor')
-    if (role === 'admin') return redirect('/admin')
-    if (role === 'parent') return redirect('/parent')
-    return redirect('/student')
+    const destination = `/${role}`
+    return { success: true, redirect: destination, message: 'Account created successfully! Redirecting...' }
   }
 
-  // Fallback: email confirmation required
-  redirect('/login?message=' + encodeURIComponent('Check your email to confirm your account.'))
+  // If email confirmation is required / default:
+  return { 
+    success: true, 
+    requireConfirmation: true, 
+    message: 'Your account was created successfully! Please check your email to confirm, then log in.' 
+  }
 }
 
 export async function signOut() {

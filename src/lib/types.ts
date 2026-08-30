@@ -89,6 +89,7 @@ export type LiveClass = {
   schedule?: string;
   students?: number;
   imageUrl?: string;
+  image_url?: string;
   imageHint?: string;
   agora_channel_name?: string;
   dyteMeetingId?: string; // Legacy

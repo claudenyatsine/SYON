@@ -11,6 +11,8 @@ import { Separator } from '@/components/ui/separator';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Upload, Key, Shield, Loader2, CheckCircle2 } from 'lucide-react';
 
+import { uploadAvatarAction } from '@/app/actions/profile';
+
 // ----------------------------------------------------------------
 // Shared, real-time Profile + Password settings component.
 // Usable in any role's settings page (student / tutor / admin).
@@ -61,7 +63,7 @@ export function ProfileSettings() {
     }, [supabase]);
 
     // --------------------------------------------------
-    // Avatar Upload → Supabase Storage → profile update
+    // Avatar Upload → Server Action → profile update
     // --------------------------------------------------
     const handleAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
@@ -70,34 +72,22 @@ export function ProfileSettings() {
         // Show immediate local preview
         const localPreview = URL.createObjectURL(file);
         setAvatarPreview(localPreview);
-
         setUploadingAvatar(true);
-        const filePath = `avatars/${userId}/${Date.now()}_${file.name}`;
 
-        const { error: uploadError } = await supabase.storage
-            .from('avatars')
-            .upload(filePath, file, { upsert: true });
+        const formData = new FormData();
+        formData.append('avatar', file);
 
-        if (uploadError) {
-            toast({ title: 'Upload failed', description: uploadError.message, variant: 'destructive' });
+        const result = await uploadAvatarAction(formData);
+
+        if (result.error) {
+            toast({ title: 'Upload failed', description: result.error, variant: 'destructive' });
             setAvatarPreview(avatarUrl); // revert preview
-            setUploadingAvatar(false);
-            return;
-        }
-
-        const { data: { publicUrl } } = supabase.storage.from('avatars').getPublicUrl(filePath);
-
-        const { error: updateError } = await supabase
-            .from('profiles')
-            .update({ avatar_url: publicUrl })
-            .eq('id', userId);
-
-        if (updateError) {
-            toast({ title: 'Profile update failed', description: updateError.message, variant: 'destructive' });
-        } else {
-            setAvatarUrl(publicUrl);
+        } else if (result.avatarUrl) {
+            setAvatarUrl(result.avatarUrl);
+            setAvatarPreview(result.avatarUrl);
             toast({ title: 'Avatar updated!', description: 'Your profile picture has been changed.' });
         }
+
         setUploadingAvatar(false);
     };
 
