@@ -27,7 +27,15 @@ export function useAgoraChat({ appKey, userId, token, channelName }: UseAgoraCha
   }, []);
 
   const initChat = useCallback(async () => {
-    if (!appKey || !userId || isJoined) return;
+    // Agora Chat AppKey must be in format "orgName#appName" and not a placeholder
+    const isValidAppKey = appKey && typeof appKey === 'string' && appKey.includes('#') && !appKey.toLowerCase().includes('your_') && !appKey.toLowerCase().includes('placeholder');
+
+    if (!isValidAppKey || !userId || isJoined) {
+      if (appKey && !isValidAppKey) {
+        console.warn('[Agora Chat] Skipping initialization: NEXT_PUBLIC_AGORA_CHAT_APP_KEY must be in the format "org#app" and cannot be a placeholder.');
+      }
+      return;
+    }
 
     try {
       const conn = new AgoraChat.connection({
