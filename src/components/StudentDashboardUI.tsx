@@ -2,8 +2,17 @@ import React from 'react';
 import { 
   Search, ChevronDown, LayoutDashboard, BookOpen, Users, 
   GraduationCap, Plus, Calendar as CalendarIcon, MessageSquare, 
-  ClipboardList, Clock, BarChart2, Paperclip, Smile, Send
+  ClipboardList, Clock, BarChart2, Paperclip, Smile, Send,
+  MoreVertical, User, Video, RefreshCw
 } from 'lucide-react';
+import { 
+  DropdownMenu, 
+  DropdownMenuContent, 
+  DropdownMenuItem, 
+  DropdownMenuLabel, 
+  DropdownMenuSeparator, 
+  DropdownMenuTrigger 
+} from '@/components/ui/dropdown-menu';
 
 export default function StudentDashboardUI() {
   return (
@@ -170,9 +179,39 @@ export default function StudentDashboardUI() {
                   <MessageSquare size={18} className="text-muted-foreground" />
                   Chat with Pelaiah
                 </div>
-                <div className="flex items-center gap-3 text-muted-foreground">
-                  <Search size={18} className="cursor-pointer hover:text-foreground" />
-                  <span className="text-xl leading-none mb-1 cursor-pointer hover:text-foreground">⋮</span>
+                <div className="flex items-center gap-1.5 text-muted-foreground">
+                  <button className="p-1.5 rounded-lg hover:bg-muted hover:text-foreground transition-colors" title="Search conversation">
+                    <Search size={18} />
+                  </button>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <button className="p-1.5 rounded-lg hover:bg-muted hover:text-foreground transition-colors flex items-center justify-center" title="Options">
+                        <MoreVertical size={18} />
+                      </button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end" className="w-52 bg-card border-border shadow-xl rounded-2xl p-1.5 z-50">
+                      <DropdownMenuLabel className="text-xs font-semibold px-2 py-1.5 text-muted-foreground">
+                        Actions
+                      </DropdownMenuLabel>
+                      <DropdownMenuItem className="flex items-center gap-2 px-2.5 py-2 text-xs rounded-xl cursor-pointer hover:bg-muted">
+                        <User size={15} className="text-[#D4AF37]" />
+                        <span>Student Profile</span>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem className="flex items-center gap-2 px-2.5 py-2 text-xs rounded-xl cursor-pointer hover:bg-muted">
+                        <Plus size={15} className="text-[#D4AF37]" />
+                        <span>Assign Task</span>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem className="flex items-center gap-2 px-2.5 py-2 text-xs rounded-xl cursor-pointer hover:bg-muted">
+                        <Video size={15} className="text-emerald-500" />
+                        <span>Live Session</span>
+                      </DropdownMenuItem>
+                      <DropdownMenuSeparator className="bg-border my-1" />
+                      <DropdownMenuItem className="flex items-center gap-2 px-2.5 py-2 text-xs rounded-xl cursor-pointer hover:bg-muted">
+                        <RefreshCw size={15} className="text-muted-foreground" />
+                        <span>Refresh Chat</span>
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 </div>
               </div>
 

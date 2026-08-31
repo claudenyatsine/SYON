@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useMemo, useRef } from 'react';
+import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import { useUser } from '@/components/providers/user-context';
 import { createClient } from '@/utils/supabase/client';
 import { SchoolHeader } from '@/components/app/school-header';
@@ -26,9 +26,19 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { 
+  DropdownMenu, 
+  DropdownMenuContent, 
+  DropdownMenuItem, 
+  DropdownMenuLabel, 
+  DropdownMenuSeparator, 
+  DropdownMenuTrigger 
+} from '@/components/ui/dropdown-menu';
+import { 
   Search, MessageSquare, Calendar, Trash2, Send, Check, 
-  User, Plus, Loader2, CalendarClock, AlertCircle, FileText, CheckCircle2, Users
-, ChevronDown, BookOpen, Clock, BarChart2, Paperclip, Smile, ClipboardList } from 'lucide-react';
+  User, Plus, Loader2, CalendarClock, AlertCircle, FileText, CheckCircle2, Users,
+  ChevronDown, BookOpen, Clock, BarChart2, Paperclip, Smile, ClipboardList,
+  MoreVertical, RefreshCw, Video, X, Info, GraduationCap, ShieldCheck
+} from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useToast } from '@/hooks/use-toast';
 
@@ -122,6 +132,11 @@ export default function TutorStudentsPage() {
   const [pendingAssignmentsLoading, setPendingAssignmentsLoading] = useState(false);
   const [pendingAssignmentsList, setPendingAssignmentsList] = useState<any[]>([]);
 
+  // Student info modal and in-chat search states
+  const [isStudentInfoOpen, setIsStudentInfoOpen] = useState(false);
+  const [isChatSearchOpen, setIsChatSearchOpen] = useState(false);
+  const [chatSearchQuery, setChatSearchQuery] = useState('');
+
   const tutorId = profile?.id || '';
 
   // 1. Fetch Students assigned to tutor
@@ -189,34 +204,39 @@ export default function TutorStudentsPage() {
     return students.find(s => s.student.id === selectedStudentId) || null;
   }, [students, selectedStudentId]);
 
+  const loadChat = useCallback(async () => {
+    if (!selectedStudentId || !tutorId) return;
+    setChatLoading(true);
+    const res = await getGlobalChatMessages(tutorId, selectedStudentId);
+    
+    if (res.error) {
+      console.warn('Database chat fetch failed, falling back to localStorage. Error:', res.error);
+      setUseChatFallback(true);
+      const stored = localStorage.getItem(`drmax_chat_${tutorId}_${selectedStudentId}`);
+      if (stored) {
+        try {
+          setMessages(JSON.parse(stored));
+        } catch {
+          setMessages([]);
+        }
+      } else {
+        setMessages([]);
+      }
+    } else if (res.data) {
+      setUseChatFallback(false);
+      setMessages(res.data);
+    }
+    setChatLoading(false);
+  }, [tutorId, selectedStudentId]);
+
+  const displayedMessages = useMemo(() => {
+    if (!chatSearchQuery.trim()) return messages;
+    return messages.filter(m => m.message?.toLowerCase().includes(chatSearchQuery.toLowerCase()));
+  }, [messages, chatSearchQuery]);
+
   // 2. Fetch Chat History and setup Realtime subscription when student changes or Messages tab opens
   useEffect(() => {
     if (!selectedStudentId || !tutorId || activeTab !== 'messages') return;
-
-    async function loadChat() {
-      setChatLoading(true);
-      const res = await getGlobalChatMessages(tutorId, selectedStudentId!);
-      
-      if (res.error) {
-        // Fallback to localStorage if tables are not found
-        console.warn('Database chat fetch failed, falling back to localStorage. Error:', res.error);
-        setUseChatFallback(true);
-        const stored = localStorage.getItem(`drmax_chat_${tutorId}_${selectedStudentId}`);
-        if (stored) {
-          try {
-            setMessages(JSON.parse(stored));
-          } catch {
-            setMessages([]);
-          }
-        } else {
-          setMessages([]);
-        }
-      } else if (res.data) {
-        setUseChatFallback(false);
-        setMessages(res.data);
-      }
-      setChatLoading(false);
-    }
 
     loadChat();
 
@@ -234,7 +254,6 @@ export default function TutorStudentsPage() {
           (newMsg.sender_id === selectedStudentId && newMsg.receiver_id === tutorId)
         ) {
           setMessages(prev => {
-            // Prevent duplicate messages if sent by the current user and optimistically added
             if (prev.find(m => m.id === newMsg.id)) return prev;
             return [...prev, newMsg];
           });
@@ -245,7 +264,7 @@ export default function TutorStudentsPage() {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [selectedStudentId, tutorId, activeTab, supabase]);
+  }, [selectedStudentId, tutorId, activeTab, loadChat, supabase]);
 
   // Fetch progress whenever a student is selected or deadlines change
   useEffect(() => {
@@ -718,22 +737,111 @@ export default function TutorStudentsPage() {
                           <MessageSquare size={18} className="text-muted-foreground" />
                           Chat with {selectedGroup.student.full_name.split(' ')[0]}
                         </div>
-                        <div className="flex items-center gap-3 text-muted-foreground">
-                          <Search size={18} className="cursor-pointer hover:text-foreground" />
-                          <span className="text-xl leading-none mb-1 cursor-pointer hover:text-foreground">⋮</span>
+                        <div className="flex items-center gap-1.5 text-muted-foreground">
+                          <button 
+                            onClick={() => setIsChatSearchOpen(!isChatSearchOpen)}
+                            className={`p-1.5 rounded-lg transition-colors ${
+                              isChatSearchOpen ? 'bg-[#D4AF37]/10 text-[#D4AF37]' : 'hover:bg-muted hover:text-foreground'
+                            }`}
+                            title="Search in conversation"
+                          >
+                            <Search size={18} />
+                          </button>
+                          
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <button 
+                                className="p-1.5 rounded-lg hover:bg-muted text-muted-foreground hover:text-foreground transition-colors flex items-center justify-center"
+                                title="Conversation Options"
+                              >
+                                <MoreVertical size={18} />
+                              </button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end" className="w-56 bg-card border-border shadow-xl rounded-2xl p-1.5 z-50">
+                              <DropdownMenuLabel className="text-xs font-semibold px-2 py-1.5 text-muted-foreground">
+                                Student Actions
+                              </DropdownMenuLabel>
+                              <DropdownMenuItem 
+                                onClick={() => setIsStudentInfoOpen(true)}
+                                className="flex items-center gap-2 px-2.5 py-2 text-xs rounded-xl cursor-pointer hover:bg-muted transition-colors"
+                              >
+                                <User size={15} className="text-[#D4AF37]" />
+                                <span>Student Profile & Info</span>
+                              </DropdownMenuItem>
+                              <DropdownMenuItem 
+                                onClick={() => {
+                                  if (selectedGroup.subjects.length > 0) {
+                                    setNewDeadlineSubjectId(selectedGroup.subjects[0].id);
+                                  }
+                                  setIsDeadlineDialogOpen(true);
+                                }}
+                                className="flex items-center gap-2 px-2.5 py-2 text-xs rounded-xl cursor-pointer hover:bg-muted transition-colors"
+                              >
+                                <Plus size={15} className="text-[#D4AF37]" />
+                                <span>Assign New Task / Goal</span>
+                              </DropdownMenuItem>
+                              <DropdownMenuItem 
+                                onClick={() => {
+                                  window.location.href = `/tutor/live-classes`;
+                                }}
+                                className="flex items-center gap-2 px-2.5 py-2 text-xs rounded-xl cursor-pointer hover:bg-muted transition-colors"
+                              >
+                                <Video size={15} className="text-emerald-500" />
+                                <span>Schedule Live Class</span>
+                              </DropdownMenuItem>
+                              <DropdownMenuItem 
+                                onClick={() => setActiveTab('overview')}
+                                className="flex items-center gap-2 px-2.5 py-2 text-xs rounded-xl cursor-pointer hover:bg-muted transition-colors"
+                              >
+                                <BarChart2 size={15} className="text-blue-400" />
+                                <span>Academic Progress</span>
+                              </DropdownMenuItem>
+                              <DropdownMenuSeparator className="bg-border my-1" />
+                              <DropdownMenuItem 
+                                onClick={() => {
+                                  loadChat();
+                                  toast({ title: 'Refreshed', description: 'Chat history updated.' });
+                                }}
+                                className="flex items-center gap-2 px-2.5 py-2 text-xs rounded-xl cursor-pointer hover:bg-muted transition-colors"
+                              >
+                                <RefreshCw size={15} className="text-muted-foreground" />
+                                <span>Refresh Chat</span>
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
                         </div>
                       </div>
+
+                      {/* In-Chat Search Bar */}
+                      {isChatSearchOpen && (
+                        <div className="px-4 py-2.5 bg-muted/40 border-b border-border flex items-center gap-2 animate-in fade-in slide-in-from-top-2 duration-200">
+                          <Search size={14} className="text-muted-foreground" />
+                          <input 
+                            type="text" 
+                            value={chatSearchQuery}
+                            onChange={e => setChatSearchQuery(e.target.value)}
+                            placeholder="Search in this conversation..."
+                            className="flex-1 bg-transparent text-xs text-foreground placeholder:text-muted-foreground focus:outline-none"
+                            autoFocus
+                          />
+                          {chatSearchQuery && (
+                            <button onClick={() => setChatSearchQuery('')} className="text-xs text-muted-foreground hover:text-foreground">
+                              <X size={14} />
+                            </button>
+                          )}
+                        </div>
+                      )}
 
                       <div className="flex-1 overflow-y-auto p-6 space-y-6 custom-scrollbar">
                         {chatLoading ? (
                            <div className="h-full flex items-center justify-center"><Loader2 className="animate-spin text-[#D4AF37]" /></div>
-                        ) : messages.length === 0 ? (
+                        ) : displayedMessages.length === 0 ? (
                            <div className="h-full flex flex-col items-center justify-center text-muted-foreground">
                              <MessageSquare className="h-10 w-10 opacity-20 mb-2" />
-                             <p className="text-sm">Start a conversation</p>
+                             <p className="text-sm">{chatSearchQuery ? 'No matching messages found' : 'Start a conversation'}</p>
                            </div>
                         ) : (
-                          messages.map(msg => {
+                          displayedMessages.map(msg => {
                             const isMe = msg.sender_id === tutorId;
                             return (
                               <div key={msg.id} className={`flex items-start gap-3 ${isMe ? 'flex-row-reverse' : ''}`}>
@@ -951,6 +1059,77 @@ export default function TutorStudentsPage() {
         </main>
 
       </div>
+
+      {/* Student Profile & Details Dialog */}
+      <Dialog open={isStudentInfoOpen} onOpenChange={setIsStudentInfoOpen}>
+        <DialogContent className="sm:max-w-[440px] bg-card border-border rounded-3xl p-6 shadow-2xl z-50">
+          <DialogHeader>
+            <DialogTitle className="text-xl font-bold flex items-center gap-2">
+              <User className="w-5 h-5 text-[#D4AF37]" />
+              Student Profile
+            </DialogTitle>
+            <DialogDescription className="text-muted-foreground text-xs">
+              Complete academic and enrollment details for this student.
+            </DialogDescription>
+          </DialogHeader>
+          
+          {selectedGroup && (
+            <div className="space-y-4 py-2">
+              <div className="flex items-center gap-4 p-3.5 bg-muted/40 rounded-2xl border border-border">
+                <Avatar className="w-14 h-14 border border-border">
+                  <AvatarImage src={selectedGroup.student.avatar_url || `https://api.dicebear.com/7.x/avataaars/svg?seed=${selectedGroup.student.full_name}`} />
+                  <AvatarFallback className="text-lg font-bold">{selectedGroup.student.full_name[0]}</AvatarFallback>
+                </Avatar>
+                <div className="min-w-0 flex-1">
+                  <h3 className="font-bold text-foreground text-base truncate">{selectedGroup.student.full_name}</h3>
+                  <p className="text-xs text-muted-foreground truncate">{selectedGroup.student.email}</p>
+                  <div className="flex items-center gap-2 mt-1.5 flex-wrap">
+                    <Badge variant="outline" className="text-[10px] border-[#D4AF37]/30 text-[#D4AF37] bg-[#D4AF37]/10">
+                      {selectedGroup.student.curriculum_board || 'ZIMSEC'}
+                    </Badge>
+                    <Badge variant="secondary" className="text-[10px]">
+                      {selectedGroup.student.student_level || 'O-Level'}
+                    </Badge>
+                  </div>
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Enrolled Subjects</p>
+                <div className="grid grid-cols-1 gap-2 max-h-48 overflow-y-auto custom-scrollbar">
+                  {selectedGroup.subjects.map(subj => (
+                    <div key={subj.id} className="flex items-center justify-between p-2.5 bg-muted/20 border border-border rounded-xl">
+                      <div className="flex items-center gap-2">
+                        <BookOpen size={14} className="text-[#D4AF37]" />
+                        <span className="text-xs font-medium text-foreground">{subj.name}</span>
+                      </div>
+                      <Badge variant="outline" className="text-[10px]">{subj.level || 'Standard'}</Badge>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+
+          <DialogFooter className="gap-2 sm:gap-0">
+            <Button variant="outline" className="rounded-xl text-xs" onClick={() => setIsStudentInfoOpen(false)}>
+              Close
+            </Button>
+            <Button 
+              className="bg-[#D4AF37] hover:bg-[#D4AF37]/90 text-black font-bold rounded-xl text-xs"
+              onClick={() => {
+                setIsStudentInfoOpen(false);
+                if (selectedGroup?.subjects.length) {
+                  setNewDeadlineSubjectId(selectedGroup.subjects[0].id);
+                }
+                setIsDeadlineDialogOpen(true);
+              }}
+            >
+              <Plus className="w-3.5 h-3.5 mr-1" /> Assign Task
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       <style dangerouslySetInnerHTML={{__html: `
         .custom-scrollbar::-webkit-scrollbar { width: 6px; }
