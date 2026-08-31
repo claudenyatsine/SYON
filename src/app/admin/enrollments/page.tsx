@@ -2,6 +2,8 @@ import { getPendingEnrollments } from '@/app/actions/lms'
 import { ActionButtons } from '../ActionButtons'
 import { UserCircle, BookOpen, AlertCircle } from 'lucide-react'
 import { formatDistanceToNow } from 'date-fns'
+import { CurriculumBoardBadge, SubjectLevelBadge } from '@/components/app/subject-badge'
+import { getCurriculumBoard, getSubjectLevel } from '@/utils/subject-utils'
 
 export default async function AdminEnrollmentsPage() {
   const { data: enrollments, error } = await getPendingEnrollments()
@@ -11,7 +13,7 @@ export default async function AdminEnrollmentsPage() {
       <header>
         <h1 className="text-3xl font-bold tracking-tight">Pending Enrollments</h1>
         <p className="text-muted-foreground mt-2">
-          Review and approve student course enrollment requests.
+          Review and approve student course enrollment requests across ZIMSEC and Cambridge curricula.
         </p>
       </header>
 
@@ -35,7 +37,7 @@ export default async function AdminEnrollmentsPage() {
               <thead className="bg-muted/50 text-muted-foreground font-medium border-b">
                 <tr>
                   <th className="px-6 py-4">Student</th>
-                  <th className="px-6 py-4">Subject</th>
+                  <th className="px-6 py-4">Subject & Curriculum</th>
                   <th className="px-6 py-4">Category</th>
                   <th className="px-6 py-4">Requested</th>
                   <th className="px-6 py-4 text-right">Actions</th>
@@ -55,10 +57,16 @@ export default async function AdminEnrollmentsPage() {
                       </div>
                     </td>
                     <td className="px-6 py-4 font-medium">
-                      {enrollment.subjects?.name}
+                      <div className="space-y-1">
+                        <span className="font-semibold text-foreground">{enrollment.subjects?.name}</span>
+                        <div className="flex items-center gap-1.5 flex-wrap">
+                          <CurriculumBoardBadge board={getCurriculumBoard(enrollment.subjects)} size="sm" />
+                          <SubjectLevelBadge level={getSubjectLevel(enrollment.subjects)} size="sm" />
+                        </div>
+                      </div>
                     </td>
                     <td className="px-6 py-4 text-muted-foreground">
-                      {enrollment.subjects?.level} - {enrollment.subjects?.category}
+                      {enrollment.subjects?.category || 'Core'}
                     </td>
                     <td className="px-6 py-4 text-muted-foreground">
                       {formatDistanceToNow(new Date(enrollment.created_at), { addSuffix: true })}

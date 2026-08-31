@@ -3,12 +3,20 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { ArrowLeft, GraduationCap, Briefcase, Shield, UserCog, Eye, Fingerprint, Loader2 } from 'lucide-react';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
+import { ArrowLeft, GraduationCap, Briefcase, Shield, UserCog, Eye, Fingerprint, Loader2, KeyRound, Mail, CheckCircle2 } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter, useParams, useSearchParams } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
-import { login } from '@/app/auth/actions';
+import { login, requestPasswordReset } from '@/app/auth/actions';
 import { createClient } from '@/utils/supabase/client';
 
 function WhatsAppIcon(props: React.SVGProps<SVGSVGElement>) {
@@ -84,6 +92,13 @@ export default function RoleLoginPage() {
   const [mounted, setMounted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  // Forgot password state
+  const [isForgotPasswordOpen, setIsForgotPasswordOpen] = useState(false);
+  const [forgotEmail, setForgotEmail] = useState('');
+  const [isSendingReset, setIsSendingReset] = useState(false);
+  const [resetSentSuccess, setResetSentSuccess] = useState(false);
+  const [forgotError, setForgotError] = useState<string | null>(null);
 
   useEffect(() => {
     setMounted(true);
@@ -194,6 +209,48 @@ export default function RoleLoginPage() {
       });
     }
     setIsLoading(false);
+  };
+
+  const handleForgotPasswordSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!forgotEmail.trim()) {
+      setForgotError('Please enter your email address.');
+      return;
+    }
+
+    setIsSendingReset(true);
+    setForgotError(null);
+
+    try {
+      const origin = window.location.origin;
+      const supabase = createClient();
+      const { error } = await supabase.auth.resetPasswordForEmail(forgotEmail.trim(), {
+        redirectTo: `${origin}/auth/callback?next=/reset-password`,
+      });
+
+      if (error) {
+        // Fallback to server action
+        const formData = new FormData();
+        formData.append('email', forgotEmail.trim());
+        formData.append('origin', origin);
+        const res = await requestPasswordReset(formData);
+        if (res?.error) {
+          setForgotError(res.error || error.message);
+          setIsSendingReset(false);
+          return;
+        }
+      }
+
+      setResetSentSuccess(true);
+      toast({
+        title: 'Reset Link Sent! ✉️',
+        description: `Check your inbox (${forgotEmail}) for the password recovery link.`,
+      });
+    } catch (err: any) {
+      setForgotError(err.message || 'Failed to send reset link. Please try again.');
+    } finally {
+      setIsSendingReset(false);
+    }
   };
 
   const displayRole = roleDisplayNames[role] || capitalizeFirstLetter(role);
@@ -310,7 +367,18 @@ export default function RoleLoginPage() {
               <div className="space-y-2">
                 <div className="flex justify-between items-center">
                   <Label htmlFor="password" className="text-foreground text-xs font-medium">Password</Label>
-                  <Link href="#" className="text-gold text-[10px] hover:underline">Forgot password?</Link>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setForgotEmail(email);
+                      setForgotError(null);
+                      setResetSentSuccess(false);
+                      setIsForgotPasswordOpen(true);
+                    }}
+                    className="text-gold text-[10px] hover:underline transition-colors focus:outline-none"
+                  >
+                    Forgot password?
+                  </button>
                 </div>
                 <div className="relative">
                   <Input
@@ -377,6 +445,103 @@ export default function RoleLoginPage() {
           </div>
         </div>
       </div>
+
+      {/* Forgot Password Dialog */}
+      <Dialog open={isForgotPasswordOpen} onOpenChange={setIsForgotPasswordOpen}>
+        <DialogContent className="sm:max-w-[420px] bg-card border-border rounded-3xl p-6 text-foreground shadow-2xl">
+          {resetSentSuccess ? (
+            <div className="text-center space-y-4 py-3">
+              <div className="w-14 h-14 rounded-full bg-green-500/20 text-green-400 flex items-center justify-center mx-auto border border-green-500/40">
+                <CheckCircle2 className="w-8 h-8" />
+              </div>
+              <div className="space-y-1.5">
+                <h3 className="text-base font-bold text-foreground">Password Reset Link Sent</h3>
+                <p className="text-xs text-muted-foreground leading-relaxed">
+                  We’ve emailed a password reset link to <span className="font-semibold text-foreground">{forgotEmail}</span>. Click the link in your email to choose a new password.
+                </p>
+                <p className="text-[11px] text-muted-foreground pt-1">
+                  Didn’t receive the email? Check your spam folder or try again in a few minutes.
+                </p>
+              </div>
+              <DialogFooter className="pt-2">
+                <Button
+                  type="button"
+                  onClick={() => setIsForgotPasswordOpen(false)}
+                  className="w-full bg-white text-obsidian font-bold text-xs rounded-xl hover:bg-muted h-10"
+                >
+                  Back to Login
+                </Button>
+              </DialogFooter>
+            </div>
+          ) : (
+            <form onSubmit={handleForgotPasswordSubmit}>
+              <DialogHeader className="space-y-1.5 text-left">
+                <div className="w-10 h-10 rounded-xl bg-gold/10 text-gold border border-gold/30 flex items-center justify-center mb-1">
+                  <KeyRound className="w-5 h-5" />
+                </div>
+                <DialogTitle className="text-lg font-bold text-foreground">
+                  Forgot your password?
+                </DialogTitle>
+                <DialogDescription className="text-xs text-muted-foreground">
+                  No worries! Enter your registered account email and we'll send you a secure password reset link.
+                </DialogDescription>
+              </DialogHeader>
+
+              <div className="space-y-4 py-4">
+                {forgotError && (
+                  <div className="p-3 bg-red-950/40 border border-red-500/50 rounded-xl text-red-400 text-xs flex items-start gap-2">
+                    <span>{forgotError}</span>
+                  </div>
+                )}
+
+                <div className="space-y-1.5">
+                  <Label htmlFor="role-forgot-email" className="text-xs font-semibold text-foreground">
+                    Email Address
+                  </Label>
+                  <div className="relative">
+                    <Input
+                      id="role-forgot-email"
+                      type="email"
+                      placeholder="Enter your account email"
+                      value={forgotEmail}
+                      onChange={e => setForgotEmail(e.target.value)}
+                      className="bg-muted border-none text-foreground h-10 rounded-xl placeholder:text-foreground/40 text-xs focus-visible:ring-1 focus-visible:ring-white/20 pl-9"
+                      required
+                      autoFocus
+                    />
+                    <Mail className="w-4 h-4 text-muted-foreground absolute left-3 top-1/2 -translate-y-1/2" />
+                  </div>
+                </div>
+              </div>
+
+              <DialogFooter className="gap-2 sm:gap-0 pt-1">
+                <Button
+                  type="button"
+                  variant="ghost"
+                  onClick={() => setIsForgotPasswordOpen(false)}
+                  className="text-xs text-muted-foreground hover:text-foreground rounded-xl"
+                >
+                  Cancel
+                </Button>
+                <Button
+                  type="submit"
+                  disabled={isSendingReset || !forgotEmail.trim()}
+                  className="bg-white text-obsidian hover:bg-muted font-bold text-xs rounded-xl h-10 px-5"
+                >
+                  {isSendingReset ? (
+                    <>
+                      <Loader2 className="w-3.5 h-3.5 mr-1.5 animate-spin" />
+                      Sending Link...
+                    </>
+                  ) : (
+                    'Send Reset Link'
+                  )}
+                </Button>
+              </DialogFooter>
+            </form>
+          )}
+        </DialogContent>
+      </Dialog>
     </main>
   );
 }

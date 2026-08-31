@@ -129,7 +129,7 @@ export default function AdminDashboardPage() {
             supabase.from('profiles').select('*', { count: 'exact', head: true }).eq('role', 'admin'),
             supabase.from('profiles').select('*', { count: 'exact', head: true }).eq('role', 'parent'),
             supabase.from('profiles').select('role, updated_at').gte('updated_at', sevenDaysAgo),
-            supabase.from('resources').select(`id, title, created_at, type, tutor:profiles!tutor_id (full_name)`).eq('approval_status', 'pending_admin_review'),
+            supabase.from('resources').select(`id, title, created_at, type, tutor:profiles!tutor_id (full_name)`),
             supabase.rpc('get_storage_usage')
         ]);
 

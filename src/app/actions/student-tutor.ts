@@ -267,3 +267,253 @@ export async function getAllStudentsProgress(tutorId: string) {
 
   return { data: results }
 }
+
+export async function getStudentSubjectDashboardData(studentId: string, subjectId: string) {
+  const supabase = await createClient()
+
+  try {
+    // 1. Fetch current subject enrollment and assigned tutor
+    const { data: enrollment, error: enrollError } = await supabase
+      .from('enrollments')
+      .select(`
+        id, 
+        student_id, 
+        subject_id, 
+        status, 
+        tutor_id, 
+        subjects!inner(id, name, level, category),
+        tutor:profiles!tutor_id(id, full_name, email, avatar_url, role, curriculum_board, student_level)
+      `)
+      .eq('student_id', studentId)
+      .eq('subject_id', subjectId)
+      .eq('status', 'approved')
+      .maybeSingle()
+
+    if (enrollError) {
+      console.error('Error fetching enrollment:', enrollError)
+    }
+
+    // 2. Fetch all student's approved enrollments for the left switcher panel
+    const { data: allEnrollments } = await supabase
+      .from('enrollments')
+      .select(`
+        id,
+        subject_id,
+        status,
+        tutor_id,
+        subjects!inner(id, name, level, category),
+        tutor:profiles!tutor_id(id, full_name, avatar_url)
+      `)
+      .eq('student_id', studentId)
+      .eq('status', 'approved')
+
+    // 3. Fetch Live Classes for this subject
+    const { data: liveClasses } = await supabase
+      .from('live_classes')
+      .select(`
+        *,
+        tutor:profiles!live_classes_tutor_id_fkey(id, full_name, avatar_url)
+      `)
+      .eq('subject_id', subjectId)
+      .order('start_time', { ascending: true })
+
+    // 4. Fetch Deadlines / Tasks for this subject
+    const { data: deadlines } = await supabase
+      .from('student_deadlines')
+      .select('*')
+      .eq('student_id', studentId)
+      .eq('subject_id', subjectId)
+      .order('due_date', { ascending: true })
+
+    // 5. Fetch Curriculum Modules, Items and Assignments for this subject
+    const { data: curriculumModules } = await supabase
+      .from('curriculum_modules')
+      .select(`
+        id,
+        title,
+        sequence_order,
+        items:curriculum_items(
+          id,
+          title,
+          item_type,
+          sequence_order,
+          duration_minutes,
+          start_date,
+          metadata,
+          assignments:curriculum_assignments(*)
+        )
+      `)
+      .eq('subject_id', subjectId)
+      .eq('approval_status', 'approved')
+      .order('sequence_order', { ascending: true })
+
+    // 6. Fetch Submissions & Graded assignments for this student
+    const { data: submissions } = await supabase
+      .from('submissions')
+      .select('*')
+      .eq('student_id', studentId)
+
+    // Also check student_assignments table
+    const { data: directAssignments } = await supabase
+      .from('student_assignments')
+      .select('*')
+      .eq('student_id', studentId)
+      .eq('subject_id', subjectId)
+
+    // Calculate progress & metrics
+    const deadlineList = deadlines || []
+    const totalDeadlines = deadlineList.length
+    const completedDeadlines = deadlineList.filter(d => d.status === 'completed').length
+
+    // Extract all assignments from curriculum
+    const allAssignments: any[] = []
+    curriculumModules?.forEach(m => {
+      m.items?.forEach((item: any) => {
+        item.assignments?.forEach((a: any) => {
+          const sub = submissions?.find(s => s.assignment_id === a.id)
+          const dir = directAssignments?.find(d => d.module_item_id === item.id && d.assignment_number === a.assignment_number)
+          
+          let status: 'pending' | 'submitted' | 'completed' = 'pending'
+          let grade: string | null = null
+          let feedback: string | null = null
+
+          if (sub) {
+            if (sub.status === 'graded' || sub.overall_grade) {
+              status = 'completed'
+              grade = sub.overall_grade || 'Graded'
+              feedback = sub.feedback || null
+            } else {
+              status = 'submitted'
+            }
+          } else if (dir) {
+            if (dir.status === 'completed') {
+              status = 'completed'
+              feedback = dir.tutor_feedback || null
+            } else if (dir.status === 'unmarked') {
+              status = 'submitted'
+            }
+          }
+
+          allAssignments.push({
+            id: a.id,
+            moduleItemId: item.id,
+            moduleTitle: m.title,
+            topicTitle: item.title,
+            assignmentNumber: a.assignment_number || 1,
+            title: a.title || `Assignment ${a.assignment_number || 1}`,
+            description: a.description || item.title,
+            dueDate: a.due_date || item.start_date || null,
+            status,
+            grade,
+            feedback,
+            submissionText: sub?.content || dir?.student_submission || null,
+            updatedAt: sub?.updated_at || dir?.updated_at || null
+          })
+        })
+      })
+    })
+
+    const totalTasks = totalDeadlines + allAssignments.length
+    const completedTasks = completedDeadlines + allAssignments.filter(a => a.status === 'completed').length
+    const percent = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0
+
+    // Dynamic Sparkline
+    let trendPath = "M0,28 L100,28"
+    if (totalTasks > 0 && completedTasks > 0) {
+      const points: {x: number, y: number}[] = [{ x: 0, y: 28 }]
+      for (let i = 1; i <= completedTasks; i++) {
+        const x = Math.round((i / completedTasks) * 100)
+        const currentPercent = i / totalTasks
+        const y = Math.round(28 - (currentPercent * 23))
+        points.push({ x, y })
+      }
+      trendPath = `M${points.map(p => `${p.x},${p.y}`).join(' L')}`
+    }
+
+    return {
+      data: {
+        enrollment,
+        allEnrollments: allEnrollments || [],
+        liveClasses: liveClasses || [],
+        deadlines: deadlineList,
+        assignments: allAssignments,
+        modules: curriculumModules || [],
+        progress: {
+          total: totalTasks,
+          completed: completedTasks,
+          percent,
+          trendPath
+        }
+      }
+    }
+  } catch (err: any) {
+    console.error('getStudentSubjectDashboardData error:', err)
+    return { error: err.message }
+  }
+}
+
+export async function createStudentPersonalTask(
+  studentId: string,
+  subjectId: string,
+  tutorId: string,
+  title: string,
+  dueDate: string,
+  description?: string
+) {
+  const supabase = await createClient()
+  const { data, error } = await supabase
+    .from('student_deadlines')
+    .insert({
+      student_id: studentId,
+      subject_id: subjectId,
+      tutor_id: tutorId || studentId,
+      title,
+      description: description || 'Self-study task',
+      due_date: dueDate,
+      status: 'pending'
+    })
+    .select('*, subjects(name, level)')
+    .single()
+
+  if (error) {
+    console.error('Error creating personal task:', error)
+    return { error: error.message }
+  }
+
+  revalidatePath(`/student/study-panel/${subjectId}`)
+  return { data }
+}
+
+export async function requestStudentLiveClass(
+  studentId: string,
+  tutorId: string,
+  subjectId: string,
+  topic: string,
+  preferredTime: string,
+  notes?: string
+): Promise<{ success: boolean; error?: string }> {
+  try {
+    const supabase = await createClient()
+
+    // 1. Send chat message to tutor as direct notification
+    const messageText = `📅 1-on-1 Live Class Request\nTopic: ${topic}\nPreferred Time: ${new Date(preferredTime).toLocaleString()}\nNotes: ${notes || 'No extra notes'}`
+    
+    const { error } = await supabase
+      .from('student_tutor_messages')
+      .insert({
+        sender_id: studentId,
+        receiver_id: tutorId,
+        message: messageText
+      })
+
+    if (error) {
+      return { success: false, error: error.message }
+    }
+
+    revalidatePath(`/student/study-panel/${subjectId}`)
+    return { success: true }
+  } catch (err: any) {
+    return { success: false, error: err.message || 'Failed to send request' }
+  }
+}
+

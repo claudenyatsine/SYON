@@ -20,6 +20,11 @@ export async function GET(request: Request) {
     const { data, error } = await supabase.auth.exchangeCodeForSession(code)
 
     if (!error && data.user) {
+      // If user came via password reset link, direct them immediately to the reset page
+      if (next && (next.startsWith('/reset-password') || next.startsWith('/update-password'))) {
+        return NextResponse.redirect(`${origin}${next}`)
+      }
+
       // Check if user already has a profile
       const { data: existingProfile } = await supabase
         .from('profiles')

@@ -7,39 +7,54 @@ import {
     BookOpenText, Store, Cpu, Theater, ScrollText, Users, Tractor,
     DraftingCompass, Palette, MessageCircle, Scale, Lightbulb,
     BookCopy, Book, GraduationCap, Loader2,
-    Search, BrainCircuit, Code, Database, Layout, ChevronRight
+    Search, BrainCircuit, Code, Database, Layout, ChevronRight, ChevronLeft, BookOpen, Award, Check
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Link from 'next/link';
 import { SchoolHeader } from "@/components/app/school-header";
 import { createClient } from '@/utils/supabase/client';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
+import { CurriculumBoardBadge, SubjectLevelBadge } from "@/components/app/subject-badge";
+import { getCurriculumBoard, getSubjectLevel, getSubjectBaseName, getSubjectCode } from "@/utils/subject-utils";
 
 const iconMap: Record<string, React.ElementType> = {
     "English Language":                     BookOpenText,
     "English":                              BookOpenText,
     "Mathematics":                          Calculator,
+    "Pure Mathematics":                     Calculator,
     "Additional Mathematics":               Cpu,
+    "Advanced Mathematics":                 Cpu,
     "Biology":                              Dna,
     "History":                              Landmark,
     "Chemistry":                            Beaker,
+    "Integrated Science":                   Beaker,
     "Geography":                            Map,
     "Commerce":                             Store,
     "Principles of Accounting":             Scale,
     "Business Enterprise and Skills":       Lightbulb,
     "Literature in Indigenous Languages":   BookCopy,
     "Indigenous Languages (Shona)":         Languages,
+    "Indigenous Languages":                 Languages,
     "Computer Science":                     Cpu,
+    "Computer Operations":                  Cpu,
+    "Combined Science":                     FlaskConical,
+    "General Science":                      FlaskConical,
     "Science":                              FlaskConical,
     "Business studies":                     Building2,
     "Physics":                              Atom,
+    "Physical Science":                     Atom,
     "ICT":                                  Network,
     "Physical Education":                   Dumbbell,
     "Economics":                            TrendingUp,
     "English Literature":                   BookOpenText,
+    "Literature in English":                BookOpenText,
+    "English & Literature":                 BookOpenText,
     "Performing arts":                      Theater,
+    "Performing Arts":                      Theater,
     "Religious studies":                    ScrollText,
+    "Family & Religious Studies":           ScrollText,
+    "Family and Religious Studies":         ScrollText,
     "Sociology":                            Users,
     "Agriculture":                          Tractor,
     "Design and Technology":               DraftingCompass,
@@ -47,24 +62,49 @@ const iconMap: Record<string, React.ElementType> = {
     "Art":                                  Palette,
     "Music":                                MessageCircle,
     "Business English":                     MessageCircle,
+    "Global Perspectives":                  Award,
+    "Thinking Skills":                      BrainCircuit,
 };
 
+function getSubjectIcon(name: string = '') {
+    const base = name.replace(/\s*\([^)]+\)/, '').trim();
+    return iconMap[base] || iconMap[name] || BookOpen;
+}
+
 function SubjectCard({ subject }: { subject: any }) {
-    const Icon = iconMap[subject.name] || Book;
-    const color = subject.color || '#6366f1';
+    const Icon = getSubjectIcon(subject.name);
+    const board = getCurriculumBoard(subject);
+    const level = getSubjectLevel(subject);
+
     return (
-        <Link href={`/student/courses/${subject.id}`} className="group block">
-            <Card className="h-full hover:border-primary transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
-                <CardContent className="p-6 flex flex-col items-center text-center gap-4">
-                    <div
-                        className="p-4 rounded-full transition-opacity group-hover:opacity-80"
-                        style={{ backgroundColor: `${color}20`, color }}
-                    >
-                        <Icon className="w-8 h-8" />
+        <Link href={`/student/study-panel/${subject.id}`} className="group block h-full">
+            <Card className="h-full bg-card border-border hover:border-gold/60 transition-all duration-300 hover:shadow-[0_8px_30px_rgb(0,0,0,0.3)] hover:-translate-y-1 rounded-2xl overflow-hidden flex flex-col justify-between">
+                <CardContent className="p-5 flex flex-col items-center text-center gap-3.5">
+                    {/* Top Badges */}
+                    <div className="w-full flex items-center justify-between gap-1.5">
+                        <CurriculumBoardBadge board={board} size="sm" />
+                        <SubjectLevelBadge level={level} size="sm" />
                     </div>
-                    <div>
-                        <h3 className="text-lg font-bold line-clamp-1">{subject.name}</h3>
-                        <p className="text-sm text-muted-foreground mt-1 line-clamp-2">{subject.description}</p>
+
+                    {/* Icon */}
+                    <div className="w-14 h-14 rounded-2xl bg-gold/10 text-gold border border-gold/30 flex items-center justify-center transition-transform group-hover:scale-110 shadow-sm mt-1">
+                        <Icon className="w-7 h-7" />
+                    </div>
+
+                    {/* Title & Info */}
+                    <div className="space-y-1 w-full">
+                        <h3 className="text-base font-bold text-foreground group-hover:text-gold transition-colors line-clamp-1">
+                            {subject.name}
+                        </h3>
+                        <p className="text-[11px] text-muted-foreground line-clamp-1">
+                            {board} Curriculum • {subject.category || 'Core'}
+                        </p>
+                    </div>
+
+                    {/* Footer Action */}
+                    <div className="pt-2.5 w-full border-t border-border/50 flex items-center justify-center gap-1 text-[11px] text-muted-foreground group-hover:text-gold transition-colors font-medium">
+                        <span>1-on-1 Study Hub</span>
+                        <ChevronRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
                     </div>
                 </CardContent>
             </Card>
@@ -94,6 +134,7 @@ export default function StudyPanelPage() {
     const [selectedReviewTopic, setSelectedReviewTopic] = useState<any>(null);
     const [selectedReviewSubject, setSelectedReviewSubject] = useState<any>(null);
     const [loading, setLoading] = useState(true);
+    const scrollContainerRef = useRef<HTMLDivElement>(null);
     const supabase = createClient();
 
     useEffect(() => {
@@ -220,48 +261,153 @@ export default function StudyPanelPage() {
                             )}
                             </div>
                             
-                            <p className="text-[10px] text-muted-foreground mb-6 font-medium">
-                                Selected: <span className="text-gold font-bold">{selectedReviewTopic ? selectedReviewTopic.title : 'None'}</span>
-                            </p>
-                            
-                            <div className="flex items-center justify-start gap-1.5 mb-8 px-2 overflow-x-auto no-scrollbar">
-                            {subjects.slice(0, 5).map((subject) => {
-                                const Icon = iconMap[subject.name] || Book;
-                                const isSelected = selectedReviewSubject?.id === subject.id;
-                                return (
-                                    <div 
-                                        key={subject.id} 
-                                        title={subject.name}
-                                        onClick={() => setSelectedReviewSubject(subject)}
-                                        className={`w-8 h-8 rounded-full flex shrink-0 items-center justify-center border border-white shadow-sm cursor-pointer transition-colors ${isSelected ? 'bg-gold/10 text-gold' : 'bg-muted text-foreground/ hover:bg-muted'}`}
-                                    >
-                                        <Icon className="w-4 h-4" />
+                            {/* Live Target / Selected Indicator */}
+                            <div className="p-3 rounded-xl bg-card border border-border/80 mb-5 space-y-1.5 shadow-sm">
+                                <div className="flex items-center justify-between text-xs">
+                                    <span className="text-muted-foreground font-medium flex items-center gap-1.5">
+                                        <BookOpen className="w-3.5 h-3.5 text-gold shrink-0" />
+                                        Target:
+                                    </span>
+                                    <div className="truncate max-w-[200px] text-right">
+                                        {selectedReviewTopic ? (
+                                            <span className="text-gold font-bold text-xs truncate">
+                                                {selectedReviewTopic.title}
+                                            </span>
+                                        ) : selectedReviewSubject ? (
+                                            <span className="text-foreground font-bold text-xs truncate">
+                                                {selectedReviewSubject.name}
+                                            </span>
+                                        ) : (
+                                            <span className="text-muted-foreground text-xs">Select a subject</span>
+                                        )}
                                     </div>
-                                )
-                            })}
-                            {subjects.length > 5 && (
-                                <div className="w-8 h-8 rounded-full shrink-0 flex items-center justify-center ml-auto text-muted-foreground hover:bg-muted transition-colors cursor-pointer">
-                                    <ChevronRight className="w-4 h-4" />
                                 </div>
-                            )}
+                                {selectedReviewSubject && !selectedReviewTopic && (
+                                    <div className="flex items-center gap-1.5 pt-0.5 flex-wrap">
+                                        <CurriculumBoardBadge board={getCurriculumBoard(selectedReviewSubject)} size="sm" />
+                                        <SubjectLevelBadge level={getSubjectLevel(selectedReviewSubject)} size="sm" />
+                                    </div>
+                                )}
+                            </div>
+                            
+                            {/* Subject Toggle & Scroll Header */}
+                            <div className="space-y-2 mb-6">
+                                <div className="flex items-center justify-between">
+                                    <span className="text-xs font-semibold text-muted-foreground flex items-center gap-1.5">
+                                        Choose Subject ({subjects.length}):
+                                    </span>
+                                    {subjects.length > 2 && (
+                                        <div className="flex items-center gap-1">
+                                            <button
+                                                type="button"
+                                                onClick={() => scrollContainerRef.current?.scrollBy({ left: -140, behavior: 'smooth' })}
+                                                className="w-6 h-6 rounded-lg bg-card border border-border flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-muted transition-colors shadow-sm"
+                                                title="Scroll left"
+                                            >
+                                                <ChevronLeft size={13} />
+                                            </button>
+                                            <button
+                                                type="button"
+                                                onClick={() => scrollContainerRef.current?.scrollBy({ left: 140, behavior: 'smooth' })}
+                                                className="w-6 h-6 rounded-lg bg-card border border-border flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-muted transition-colors shadow-sm"
+                                                title="Scroll right"
+                                            >
+                                                <ChevronRight size={13} />
+                                            </button>
+                                        </div>
+                                    )}
+                                </div>
+
+                                {/* Smooth Scrollable Subject Toggle Buttons */}
+                                <div 
+                                    ref={scrollContainerRef}
+                                    className="flex items-center gap-2 px-1 py-1.5 overflow-x-auto custom-study-scrollbar scroll-smooth"
+                                >
+                                    {subjects.map((subject) => {
+                                        const Icon = getSubjectIcon(subject.name);
+                                        const isSelected = selectedReviewSubject?.id === subject.id && !selectedReviewTopic;
+                                        const board = getCurriculumBoard(subject);
+                                        const level = getSubjectLevel(subject);
+
+                                        return (
+                                            <button 
+                                                key={subject.id} 
+                                                type="button"
+                                                title={`${board} • ${subject.name} (${level})`}
+                                                onClick={() => {
+                                                    setSelectedReviewSubject(subject);
+                                                    setSelectedReviewTopic(null);
+                                                }}
+                                                className={`h-11 px-3 rounded-xl flex shrink-0 items-center gap-2 border transition-all text-left shadow-sm cursor-pointer ${
+                                                    isSelected 
+                                                        ? 'bg-gold/15 border-gold text-gold font-bold ring-1 ring-gold/40' 
+                                                        : 'bg-card border-border text-muted-foreground hover:text-foreground hover:bg-muted hover:border-border/80'
+                                                }`}
+                                            >
+                                                <Icon className="w-4 h-4 shrink-0" />
+                                                <div className="flex flex-col min-w-0 pr-1">
+                                                    <span className="text-xs font-semibold truncate max-w-[130px] leading-tight text-foreground">
+                                                        {subject.name}
+                                                    </span>
+                                                    <span className="text-[9px] opacity-75 font-medium leading-none mt-0.5">
+                                                        {board} • {level}
+                                                    </span>
+                                                </div>
+                                                {isSelected && (
+                                                    <span className="w-1.5 h-1.5 rounded-full bg-gold shrink-0"></span>
+                                                )}
+                                            </button>
+                                        );
+                                    })}
+                                </div>
                             </div>
 
+                            {/* Action Buttons */}
                             <div className="flex items-center gap-3">
-                            <Button variant="outline" className="flex-1 rounded-xl h-11 font-semibold border-border shadow-sm" disabled={!selectedReviewSubject}>
-                                Practice
-                            </Button>
-                                                        <Button asChild={!!selectedReviewTopic} className="flex-1 rounded-xl h-11 font-semibold bg-background text-foreground hover:bg-background dark:bg-white dark:text-foreground dark:hover:bg-muted" disabled={!selectedReviewTopic}>
-                                {selectedReviewTopic ? (
-                                    <Link href={`/student/quiz?topicId=${selectedReviewTopic.id}`}>Start Quiz →</Link>
-                                ) : (
-                                    <span>Start Quiz →</span>
-                                )}
-                            </Button>
+                                <Button 
+                                    asChild={!!selectedReviewSubject}
+                                    variant="outline" 
+                                    className="flex-1 rounded-xl h-11 font-bold border-gold/40 text-gold hover:bg-gold/10 hover:text-gold shadow-sm transition-all"
+                                    disabled={!selectedReviewSubject}
+                                >
+                                    {selectedReviewSubject ? (
+                                        <Link href={`/student/quiz?subjectId=${selectedReviewSubject.id}`}>
+                                            Practice
+                                        </Link>
+                                    ) : (
+                                        <span>Practice</span>
+                                    )}
+                                </Button>
+
+                                <Button 
+                                    asChild={!!(selectedReviewTopic || selectedReviewSubject)} 
+                                    className="flex-1 rounded-xl h-11 font-bold bg-gold hover:bg-[#c29f2f] text-black shadow-md shadow-gold/20 transition-all disabled:opacity-50 disabled:bg-gold/20 disabled:text-gold"
+                                    disabled={!(selectedReviewTopic || selectedReviewSubject)}
+                                >
+                                    {selectedReviewTopic ? (
+                                        <Link href={`/student/quiz?topicId=${selectedReviewTopic.id}`}>
+                                            Start Quiz →
+                                        </Link>
+                                    ) : selectedReviewSubject ? (
+                                        <Link href={`/student/quiz?subjectId=${selectedReviewSubject.id}`}>
+                                            Start Quiz →
+                                        </Link>
+                                    ) : (
+                                        <span>Start Quiz →</span>
+                                    )}
+                                </Button>
                             </div>
                         </CardContent>
                     </Card>
                 </div>
             </div>
+
+            <style dangerouslySetInnerHTML={{__html: `
+                .custom-study-scrollbar::-webkit-scrollbar { height: 4px; }
+                .custom-study-scrollbar::-webkit-scrollbar-track { background: transparent; }
+                .custom-study-scrollbar::-webkit-scrollbar-thumb { background: #334155; border-radius: 9999px; }
+                .custom-study-scrollbar::-webkit-scrollbar-thumb:hover { background: #64748b; }
+            `}} />
         </div>
     );
 }

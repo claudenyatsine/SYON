@@ -17,6 +17,8 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { getEnrolledStudentsForSubjects, batchAssignStudentsToTutor, toggleUserApproval } from "@/app/actions/lms";
+import { CurriculumBoardBadge, SubjectLevelBadge } from "@/components/app/subject-badge";
+import { getCurriculumBoard, getSubjectLevel } from "@/utils/subject-utils";
 
 const INVITE_LINK = `${typeof window !== 'undefined' ? window.location.origin : 'http://localhost:3000'}/invite/tutor-a1b2-c3d4-e5f6`;
 
@@ -362,14 +364,21 @@ export default function TutorsPage() {
                                             <TableCell>{tutor.email}</TableCell>
                                             <TableCell>{tutor.updated_at ? new Date(tutor.updated_at).toLocaleDateString() : 'N/A'}</TableCell>
                                             <TableCell>
-                                                <div className="flex flex-wrap gap-1 max-w-[200px]">
+                                                <div className="flex flex-wrap gap-1 max-w-[240px]">
                                                     {(tutorSubjects[tutor.id] || []).length === 0 ? (
                                                         <span className="text-xs text-muted-foreground italic">None</span>
                                                     ) : (
                                                         <>
                                                             {(tutorSubjects[tutor.id] || []).slice(0, 2).map(subId => {
                                                                 const sub = subjects.find(s => s.id === subId);
-                                                                return <Badge key={subId} variant="secondary" className="text-[10px] font-normal px-1 py-0 h-4">{sub?.name}</Badge>;
+                                                                if (!sub) return null;
+                                                                const board = getCurriculumBoard(sub);
+                                                                return (
+                                                                    <div key={subId} className="flex items-center gap-1 bg-muted/60 px-1.5 py-0.5 rounded border text-[10px] truncate max-w-[180px]">
+                                                                        <span className="text-[8px] font-bold px-1 rounded bg-gold/15 text-gold">{board}</span>
+                                                                        <span className="truncate font-medium">{sub.name}</span>
+                                                                    </div>
+                                                                );
                                                             })}
                                                             {(tutorSubjects[tutor.id] || []).length > 2 && (
                                                                 <Badge variant="secondary" className="text-[10px] font-normal px-1 py-0 h-4">+{tutorSubjects[tutor.id].length - 2} more</Badge>
@@ -409,37 +418,42 @@ export default function TutorsPage() {
                 </Card>
             )}
 
+            {/* Assign Modal */}
             <Dialog open={isAssignDialogOpen} onOpenChange={setIsAssignDialogOpen}>
-                <DialogContent className="max-w-2xl h-[80vh] flex flex-col overflow-hidden">
-                    <DialogHeader className="px-6 py-4 border-b">
-                        <DialogTitle>Manage Assignments for {selectedTutor?.full_name}</DialogTitle>
+                <DialogContent className="max-w-2xl max-h-[85vh] flex flex-col p-0">
+                    <DialogHeader className="px-6 pt-6 pb-4 border-b">
+                        <DialogTitle>Manage Tutor Assignments</DialogTitle>
                         <DialogDescription>
-                            Configure the subjects this tutor teaches and the students assigned to them.
+                            Assign subjects to <span className="font-semibold text-foreground">{selectedTutor?.full_name}</span> and link students who are enrolled in those subjects.
                         </DialogDescription>
                     </DialogHeader>
-                    
-                    <div className="flex-1 overflow-hidden p-6">
-                        <Tabs defaultValue="subjects" className="h-full flex flex-col">
+
+                    <div className="px-6 py-4 flex-1 overflow-hidden flex flex-col">
+                        <Tabs defaultValue="subjects" className="flex-1 flex flex-col overflow-hidden">
                             <TabsList className="grid w-full grid-cols-2 mb-4">
-                                <TabsTrigger value="subjects">Assigned Subjects</TabsTrigger>
+                                <TabsTrigger value="subjects">Subjects ({tempSelectedSubjects.length})</TabsTrigger>
                                 <TabsTrigger value="students">Assigned Students</TabsTrigger>
                             </TabsList>
                             
                             <TabsContent value="subjects" className="flex-1 overflow-y-auto">
-                                <div className="space-y-4">
+                                <div className="space-y-3 pr-1">
                                     {subjects.length === 0 ? (
                                         <p className="text-sm text-muted-foreground p-4 text-center border border-dashed rounded-lg">No subjects found in the database.</p>
                                     ) : (
                                         subjects.map(subject => (
-                                            <div key={subject.id} className="flex items-center space-x-3 p-3 rounded-lg border hover:bg-muted/50 transition-colors">
+                                            <div key={subject.id} className="flex items-center space-x-3 p-3 rounded-xl border hover:bg-muted/50 transition-colors">
                                                 <Checkbox 
                                                     id={`subject-${subject.id}`} 
                                                     checked={tempSelectedSubjects.includes(subject.id)}
                                                     onCheckedChange={() => handleSubjectToggle(subject.id)}
                                                     className="w-5 h-5"
                                                 />
-                                                <Label htmlFor={`subject-${subject.id}`} className="text-sm font-medium leading-none cursor-pointer flex-1">
-                                                    {subject.name} <span className="text-muted-foreground text-xs font-normal ml-2">({subject.level})</span>
+                                                <Label htmlFor={`subject-${subject.id}`} className="text-sm font-medium leading-none cursor-pointer flex-1 flex items-center justify-between gap-2 flex-wrap">
+                                                    <span className="font-bold">{subject.name}</span>
+                                                    <div className="flex items-center gap-1.5">
+                                                        <CurriculumBoardBadge board={getCurriculumBoard(subject)} size="sm" />
+                                                        <SubjectLevelBadge level={getSubjectLevel(subject)} size="sm" />
+                                                    </div>
                                                 </Label>
                                             </div>
                                         ))

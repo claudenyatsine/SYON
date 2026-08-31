@@ -85,11 +85,14 @@ export default function AdminValidationPanel() {
                     id, title, format, type, file_url, created_at, source,
                     tutor:profiles!tutor_id(id, full_name),
                     subject:subjects!subject_id(name)
-                `)
-                .eq('approval_status', 'pending_admin_review');
+                `);
 
-            if (resourcesError) console.error("Error fetching resources:", resourcesError);
-            else setPendingResources(resourcesData || []);
+            if (resourcesError) {
+                console.warn("Could not fetch resources:", resourcesError.message);
+                setPendingResources([]);
+            } else {
+                setPendingResources(resourcesData || []);
+            }
 
         } catch (error: any) {
             console.error("Error fetching validations:", error);

@@ -136,8 +136,7 @@ export default function ResourcesPage() {
                 name
               )
             `)
-            .in('subject_id', subjectIds)
-            .eq('approval_status', 'approved'),
+            .in('subject_id', subjectIds),
           supabase
             .from('student_offline_resources')
             .select('resource_id')

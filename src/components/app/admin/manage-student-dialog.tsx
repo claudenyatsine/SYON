@@ -19,6 +19,8 @@ import {
 import {
     Settings, BookOpen, BookPlus, BookMinus, UserX, Loader2, AlertTriangle, CheckCircle2, Users
 } from 'lucide-react';
+import { CurriculumBoardBadge, SubjectLevelBadge } from '@/components/app/subject-badge';
+import { getCurriculumBoard, getSubjectLevel } from '@/utils/subject-utils';
 
 // ─────────────────────────────────────────────
 // Types
@@ -72,7 +74,7 @@ export function ManageStudentDialog({ student, onStudentRemoved }: ManageStudent
         setLoadingCourses(true);
         try {
             const [{ data: courses }, { data: enrollments }, { data: parents }, { data: links }] = await Promise.all([
-                supabase.from('subjects').select('id, name, level').order('name'),
+                supabase.from('subjects').select('id, name, level, category, curriculum_board').order('name'),
                 supabase.from('enrollments').select('id, subject_id, status').eq('student_id', student.id),
                 supabase.from('profiles').select('id, full_name').eq('role', 'Parent').order('full_name'),
                 supabase.from('parent_student_links').select('parent_id').eq('student_id', student.id).maybeSingle(),
@@ -338,16 +340,19 @@ export function ManageStudentDialog({ student, onStudentRemoved }: ManageStudent
                                             isEnrolled ? 'bg-primary/5 border-primary/20' : isPending ? 'bg-gold/5 border-gold/20' : 'bg-background'
                                         }`}
                                     >
-                                        <div className="flex items-center gap-2 min-w-0">
+                                        <div className="flex items-center gap-2.5 min-w-0">
                                             {isEnrolled
-                                                ? <CheckCircle2 className="h-4 w-4 text-primary flex-shrink-0" />
+                                                ? <CheckCircle2 className="h-4 w-4 text-emerald-400 flex-shrink-0" />
                                                 : isPending
                                                 ? <Loader2 className="h-4 w-4 text-gold flex-shrink-0 animate-pulse" />
                                                 : <BookOpen className="h-4 w-4 text-muted-foreground flex-shrink-0" />
                                             }
                                             <div className="flex flex-col min-w-0">
                                                 <span className="text-sm truncate font-medium">{course.name}</span>
-                                                <span className="text-xs truncate text-muted-foreground">{course.level}</span>
+                                                <div className="flex items-center gap-1 mt-0.5 flex-wrap">
+                                                    <CurriculumBoardBadge board={getCurriculumBoard(course)} size="sm" />
+                                                    <SubjectLevelBadge level={getSubjectLevel(course)} size="sm" />
+                                                </div>
                                             </div>
                                         </div>
                                         <div className="flex gap-2">

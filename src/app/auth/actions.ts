@@ -118,6 +118,30 @@ export async function signOut() {
   redirect('/login')
 }
 
+export async function requestPasswordReset(formData: FormData) {
+  const supabase = await createClient()
+  const email = (formData.get('email') as string)?.trim()
+  const origin = (formData.get('origin') as string)?.trim()
+
+  if (!email) {
+    return { error: 'Please provide a valid email address.' }
+  }
+
+  const redirectTo = origin
+    ? `${origin}/auth/callback?next=/reset-password`
+    : undefined
+
+  const { error } = await supabase.auth.resetPasswordForEmail(email, {
+    redirectTo,
+  })
+
+  if (error) {
+    return { error: error.message }
+  }
+
+  return { success: true, message: 'Password reset link has been sent to your email.' }
+}
+
 export async function updatePassword(formData: FormData) {
   const supabase = await createClient()
   const password = formData.get('password') as string
@@ -132,3 +156,4 @@ export async function updatePassword(formData: FormData) {
 
   return { success: true }
 }
+

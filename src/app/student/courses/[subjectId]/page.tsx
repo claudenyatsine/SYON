@@ -88,10 +88,20 @@ export default async function CoursePage({ params }: { params: Promise<{ subject
   // 6. Render protected content
   return (
     <div className="space-y-6 font-sans pb-24">
-      <Link href="/student/courses" className="inline-flex items-center text-sm font-medium text-muted-foreground hover:text-foreground transition-colors mb-4">
-        <ArrowLeft className="w-4 h-4 mr-2" />
-        Back to Catalog
-      </Link>
+      <div className="flex items-center justify-between gap-4 flex-wrap">
+        <Link href="/student/courses" className="inline-flex items-center text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+          <ArrowLeft className="w-4 h-4 mr-2" />
+          Back to Catalog
+        </Link>
+
+        <Link 
+          href={`/student/study-panel/${subjectId}`}
+          className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold bg-[#D4AF37] text-black hover:bg-[#c29f2f] transition-colors shadow-sm"
+        >
+          <BookOpen className="w-4 h-4" /> Open 1-on-1 Subject Dashboard →
+        </Link>
+      </div>
+
       <div>
         <div className="flex items-center gap-3 text-primary mb-2">
           <BookOpen className="w-5 h-5" />

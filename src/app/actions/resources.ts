@@ -38,7 +38,6 @@ export async function getStudentResources() {
         level
       )
     `)
-    .eq('approval_status', 'approved')
     .order('created_at', { ascending: false })
 
   if (error) {

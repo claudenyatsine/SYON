@@ -41,6 +41,8 @@ import {
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useToast } from '@/hooks/use-toast';
+import { CurriculumBoardBadge, SubjectLevelBadge } from '@/components/app/subject-badge';
+import { getCurriculumBoard, getSubjectLevel } from '@/utils/subject-utils';
 
 // Types
 interface StudentProfile {
@@ -56,6 +58,7 @@ interface Subject {
   id: string;
   name: string;
   level: string;
+  curriculum_board?: string;
 }
 
 interface StudentGrouped {
@@ -179,7 +182,8 @@ export default function TutorStudentsPage() {
             groups[s.id].subjects.push({
               id: sub.id,
               name: sub.name,
-              level: sub.level
+              level: sub.level,
+              curriculum_board: sub.curriculum_board
             });
           }
         });
@@ -949,7 +953,9 @@ export default function TutorStudentsPage() {
                                    </SelectTrigger>
                                    <SelectContent className="bg-background border-border text-foreground">
                                      {selectedGroup.subjects.map(s => (
-                                       <SelectItem key={s.id} value={s.id}>{s.name}</SelectItem>
+                                       <SelectItem key={s.id} value={s.id}>
+                                         [{getCurriculumBoard(s)}] {s.name} ({getSubjectLevel(s)})
+                                       </SelectItem>
                                      ))}
                                    </SelectContent>
                                  </Select>
@@ -1098,12 +1104,15 @@ export default function TutorStudentsPage() {
                 <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Enrolled Subjects</p>
                 <div className="grid grid-cols-1 gap-2 max-h-48 overflow-y-auto custom-scrollbar">
                   {selectedGroup.subjects.map(subj => (
-                    <div key={subj.id} className="flex items-center justify-between p-2.5 bg-muted/20 border border-border rounded-xl">
-                      <div className="flex items-center gap-2">
-                        <BookOpen size={14} className="text-[#D4AF37]" />
-                        <span className="text-xs font-medium text-foreground">{subj.name}</span>
+                    <div key={subj.id} className="flex items-center justify-between gap-2 p-2.5 bg-muted/20 border border-border rounded-xl">
+                      <div className="flex items-center gap-2 min-w-0">
+                        <BookOpen size={14} className="text-[#D4AF37] shrink-0" />
+                        <span className="text-xs font-semibold text-foreground truncate">{subj.name}</span>
                       </div>
-                      <Badge variant="outline" className="text-[10px]">{subj.level || 'Standard'}</Badge>
+                      <div className="flex items-center gap-1 shrink-0">
+                        <CurriculumBoardBadge board={getCurriculumBoard(subj)} size="sm" />
+                        <SubjectLevelBadge level={getSubjectLevel(subj)} size="sm" />
+                      </div>
                     </div>
                   ))}
                 </div>

@@ -18,6 +18,8 @@ import {
     AccordionItem,
     AccordionTrigger,
 } from "@/components/ui/accordion";
+import { CurriculumBoardBadge, SubjectLevelBadge } from "@/components/app/subject-badge";
+import { getCurriculumBoard, getSubjectLevel } from "@/utils/subject-utils";
 
 const statusColorMap: Record<string, string> = {
     "approved": "bg-gold hover:bg-gold text-foreground",
@@ -161,18 +163,21 @@ function CourseList({ tutorId }: { tutorId: string }) {
 
             <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
                 {subjects.map(subject => (
-                    <Card key={subject.id} className="overflow-hidden flex flex-col h-full border-border/60 shadow-sm transition-all hover:border-primary/50">
-                        <CardHeader className="p-0 relative">
-                            <div className="relative aspect-[3/2] w-full bg-gradient-to-br from-primary/10 to-primary/5">
-                                <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center">
-                                    <BookOpen className="w-12 h-12 text-primary/40 mb-3" />
-                                    <h3 className="text-2xl font-bold text-primary/80 line-clamp-2">{subject.name}</h3>
-                                    <Badge variant="outline" className="mt-2 bg-background/50 backdrop-blur-sm border-primary/20 text-primary">
-                                        {subject.level}
-                                    </Badge>
+                    <Card key={subject.id} className="overflow-hidden flex flex-col h-full border-border/60 shadow-sm transition-all hover:border-gold/50 hover:shadow-md group">
+                        <Link href={`/tutor/courses/${subject.id}`} className="block">
+                            <CardHeader className="p-0 relative cursor-pointer">
+                                <div className="relative aspect-[3/2] w-full bg-gradient-to-br from-gold/15 via-gold/5 to-background transition-colors group-hover:from-gold/25">
+                                    <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center">
+                                        <BookOpen className="w-12 h-12 text-gold/60 mb-3 group-hover:scale-110 transition-transform" />
+                                        <h3 className="text-2xl font-bold text-foreground group-hover:text-gold transition-colors line-clamp-2">{subject.name}</h3>
+                                        <div className="flex items-center gap-1.5 mt-2 flex-wrap justify-center">
+                                            <CurriculumBoardBadge board={getCurriculumBoard(subject)} size="sm" />
+                                            <SubjectLevelBadge level={getSubjectLevel(subject)} size="sm" />
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                        </CardHeader>
+                            </CardHeader>
+                        </Link>
                         <CardContent className="p-0 flex-grow flex flex-col">
                             <div className="p-4 border-b bg-muted/10">
                                 <div className="flex items-center justify-between text-sm text-muted-foreground">
@@ -266,6 +271,13 @@ function CourseList({ tutorId }: { tutorId: string }) {
                                         </AccordionItem>
                                     </Accordion>
                                 )}
+                            </div>
+                            <div className="p-4 pt-0">
+                                <Button asChild size="sm" variant="outline" className="w-full text-xs font-bold rounded-xl border-gold/40 text-gold hover:bg-gold hover:text-black transition-all">
+                                    <Link href={`/tutor/courses/${subject.id}`}>
+                                        Subject Details & Enrolled Students →
+                                    </Link>
+                                </Button>
                             </div>
                         </CardContent>
                     </Card>

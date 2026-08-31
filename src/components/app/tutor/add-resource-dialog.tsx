@@ -90,8 +90,7 @@ export function AddResourceDialog({ tutorId, trigger }: {
                 subject_id: selectedSubjectId,
                 source: 'tutor_upload',
                 uploaded_by: tutorId,
-                tutor_id: tutorId,
-                approval_status: 'pending_admin_review'
+                tutor_id: tutorId
             });
 
             if (insertError) throw insertError;
