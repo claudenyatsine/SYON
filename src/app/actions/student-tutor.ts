@@ -7,7 +7,7 @@ export async function getTutorStudents(tutorId: string) {
   const supabase = await createClient()
   const { data, error } = await supabase
     .from('enrollments')
-    .select('id, student_id, subject_id, status, tutor_id, profiles!student_id!inner(id, full_name, email, avatar_url, curriculum_board, student_level), subjects!inner(id, name, level, category)')
+    .select('id, student_id, subject_id, status, tutor_id, profiles!student_id!inner(id, full_name, email, avatar_url, curriculum_board, student_level, role), subjects!inner(id, name, level, category)')
     .eq('tutor_id', tutorId)
     .eq('status', 'approved')
 
@@ -16,7 +16,16 @@ export async function getTutorStudents(tutorId: string) {
     return { error: error.message }
   }
 
-  return { data }
+  // Filter out the tutor themselves and any non-student accounts (tutors/admins)
+  const actualStudents = (data || []).filter((item: any) => {
+    const s = item.profiles;
+    if (!s) return false;
+    if (s.id === tutorId) return false;
+    if (s.role && s.role !== 'student') return false;
+    return true;
+  });
+
+  return { data: actualStudents }
 }
 
 export async function getChatMessages(userId: string, partnerId: string) {

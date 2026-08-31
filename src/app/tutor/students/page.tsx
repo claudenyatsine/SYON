@@ -144,6 +144,7 @@ export default function TutorStudentsPage() {
           const s = item.profiles;
           const sub = item.subjects;
           if (!s || !sub) return;
+          if (s.id === tutorId || (s.role && s.role !== 'student')) return;
 
           if (!groups[s.id]) {
             groups[s.id] = {
