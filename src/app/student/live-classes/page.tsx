@@ -32,6 +32,33 @@ export default function StudentLiveClassesPage() {
     // Stable supabase client — created once per component mount
     const supabase = useMemo(() => createClient(), []);
 
+    const getOneOnOneInfo = (liveClass: any) => {
+        if (liveClass.meeting_link) {
+            try {
+                const parsed = JSON.parse(liveClass.meeting_link);
+                if (parsed.type === 'one_on_one') {
+                    return {
+                        isOneOnOne: true,
+                        studentName: parsed.student_name,
+                        studentId: parsed.student_id
+                    };
+                }
+            } catch {}
+        }
+        if (liveClass.title?.startsWith('[1-on-1:')) {
+            const match = liveClass.title.match(/\[1-on-1:\s*([^\]]+)\]/);
+            return {
+                isOneOnOne: true,
+                studentName: match ? match[1] : 'Student'
+            };
+        }
+        return { isOneOnOne: false };
+    };
+
+    const cleanTitle = (title: string) => {
+        return title ? title.replace(/^\[1-on-1:[^\]]+\]\s*/, '') : 'Untitled Class';
+    };
+
     const fetchClasses = useCallback(async () => {
         const { data, error } = await supabase
             .from('live_classes')
@@ -45,10 +72,25 @@ export default function StudentLiveClassesPage() {
             .order('start_time', { ascending: true });
 
         if (data && !error) {
-            setClasses(data as any);
+            const studentId = profile?.id;
+            const filtered = (data as any[]).filter(c => {
+                if (c.meeting_link) {
+                    try {
+                        const parsed = JSON.parse(c.meeting_link);
+                        if (parsed.type === 'one_on_one') {
+                            return parsed.student_id === studentId;
+                        }
+                    } catch {}
+                }
+                if (c.title?.startsWith('[1-on-1:')) {
+                    return studentId && c.title.toLowerCase().includes(profile?.full_name?.toLowerCase() || '');
+                }
+                return true;
+            });
+            setClasses(filtered);
         }
         setLoading(false);
-    }, [supabase]);
+    }, [supabase, profile?.id, profile?.full_name]);
 
     useEffect(() => {
         fetchClasses();
@@ -108,9 +150,21 @@ export default function StudentLiveClassesPage() {
                 </div>
             ) : (
                 <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                    {classes.map((liveClass) => (
+                    {classes.map((liveClass) => {
+                        const oneOnOne = getOneOnOneInfo(liveClass);
+                        const displayTitle = cleanTitle(liveClass.title);
+
+                        return (
                         <Card key={liveClass.id} className="overflow-hidden flex flex-col bg-muted border-border hover:border-border transition-all">
                             <CardHeader className="p-0 relative">
+                                {oneOnOne.isOneOnOne && (
+                                    <div className="absolute top-4 left-4 z-10">
+                                        <Badge className="bg-emerald-600 hover:bg-emerald-600 text-white font-bold text-xs shadow-md flex items-center gap-1.5 px-2.5 py-1 rounded-lg">
+                                            <Users className="w-3.5 h-3.5" />
+                                            1-on-1 Private Session
+                                        </Badge>
+                                    </div>
+                                )}
                                 <Badge
                                     variant={statusVariantMap[liveClass.status]}
                                     className="absolute top-4 right-4 z-10 capitalize"
@@ -133,7 +187,7 @@ export default function StudentLiveClassesPage() {
                                     )}
                                 </div>
                             </CardHeader>
-                            <CardContent className="p-6 flex-grow">
+                            <CardContent className="p-6 flex-grow space-y-2.5">
                                 <div className="flex items-center gap-2 mb-2">
                                     <Avatar className="w-6 h-6 border border-border">
                                         <AvatarImage src={liveClass.tutor?.avatar_url} />
@@ -141,7 +195,15 @@ export default function StudentLiveClassesPage() {
                                     </Avatar>
                                     <span className="text-xs text-foreground/">{liveClass.tutor?.full_name}</span>
                                 </div>
-                                <h3 className="text-lg font-bold text-foreground/">{liveClass.title}</h3>
+                                <h3 className="text-lg font-bold text-foreground/">{displayTitle}</h3>
+                                {oneOnOne.isOneOnOne && (
+                                    <div className="flex items-center gap-1.5">
+                                        <span className="inline-flex items-center gap-1 text-xs font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-md border border-emerald-500/20">
+                                            <Users className="w-3 h-3" />
+                                            Private Session with {liveClass.tutor?.full_name || 'Tutor'}
+                                        </span>
+                                    </div>
+                                )}
                                 <p className="text-sm text-foreground/">
                                     {(liveClass.start_time || liveClass.schedule) ? new Date(liveClass.start_time || liveClass.schedule || '').toLocaleString() : 'TBD'}
                                 </p>
@@ -163,7 +225,7 @@ export default function StudentLiveClassesPage() {
                                 )}
                             </CardFooter>
                         </Card>
-                    ))}
+                    )})}
                 </div>
             )}
         </div>

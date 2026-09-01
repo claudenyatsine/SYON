@@ -74,6 +74,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { createClient } from '@/utils/supabase/client';
 import Image from 'next/image';
 import { useUser } from '@/components/providers/user-context';
+import { useToast } from '@/hooks/use-toast';
 
 const AgoraWhiteboard = lazy(() => import('./AgoraWhiteboard'));
 
@@ -135,6 +136,7 @@ function ClassroomInner({
 }: AgoraClassroomProps) {
   const [micOn, setMic] = useState(false);
   const [videoOn, setVideo] = useState(false);
+  const { toast } = useToast();
   const { profile, loading: loadingProfile } = useUser();
   const { messages, sendMessage } = useChat(channelName);
   const [msgInput, setMsgInput] = useState('');
@@ -363,23 +365,90 @@ function ClassroomInner({
     if (micError) {
       if (isPermissionDeniedError(micError)) {
         console.warn('[Classroom] Microphone permission revoked by user.');
+        toast({
+          variant: 'destructive',
+          title: 'Microphone Permission Blocked 🎙️',
+          description: 'Microphone access was denied. Please click the padlock or tune icon in the Chrome address bar to Allow microphone access.',
+        });
       } else {
         console.error('Mic:', micError);
       }
       setMic(false);
     }
-  }, [micError, isPermissionDeniedError]);
+  }, [micError, isPermissionDeniedError, toast]);
 
   useEffect(() => {
     if (camError) {
       if (isPermissionDeniedError(camError)) {
-        console.warn('[Classroom] Camera permission revoked by user.');
+        console.warn('[Classroom] Camera permission revoked or denied by user.');
+        toast({
+          variant: 'destructive',
+          title: 'Camera Permission Denied 🚫',
+          description: 'Camera access is blocked by your browser or OS. Click the site settings icon in the Chrome address bar next to the URL, set Camera to "Allow", and make sure no other app (Zoom, Teams, etc.) is using your webcam.',
+        });
       } else {
         console.error('Cam:', camError);
       }
       setVideo(false);
     }
-  }, [camError, isPermissionDeniedError]);
+  }, [camError, isPermissionDeniedError, toast]);
+
+  const toggleCamera = async () => {
+    if (!videoOn) {
+      // Test browser media stream availability
+      if (typeof navigator !== 'undefined' && navigator.mediaDevices?.getUserMedia) {
+        try {
+          const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+          stream.getTracks().forEach(t => t.stop());
+          setVideo(true);
+        } catch (err: any) {
+          console.warn('[Camera Check Failed]:', err);
+          const isDenied = isPermissionDeniedError(err);
+          toast({
+            variant: 'destructive',
+            title: isDenied ? 'Camera Access Blocked 🚫' : 'Webcam Not Available',
+            description: isDenied
+              ? 'Your browser blocked camera access. Click the padlock/settings icon in the browser address bar (top left), toggle Camera to "Allow", and refresh.'
+              : 'Please ensure your webcam is connected and close any other app (Zoom, Teams, Camera app) that might be using it.',
+          });
+          setVideo(false);
+          return;
+        }
+      } else {
+        setVideo(true);
+      }
+    } else {
+      setVideo(false);
+    }
+  };
+
+  const toggleMicrophone = async () => {
+    if (!micOn) {
+      if (typeof navigator !== 'undefined' && navigator.mediaDevices?.getUserMedia) {
+        try {
+          const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+          stream.getTracks().forEach(t => t.stop());
+          setMic(true);
+        } catch (err: any) {
+          console.warn('[Mic Check Failed]:', err);
+          const isDenied = isPermissionDeniedError(err);
+          toast({
+            variant: 'destructive',
+            title: isDenied ? 'Microphone Blocked 🎙️' : 'Microphone Not Available',
+            description: isDenied
+              ? 'Your browser blocked microphone access. Click the padlock/settings icon in your address bar to Allow microphone access.'
+              : 'Please verify your microphone settings.',
+          });
+          setMic(false);
+          return;
+        }
+      } else {
+        setMic(true);
+      }
+    } else {
+      setMic(false);
+    }
+  };
 
   // --- MANUAL JOIN WITH UID_CONFLICT RECOVERY ---
   useEffect(() => {
@@ -587,14 +656,37 @@ function ClassroomInner({
     }
   };
 
-  // During screen share, exclude camera from usePublish so it doesn't
-  // conflict with the manually-published screen track (Agora only allows
-  // one video track per client in RTC mode). Mic stays published always.
+  // Sync camera track enabled state with videoOn
+  useEffect(() => {
+    if (localCameraTrack) {
+      localCameraTrack.setEnabled(videoOn).catch(() => {});
+      if (!videoOn && client && isJoined) {
+        client.unpublish(localCameraTrack).catch(() => {});
+      }
+    }
+  }, [localCameraTrack, videoOn, client, isJoined]);
+
+  // Sync mic track enabled state with micOn
+  useEffect(() => {
+    if (localMicrophoneTrack) {
+      localMicrophoneTrack.setEnabled(micOn).catch(() => {});
+      if (!micOn && client && isJoined) {
+        client.unpublish(localMicrophoneTrack).catch(() => {});
+      }
+    }
+  }, [localMicrophoneTrack, micOn, client, isJoined]);
+
+  // Only publish tracks that are actively turned ON
   const tracksToPublish = useMemo(() => {
-    if (isVoiceOnly) return [localMicrophoneTrack].filter(Boolean) as any[];
-    if (isScreenSharing) return [localMicrophoneTrack].filter(Boolean) as any[];
-    return [localMicrophoneTrack, localCameraTrack].filter(Boolean) as any[];
-  }, [localMicrophoneTrack, localCameraTrack, isScreenSharing, isVoiceOnly]);
+    const tracks: any[] = [];
+    if (micOn && localMicrophoneTrack) {
+      tracks.push(localMicrophoneTrack);
+    }
+    if (videoOn && localCameraTrack && !isVoiceOnly && !isScreenSharing) {
+      tracks.push(localCameraTrack);
+    }
+    return tracks;
+  }, [localMicrophoneTrack, localCameraTrack, micOn, videoOn, isScreenSharing, isVoiceOnly]);
   
   usePublish(isJoined ? tracksToPublish : []);
 
@@ -746,8 +838,8 @@ function ClassroomInner({
         micPermissionRevoked={micPermissionRevoked}
         camPermissionRevoked={camPermissionRevoked}
         localCameraTrack={localCameraTrack}
-        onToggleMic={() => setMic(m => !m)}
-        onToggleVideo={() => setVideo(v => !v)}
+        onToggleMic={toggleMicrophone}
+        onToggleVideo={toggleCamera}
         onJoin={manualJoin}
         onLeave={onLeave}
         isLoading={isJoinLoading}
@@ -836,7 +928,7 @@ function ClassroomInner({
                   <div className="absolute inset-0">
                     <LocalVideoTrack track={localCameraTrack} play style={{ width: '100%', height: '100%' }} />
                   </div>
-                ) : !iAmTutor && teacherUser && teacherUser !== 'local' ? (
+                ) : isTeacherOnStage && teacherUser ? (
                   /* Priority 4 (student view): Show REMOTE tutor's camera in the stage */
                   <div className="absolute inset-0">
                     <RemoteUser user={teacherUser as any} playVideo playAudio style={{ width: '100%', height: '100%' }} />
@@ -858,7 +950,7 @@ function ClassroomInner({
                     {iAmTutor && (
                       <div className="flex gap-3 mt-6">
                         <button
-                          onClick={() => setVideo(true)}
+                          onClick={toggleCamera}
                           className="px-5 py-2.5 bg-gold/20 hover:bg-gold/30 border border-gold/30 rounded-full text-gold text-xs font-bold uppercase tracking-widest transition-all hover:scale-105 active:scale-95 flex items-center gap-2"
                         >
                           <VideoIcon className="w-4 h-4" />
@@ -938,14 +1030,14 @@ function ClassroomInner({
                       isError={!!micError}
                       isWarning={micPermissionRevoked}
                       icon={micOn ? Mic : MicOff}
-                      onClick={() => setMic(!micOn)}
+                      onClick={toggleMicrophone}
                     />
                     <ControlButton
                       active={videoOn}
                       isError={!!camError}
                       isWarning={camPermissionRevoked}
                       icon={videoOn ? VideoIcon : VideoOff}
-                      onClick={() => setVideo(!videoOn)}
+                      onClick={toggleCamera}
                     />
                     <ControlButton
                       active={isScreenSharing}

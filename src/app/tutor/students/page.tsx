@@ -15,6 +15,7 @@ import {
 } from '@/app/actions/student-tutor';
 import { getGlobalChatMessages, sendGlobalChatMessage } from '@/app/actions/chat';
 import { getSubjectAssignments, getSubjectTopics } from '@/app/actions/student-assignments';
+import { ScheduleClassDialog } from '@/components/app/tutor/schedule-class-dialog';
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -135,8 +136,9 @@ export default function TutorStudentsPage() {
   const [pendingAssignmentsLoading, setPendingAssignmentsLoading] = useState(false);
   const [pendingAssignmentsList, setPendingAssignmentsList] = useState<any[]>([]);
 
-  // Student info modal and in-chat search states
+  // Student info modal, schedule live class, and in-chat search states
   const [isStudentInfoOpen, setIsStudentInfoOpen] = useState(false);
+  const [isScheduleLiveClassOpen, setIsScheduleLiveClassOpen] = useState(false);
   const [isChatSearchOpen, setIsChatSearchOpen] = useState(false);
   const [chatSearchQuery, setChatSearchQuery] = useState('');
 
@@ -786,7 +788,7 @@ export default function TutorStudentsPage() {
                               </DropdownMenuItem>
                               <DropdownMenuItem 
                                 onClick={() => {
-                                  window.location.href = `/tutor/live-classes`;
+                                  setIsScheduleLiveClassOpen(true);
                                 }}
                                 className="flex items-center gap-2 px-2.5 py-2 text-xs rounded-xl cursor-pointer hover:bg-muted transition-colors"
                               >
@@ -1139,6 +1141,21 @@ export default function TutorStudentsPage() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* 1-on-1 Private Live Class Dialog */}
+      {isScheduleLiveClassOpen && selectedGroup && (
+        <ScheduleClassDialog
+          tutorId={tutorId}
+          studentId={selectedGroup.student.id}
+          studentName={selectedGroup.student.full_name}
+          defaultSubjectId={selectedGroup.subjects[0]?.id}
+          isOpen={isScheduleLiveClassOpen}
+          onOpenChange={setIsScheduleLiveClassOpen}
+          onClassScheduled={() => {
+            loadChat();
+          }}
+        />
+      )}
 
       <style dangerouslySetInnerHTML={{__html: `
         .custom-scrollbar::-webkit-scrollbar { width: 6px; }

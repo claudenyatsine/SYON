@@ -3,6 +3,7 @@
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/utils/supabase/server'
+import { createAdminClient } from '@/utils/supabase/admin'
 
 export async function login(formData: FormData) {
   const supabase = await createClient()
@@ -19,15 +20,34 @@ export async function login(formData: FormData) {
     return { error: error.message }
   }
 
-  // Fetch role to verify it matches the login attempt
-  let { data: profile } = await supabase
+  // Fetch profile via admin client to avoid any RLS blockages
+  const adminClient = createAdminClient()
+  let { data: profile } = await adminClient
     .from('profiles')
-    .select('role')
+    .select('*')
     .eq('id', data.user.id)
-    .single()
+    .maybeSingle()
 
-  // FALLBACK: If profile record is missing, use metadata from Auth
-  const userRole = profile?.role || data.user.user_metadata?.role || 'student'
+  const metaRole = data.user.user_metadata?.role
+
+  // Self-healing: If user signed up with a specific role in metadata (e.g. parent/tutor/admin)
+  // and is logging into that matching portal, but the database profile defaulted to 'student'
+  // or was missing, heal the profile record in the database immediately.
+  if (metaRole && role && metaRole === role && profile?.role !== metaRole) {
+    await adminClient.from('profiles').upsert({
+      id: data.user.id,
+      email: data.user.email,
+      full_name: data.user.user_metadata?.full_name || profile?.full_name || data.user.email?.split('@')[0],
+      role: metaRole,
+      updated_at: new Date().toISOString()
+    }, { onConflict: 'id' })
+
+    if (profile) {
+      profile.role = metaRole
+    }
+  }
+
+  const userRole = profile?.role || metaRole || 'student'
 
   if (userRole !== role) {
     // Sign out immediately if role mismatch
@@ -35,12 +55,14 @@ export async function login(formData: FormData) {
     return { error: `This account is registered as a ${userRole}. Please log in through the correct portal.` }
   }
 
-  // Ensure profile exists if it was missing (healing)
+  // Ensure profile exists if it was completely missing
   if (!profile) {
-    await supabase.from('profiles').upsert({
+    await adminClient.from('profiles').upsert({
       id: data.user.id,
       email: data.user.email,
       role: userRole,
+      full_name: data.user.user_metadata?.full_name || data.user.email?.split('@')[0],
+      updated_at: new Date().toISOString()
     }, { onConflict: 'id' })
   }
 
@@ -84,15 +106,22 @@ export async function signup(formData: FormData) {
     return { error: error.message }
   }
 
-  // If user is created successfully, ensure profile record exists
+  // Immediately ensure the profile record exists with the EXACT chosen role using Admin Client
+  // to prevent DB default triggers or RLS from defaulting the user to 'student'.
   if (data.user) {
-    await supabase.from('profiles').upsert({
-      id: data.user.id,
-      email: email,
-      full_name: fullName || email.split('@')[0],
-      role: role,
-      is_approved: false,
-    }, { onConflict: 'id' })
+    try {
+      const adminClient = createAdminClient()
+      await adminClient.from('profiles').upsert({
+        id: data.user.id,
+        email: email,
+        full_name: fullName || email.split('@')[0],
+        role: role,
+        is_approved: false,
+        updated_at: new Date().toISOString()
+      }, { onConflict: 'id' })
+    } catch (upsertErr) {
+      console.error('[Signup] Error persisting chosen role to profile:', upsertErr)
+    }
   }
 
   revalidatePath('/', 'layout')

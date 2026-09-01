@@ -1,7 +1,110 @@
 "use server"
 
 import { createClient } from '@/utils/supabase/server'
+import { createAdminClient } from '@/utils/supabase/admin'
 import { revalidatePath } from 'next/cache'
+
+export async function createSelfStudentDeadline(
+  studentId: string,
+  title: string,
+  dueDate: string,
+  subjectId?: string,
+  priority?: string
+) {
+  try {
+    const adminClient = createAdminClient()
+
+    // 1. Resolve valid subject_id to satisfy foreign key constraint
+    let resolvedSubjectId = subjectId && subjectId !== 'none' ? subjectId : null
+    if (!resolvedSubjectId) {
+      const { data: enrollment } = await adminClient
+        .from('enrollments')
+        .select('subject_id')
+        .eq('student_id', studentId)
+        .limit(1)
+        .maybeSingle()
+      
+      if (enrollment?.subject_id) {
+        resolvedSubjectId = enrollment.subject_id
+      } else {
+        const { data: firstSub } = await adminClient.from('subjects').select('id').limit(1).single()
+        resolvedSubjectId = firstSub?.id || null
+      }
+    }
+
+    // 2. Resolve valid tutor_id to satisfy NOT NULL constraint
+    const { data: tutorAssignment } = await adminClient
+      .from('enrollments')
+      .select('tutor_id')
+      .eq('student_id', studentId)
+      .not('tutor_id', 'is', null)
+      .limit(1)
+      .maybeSingle()
+
+    let resolvedTutorId = tutorAssignment?.tutor_id
+    if (!resolvedTutorId) {
+      const { data: defaultTutor } = await adminClient
+        .from('profiles')
+        .select('id')
+        .eq('role', 'tutor')
+        .limit(1)
+        .maybeSingle()
+      resolvedTutorId = defaultTutor?.id
+    }
+
+    const { data, error } = await adminClient
+      .from('student_deadlines')
+      .insert({
+        student_id: studentId,
+        tutor_id: resolvedTutorId,
+        subject_id: resolvedSubjectId,
+        title,
+        description: priority ? `Priority: ${priority}` : null,
+        due_date: dueDate,
+        status: 'pending',
+        updated_at: new Date().toISOString()
+      })
+      .select('*, subject:subjects(name)')
+      .single()
+
+    if (error) {
+      console.error('Error creating self student deadline:', error)
+      return { error: error.message }
+    }
+
+    revalidatePath('/student/progress')
+    return { data }
+  } catch (err: any) {
+    console.error('Unexpected error creating self student deadline:', err)
+    return { error: err.message || 'Failed to create task' }
+  }
+}
+
+export async function toggleSelfDeadlineStatus(deadlineId: string, status: string) {
+  try {
+    const adminClient = createAdminClient()
+    const { data, error } = await adminClient
+      .from('student_deadlines')
+      .update({ 
+        status: status.toLowerCase(), 
+        updated_at: new Date().toISOString() 
+      })
+      .eq('id', deadlineId)
+      .select()
+      .single()
+
+    if (error) {
+      console.error('Error toggling self deadline status:', error)
+      return { error: error.message }
+    }
+
+    revalidatePath('/student/progress')
+    return { data }
+  } catch (err: any) {
+    console.error('Unexpected error toggling self deadline status:', err)
+    return { error: err.message || 'Failed to update task status' }
+  }
+}
 
 export async function getTutorStudents(tutorId: string) {
   const supabase = await createClient()
@@ -317,6 +420,18 @@ export async function getStudentSubjectDashboardData(studentId: string, subjectI
       .eq('subject_id', subjectId)
       .order('start_time', { ascending: true })
 
+    const subjectLiveClasses = (liveClasses || []).filter((c: any) => {
+      if (c.meeting_link) {
+        try {
+          const parsed = JSON.parse(c.meeting_link);
+          if (parsed.type === 'one_on_one') {
+            return parsed.student_id === studentId;
+          }
+        } catch {}
+      }
+      return true;
+    });
+
     // 4. Fetch Deadlines / Tasks for this subject
     const { data: deadlines } = await supabase
       .from('student_deadlines')
@@ -434,7 +549,7 @@ export async function getStudentSubjectDashboardData(studentId: string, subjectI
       data: {
         enrollment,
         allEnrollments: allEnrollments || [],
-        liveClasses: liveClasses || [],
+        liveClasses: subjectLiveClasses,
         deadlines: deadlineList,
         assignments: allAssignments,
         modules: curriculumModules || [],

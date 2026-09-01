@@ -32,18 +32,45 @@ import {
 } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
 
-export function ScheduleClassDialog({ tutorId, onClassScheduled, trigger }: { 
+export function ScheduleClassDialog({ 
+    tutorId, 
+    studentId,
+    studentName,
+    defaultSubjectId,
+    defaultTitle,
+    isOpen: controlledOpen,
+    onOpenChange: controlledOnOpenChange,
+    onClassScheduled, 
+    trigger 
+}: { 
     tutorId: string; 
+    studentId?: string;
+    studentName?: string;
+    defaultSubjectId?: string;
+    defaultTitle?: string;
+    isOpen?: boolean;
+    onOpenChange?: (open: boolean) => void;
     onClassScheduled?: () => void;
     trigger?: React.ReactNode;
 }) {
-    const [open, setOpen] = useState(false);
+    const [internalOpen, setInternalOpen] = useState(false);
+    const isControlled = controlledOpen !== undefined;
+    const open = isControlled ? controlledOpen : internalOpen;
+    const setOpen = (newOpen: boolean) => {
+        if (isControlled) {
+            controlledOnOpenChange?.(newOpen);
+        } else {
+            setInternalOpen(newOpen);
+        }
+    };
+
+    const isOneOnOne = !!studentId && !!studentName;
     const [loading, setLoading] = useState(false);
-    const [title, setTitle] = useState("");
+    const [title, setTitle] = useState(defaultTitle || "");
     const [date, setDate] = useState<Date | undefined>(undefined);
     const [time, setTime] = useState("12:00");
     const [status, setStatus] = useState("upcoming");
-    const [subjectId, setSubjectId] = useState("");
+    const [subjectId, setSubjectId] = useState(defaultSubjectId || "");
     const [subjects, setSubjects] = useState<any[]>([]);
     const [imageUrl, setImageUrl] = useState("");
     const [uploading, setUploading] = useState(false);
@@ -51,6 +78,11 @@ export function ScheduleClassDialog({ tutorId, onClassScheduled, trigger }: {
     const [uploadError, setUploadError] = useState<string | null>(null);
     const supabase = createClient();
     const { toast } = useToast();
+
+    useEffect(() => {
+        if (defaultSubjectId) setSubjectId(defaultSubjectId);
+        if (defaultTitle) setTitle(defaultTitle);
+    }, [defaultSubjectId, defaultTitle]);
 
     useEffect(() => {
         if (open && tutorId) {
@@ -63,10 +95,15 @@ export function ScheduleClassDialog({ tutorId, onClassScheduled, trigger }: {
                     if (data) {
                         const mapped = data.map((ts: any) => ts.subjects).filter(Boolean);
                         setSubjects(mapped);
+                        if (!subjectId && defaultSubjectId) {
+                            setSubjectId(defaultSubjectId);
+                        } else if (!subjectId && mapped.length > 0) {
+                            setSubjectId(mapped[0].id);
+                        }
                     }
                 });
         }
-    }, [open, tutorId, supabase]);
+    }, [open, tutorId, supabase, defaultSubjectId, subjectId]);
 
     const compressImage = (file: File, maxWidth = 800, quality = 0.7): Promise<Blob> => {
         return new Promise((resolve, reject) => {
@@ -145,7 +182,7 @@ export function ScheduleClassDialog({ tutorId, onClassScheduled, trigger }: {
         }
     };
 
-    const handleSchedule = () => {
+    const handleSchedule = async () => {
         if (!title || !date || !tutorId || !subjectId || uploading) return;
         setLoading(true);
         
@@ -153,69 +190,102 @@ export function ScheduleClassDialog({ tutorId, onClassScheduled, trigger }: {
         const [hours, minutes] = time.split(':').map(Number);
         fullDate.setHours(hours, minutes);
 
-        const insertTitle = title;
+        const finalTitle = isOneOnOne ? `[1-on-1: ${studentName}] ${title}` : title;
         const insertStatus = status;
         const insertSubjectId = subjectId;
+        const meetingLinkPayload = isOneOnOne 
+            ? JSON.stringify({ type: 'one_on_one', student_id: studentId, student_name: studentName })
+            : null;
 
-        setOpen(false);
-        setTitle("");
-        setDate(undefined);
-        setTime("12:00");
-        setStatus("upcoming");
-        setSubjectId("");
-        setImageUrl("");
-        setLoading(false);
-        if (onClassScheduled) onClassScheduled();
+        try {
+            const { data: insertedClass, error } = await supabase
+                .from('live_classes')
+                .insert({
+                    title: finalTitle,
+                    start_time: fullDate.toISOString(),
+                    status: insertStatus,
+                    tutor_id: tutorId,
+                    subject_id: insertSubjectId,
+                    meeting_link: meetingLinkPayload,
+                    presentation_url: imageUrl || null,
+                    approval_status: 'approved',
+                    proposed_by: tutorId
+                })
+                .select()
+                .single();
 
-        supabase
-            .from('live_classes')
-            .insert({
-                title: insertTitle,
-                start_time: fullDate.toISOString(),
-                status: insertStatus,
-                tutor_id: tutorId,
-                subject_id: insertSubjectId,
-                presentation_url: imageUrl || null,
-                approval_status: 'approved',
-                proposed_by: tutorId
-            })
-            .then(({ error }) => {
-                if (error) {
-                    console.error('Insert error:', JSON.stringify(error), error);
-                    toast({
-                        title: 'Could not save class',
-                        description: error.message,
-                        variant: 'destructive',
-                    });
-                } else {
-                    toast({
-                        title: '🎉 Class Scheduled!',
-                        description: `"${insertTitle}" has been added to your schedule.`,
-                    });
-                    if (onClassScheduled) onClassScheduled();
-                }
+            if (error) throw error;
+
+            // If this is a 1-on-1 private class, send direct notification in chat
+            if (isOneOnOne && studentId) {
+                const classId = insertedClass?.id;
+                const formattedTime = fullDate.toLocaleString();
+                const notifyMessage = `🎥 1-on-1 Live Class Scheduled!\n\nTopic: ${title}\nDate & Time: ${formattedTime}\n\nThis is a private 1-on-1 session between us. You can join directly from your Study Panel or Live Classes tab.`;
+                
+                await supabase.from('student_tutor_messages').insert({
+                    sender_id: tutorId,
+                    receiver_id: studentId,
+                    message: notifyMessage
+                });
+            }
+
+            toast({
+                title: isOneOnOne ? '🎯 1-on-1 Live Class Scheduled!' : '🎉 Class Scheduled!',
+                description: isOneOnOne 
+                    ? `Private session with ${studentName} scheduled for ${fullDate.toLocaleDateString()}.`
+                    : `"${title}" has been added to your schedule.`,
             });
+
+            setOpen(false);
+            setTitle(defaultTitle || "");
+            setDate(undefined);
+            setTime("12:00");
+            setStatus("upcoming");
+            setImageUrl("");
+            if (onClassScheduled) onClassScheduled();
+        } catch (err: any) {
+            console.error('Schedule class error:', err);
+            toast({
+                title: 'Could not schedule class',
+                description: err.message || 'An error occurred',
+                variant: 'destructive',
+            });
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
         <Dialog open={open} onOpenChange={setOpen}>
-            <DialogTrigger asChild>
-                {trigger || (
+            {trigger ? (
+                <DialogTrigger asChild>
+                    {trigger}
+                </DialogTrigger>
+            ) : !isControlled ? (
+                <DialogTrigger asChild>
                     <Button className="bg-gold hover:bg-gold text-[#0A1A12] font-bold rounded-xl transition-all hover:scale-105">
                         <CalendarPlus className="mr-2 h-4 w-4" />
                         Schedule New Class
                     </Button>
-                )}
-            </DialogTrigger>
+                </DialogTrigger>
+            ) : null}
             <DialogContent className="sm:max-w-[500px] bg-background border-border text-foreground overflow-hidden p-0 gap-0">
-                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-gold via-[#6A994E] to-[#A7C957] animate-gradient" />
+                <div className={`absolute top-0 left-0 w-full h-1 bg-gradient-to-r ${isOneOnOne ? 'from-emerald-500 via-gold to-emerald-400' : 'from-gold via-[#6A994E] to-[#A7C957]'} animate-gradient`} />
                 
                 <DialogHeader className="p-8 pb-4 text-left">
-                    <DialogTitle className="text-2xl font-bold tracking-tight bg-gradient-to-r from-white to-white/60 bg-clip-text text-transparent">
-                        Schedule New Live Class
-                    </DialogTitle>
-                    <DialogDescription className="text-foreground/">
-                        Craft your next session. Fill in the details below.
+                    <div className="flex items-center gap-2">
+                        <DialogTitle className="text-2xl font-bold tracking-tight bg-gradient-to-r from-white to-white/60 bg-clip-text text-transparent">
+                            {isOneOnOne ? 'Schedule 1-on-1 Live Class' : 'Schedule New Live Class'}
+                        </DialogTitle>
+                    </div>
+                    <DialogDescription className="text-muted-foreground text-xs mt-1">
+                        {isOneOnOne ? (
+                            <span className="text-emerald-400 font-medium">
+                                🔒 Private Session exclusively for <strong>{studentName}</strong> (not visible to other students).
+                            </span>
+                        ) : (
+                            'Craft your next group session. Fill in the details below.'
+                        )}
                     </DialogDescription>
                 </DialogHeader>
 

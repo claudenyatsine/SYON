@@ -117,11 +117,50 @@ function LiveClassList({ status, classes, onUpdate, onDelete }: { status: string
         )
     }
 
+    const getOneOnOneInfo = (liveClass: any) => {
+        if (liveClass.meeting_link) {
+            try {
+                const parsed = JSON.parse(liveClass.meeting_link);
+                if (parsed.type === 'one_on_one') {
+                    return {
+                        isOneOnOne: true,
+                        studentName: parsed.student_name,
+                        studentId: parsed.student_id
+                    };
+                }
+            } catch {}
+        }
+        if (liveClass.title?.startsWith('[1-on-1:')) {
+            const match = liveClass.title.match(/\[1-on-1:\s*([^\]]+)\]/);
+            return {
+                isOneOnOne: true,
+                studentName: match ? match[1] : 'Student'
+            };
+        }
+        return { isOneOnOne: false };
+    };
+
+    const cleanTitle = (title: string) => {
+        return title ? title.replace(/^\[1-on-1:[^\]]+\]\s*/, '') : 'Untitled Class';
+    };
+
     return (
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-           {filteredClasses.map(liveClass => (
+           {filteredClasses.map(liveClass => {
+                const oneOnOne = getOneOnOneInfo(liveClass);
+                const displayTitle = cleanTitle(liveClass.title);
+
+                return (
                 <Card key={liveClass.id} className="overflow-hidden flex flex-col hover:border-primary/50 transition-all shadow-sm">
                     <CardHeader className="p-0 relative">
+                        {oneOnOne.isOneOnOne && (
+                            <div className="absolute top-4 left-4 z-10">
+                                <Badge className="bg-emerald-600 hover:bg-emerald-600 text-white font-bold text-xs shadow-md flex items-center gap-1.5 px-2.5 py-1 rounded-lg">
+                                    <Users className="w-3.5 h-3.5" />
+                                    1-on-1 • {oneOnOne.studentName}
+                                </Badge>
+                            </div>
+                        )}
                         <Badge variant={statusVariantMap[liveClass.status]} className="absolute top-4 right-4 z-10 capitalize">
                             {liveClass.status}
                         </Badge>
@@ -135,10 +174,27 @@ function LiveClassList({ status, classes, onUpdate, onDelete }: { status: string
                             )}
                         </div>
                     </CardHeader>
-                    <CardContent className="p-4 flex-grow space-y-2">
-                        <h3 className="text-lg font-bold truncate">{liveClass.title}</h3>
+                    <CardContent className="p-4 flex-grow space-y-2.5">
+                        <div>
+                            <div className="flex items-center justify-between gap-2">
+                                <h3 className="text-lg font-bold truncate">{displayTitle}</h3>
+                                {liveClass.subject?.name && (
+                                    <span className="text-[11px] font-medium bg-muted text-muted-foreground px-2 py-0.5 rounded-md shrink-0 border border-border">
+                                        {liveClass.subject.name}
+                                    </span>
+                                )}
+                            </div>
+                            {oneOnOne.isOneOnOne && (
+                                <div className="mt-1.5 flex items-center gap-1.5">
+                                    <span className="inline-flex items-center gap-1 text-xs font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-md border border-emerald-500/20">
+                                        <Users className="w-3 h-3" />
+                                        Private Session for {oneOnOne.studentName}
+                                    </span>
+                                </div>
+                            )}
+                        </div>
                         <p className="text-sm text-muted-foreground flex items-center gap-2">
-                            <CalendarPlus className="w-4 h-4" />
+                            <CalendarPlus className="w-4 h-4 text-gold" />
                             {(liveClass.start_time || liveClass.schedule) ? new Date(liveClass.start_time || liveClass.schedule).toLocaleString() : 'TBD'}
                         </p>
                     </CardContent>
@@ -198,7 +254,7 @@ function LiveClassList({ status, classes, onUpdate, onDelete }: { status: string
                          )}
                     </CardFooter>
                 </Card>
-           ))}
+           )})}
         </div>
     )
 }

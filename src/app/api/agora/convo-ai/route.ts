@@ -1,116 +1,207 @@
 import { NextResponse } from 'next/server';
+import { RtcTokenBuilder, RtcRole } from 'agora-access-token';
 
-// Agora Conversational AI API endpoint
-// Documentation: https://docs.agora.io/en/conversational-ai/
+// Agora Conversational AI API endpoint (v2)
+// Documentation: https://docs.agora.io/en/conversational-ai/rest-api/join
 
 export async function POST(req: Request) {
   try {
     const { channelName, uid } = await req.json();
 
-    if (!channelName || !uid) {
-      return NextResponse.json({ error: 'Missing channelName or uid' }, { status: 400 });
+    if (!channelName) {
+      return NextResponse.json({ error: 'Missing channelName' }, { status: 400 });
     }
 
     const AGORA_APP_ID = process.env.NEXT_PUBLIC_AGORA_APP_ID || process.env.AGORA_APP_ID;
-    const AGORA_APP_CERTIFICATE = process.env.AGORA_APP_CERTIFICATE; // Server-side only
-    const OPENAI_API_KEY = process.env.OPENAI_API_KEY; // Server-side only
+    const AGORA_APP_CERTIFICATE = process.env.AGORA_APP_CERTIFICATE;
+    const AGORA_CUSTOMER_ID = process.env.AGORA_CUSTOMER_ID;
+    const AGORA_CUSTOMER_SECRET = process.env.AGORA_CUSTOMER_SECRET;
+    const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 
-    if (!AGORA_APP_ID || !AGORA_APP_CERTIFICATE || !OPENAI_API_KEY) {
-      return NextResponse.json({ error: 'Missing environment variables for Convo AI' }, { status: 500 });
+    if (!AGORA_APP_ID || !AGORA_APP_CERTIFICATE) {
+      return NextResponse.json(
+        { error: 'Agora credentials (AGORA_APP_ID, AGORA_APP_CERTIFICATE) are missing.' },
+        { status: 500 }
+      );
     }
 
-    // Generate a unique agent name for this session
-    const agentName = `AI_Tutor_${channelName}_${Date.now()}`;
+    if (!OPENAI_API_KEY) {
+      return NextResponse.json(
+        { error: 'OPENAI_API_KEY is not configured in .env.local.' },
+        { status: 500 }
+      );
+    }
 
-    // 1. Prepare the payload for Agora's Convo AI REST API
-    // We are passing the OpenAI API key securely from the backend to Agora,
-    // so the client never sees it.
+    // 1. Basic Auth credentials: Agora REST APIs require Customer ID & Customer Secret
+    // If not separately provided, try App ID and App Certificate as fallback.
+    const authUser = AGORA_CUSTOMER_ID || AGORA_APP_ID;
+    const authSecret = AGORA_CUSTOMER_SECRET || AGORA_APP_CERTIFICATE;
+    const credentials = Buffer.from(`${authUser}:${authSecret}`).toString('base64');
+
+    // 2. Generate a dedicated RTC token for the AI Agent (UID 999999)
+    const agentUid = 999999;
+    const expirationTimeInSeconds = 3600;
+    const currentTimestamp = Math.floor(Date.now() / 1000);
+    const privilegeExpiredTs = currentTimestamp + expirationTimeInSeconds;
+
+    const agentRtcToken = RtcTokenBuilder.buildTokenWithUid(
+      AGORA_APP_ID,
+      AGORA_APP_CERTIFICATE,
+      channelName,
+      agentUid,
+      RtcRole.PUBLISHER,
+      privilegeExpiredTs
+    );
+
+    const agentName = `AI_Tutor_${channelName.replace(/[^a-zA-Z0-9_]/g, '_')}_${Date.now()}`;
+
+    // 3. Payload for Agora Conversational AI Agent v2 REST API
     const payload = {
-      appId: AGORA_APP_ID,
-      channelName: channelName,
-      // We pass 0 so the agent picks a random available UID
-      uid: 0,
-      agentName: agentName,
-      idleTimeout: 300, // Terminate agent if no one speaks for 5 mins
-      llm: {
-        provider: "openai",
-        apiKey: OPENAI_API_KEY,
-        model: "gpt-4o",
-        systemPrompt: "You are an AI teaching assistant inside a live online classroom for Dr Max LMS. You should be helpful, concise, and encourage students. If someone asks you a question, answer it clearly but keep your responses relatively brief so you don't dominate the voice channel.",
+      name: agentName,
+      properties: {
+        channel: channelName,
+        token: agentRtcToken,
+        agent_rtc_uid: String(agentUid),
+        remote_rtc_uids: ['*'],
+        idle_timeout: 300,
+        asr: {
+          language: 'en-US',
+        },
+        tts: {
+          vendor: 'openai',
+          params: {
+            key: OPENAI_API_KEY,
+            model: 'tts-1',
+            voice: 'alloy',
+          },
+        },
+        llm: {
+          url: 'https://api.openai.com/v1/chat/completions',
+          api_key: OPENAI_API_KEY,
+          system_messages: [
+            {
+              role: 'system',
+              content:
+                'You are an expert AI teaching assistant inside a live online classroom for Dr Max LMS. You should be helpful, concise, and encourage students. If someone asks a question, answer clearly and keep responses brief for natural real-time voice conversation.',
+            },
+          ],
+          params: {
+            model: 'gpt-4o-mini',
+          },
+        },
+        vad: {
+          mode: 'interrupt',
+        },
       },
-      tts: {
-        provider: "openai",
-        voice: "alloy"
-      },
-      stt: {
-        provider: "openai"
-      }
     };
 
-    // 2. We must use Basic Auth with our App ID and App Certificate
-    const credentials = Buffer.from(`${AGORA_APP_ID}:${AGORA_APP_CERTIFICATE}`).toString('base64');
-
-    // 3. Call Agora's REST API to spawn the agent into the channel
-    const response = await fetch(`https://api.agora.io/v1/projects/${AGORA_APP_ID}/convo-ai/agents`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Basic ${credentials}`
-      },
-      body: JSON.stringify(payload)
-    });
+    const response = await fetch(
+      `https://api.agora.io/api/conversational-ai-agent/v2/projects/${AGORA_APP_ID}/join`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Basic ${credentials}`,
+        },
+        body: JSON.stringify(payload),
+      }
+    );
 
     if (!response.ok) {
-      const errorData = await response.text();
-      console.error('[Convo AI] Agora API error:', errorData);
-      return NextResponse.json({ error: 'Failed to start AI agent', details: errorData }, { status: response.status });
+      const errorText = await response.text();
+      console.error('[Convo AI] Agora API error response:', response.status, errorText);
+
+      let parsedErr: any = null;
+      try {
+        parsedErr = JSON.parse(errorText);
+      } catch {}
+
+      if (response.status === 401) {
+        return NextResponse.json(
+          {
+            error:
+              'Agora REST API authentication failed. Agora Conversational AI requires RESTful API credentials (AGORA_CUSTOMER_ID and AGORA_CUSTOMER_SECRET) from the Agora Console RESTful API section.',
+            requiresRestCredentials: true,
+            details: errorText,
+          },
+          { status: 401 }
+        );
+      }
+
+      return NextResponse.json(
+        {
+          error: parsedErr?.message || parsedErr?.error || 'Failed to start AI Agent',
+          details: errorText,
+        },
+        { status: response.status }
+      );
     }
 
     const data = await response.json();
-    
-    // The response includes the agent_id, which we need to stop it later
-    return NextResponse.json({ success: true, agentId: data.agent_id, agentName });
-    
+    const agentId = data?.agent_id || data?.id || agentName;
+
+    return NextResponse.json({
+      success: true,
+      agentId,
+      agentName,
+      agentUid,
+    });
   } catch (err: any) {
     console.error('[Convo AI] Server error:', err);
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+    return NextResponse.json(
+      { error: err.message || 'Internal Server Error' },
+      { status: 500 }
+    );
   }
 }
 
 // DELETE to stop the agent
 export async function DELETE(req: Request) {
-    try {
-        const url = new URL(req.url);
-        const agentId = url.searchParams.get('agentId');
+  try {
+    const url = new URL(req.url);
+    const agentId = url.searchParams.get('agentId');
 
-        if (!agentId) {
-            return NextResponse.json({ error: 'Missing agentId' }, { status: 400 });
-        }
-
-        const AGORA_APP_ID = process.env.NEXT_PUBLIC_AGORA_APP_ID || process.env.AGORA_APP_ID;
-        const AGORA_APP_CERTIFICATE = process.env.AGORA_APP_CERTIFICATE;
-
-        if (!AGORA_APP_ID || !AGORA_APP_CERTIFICATE) {
-            return NextResponse.json({ error: 'Missing environment variables' }, { status: 500 });
-        }
-
-        const credentials = Buffer.from(`${AGORA_APP_ID}:${AGORA_APP_CERTIFICATE}`).toString('base64');
-
-        const response = await fetch(`https://api.agora.io/v1/projects/${AGORA_APP_ID}/convo-ai/agents/${agentId}`, {
-            method: 'DELETE',
-            headers: {
-                'Authorization': `Basic ${credentials}`
-            }
-        });
-
-        if (!response.ok) {
-            const errorData = await response.text();
-            return NextResponse.json({ error: 'Failed to stop AI agent', details: errorData }, { status: response.status });
-        }
-
-        return NextResponse.json({ success: true });
-
-    } catch (err) {
-        return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+    if (!agentId) {
+      return NextResponse.json({ error: 'Missing agentId' }, { status: 400 });
     }
+
+    const AGORA_APP_ID = process.env.NEXT_PUBLIC_AGORA_APP_ID || process.env.AGORA_APP_ID;
+    const AGORA_APP_CERTIFICATE = process.env.AGORA_APP_CERTIFICATE;
+    const AGORA_CUSTOMER_ID = process.env.AGORA_CUSTOMER_ID;
+    const AGORA_CUSTOMER_SECRET = process.env.AGORA_CUSTOMER_SECRET;
+
+    if (!AGORA_APP_ID) {
+      return NextResponse.json({ error: 'Missing AGORA_APP_ID' }, { status: 500 });
+    }
+
+    const authUser = AGORA_CUSTOMER_ID || AGORA_APP_ID;
+    const authSecret = AGORA_CUSTOMER_SECRET || AGORA_APP_CERTIFICATE || '';
+    const credentials = Buffer.from(`${authUser}:${authSecret}`).toString('base64');
+
+    // Agora v2 stop endpoint is POST .../agents/{agentId}/leave
+    const response = await fetch(
+      `https://api.agora.io/api/conversational-ai-agent/v2/projects/${AGORA_APP_ID}/agents/${agentId}/leave`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Basic ${credentials}`,
+        },
+      }
+    );
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.warn('[Convo AI] Stop agent error:', response.status, errorText);
+      return NextResponse.json(
+        { error: 'Failed to stop AI agent', details: errorText },
+        { status: response.status }
+      );
+    }
+
+    return NextResponse.json({ success: true });
+  } catch (err: any) {
+    console.error('[Convo AI] Server delete error:', err);
+    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+  }
 }

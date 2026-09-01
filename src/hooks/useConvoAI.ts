@@ -32,26 +32,26 @@ export function useConvoAI(channelName: string, uid: number) {
         body: JSON.stringify({ channelName, uid }),
       });
 
-      const data = await res.json();
+      const data = await res.json().catch(() => ({}));
 
       if (!res.ok) {
-        throw new Error(data.error || 'Failed to start AI Agent');
+        throw new Error(data.error || data.details || 'Failed to start AI Agent');
       }
 
       if (isMounted.current) {
         setIsAgentActive(true);
         setActiveAgentId(data.agentId);
         toast({
-          title: 'AI Tutor Joined',
-          description: 'The AI assistant is now in the voice channel.',
+          title: 'AI Tutor Joined 🤖',
+          description: 'The AI assistant is now listening and speaking in the voice channel.',
         });
       }
     } catch (err: any) {
       console.error('[Convo AI] Start error:', err);
       if (isMounted.current) {
         toast({
-          title: 'Failed to start AI',
-          description: err.message,
+          title: 'AI Agent Notice',
+          description: err.message || 'Could not connect to AI voice agent.',
           variant: 'destructive',
         });
       }
