@@ -144,12 +144,29 @@ export default function ResourcesPage() {
       ]);
       
       if (resourcesData) {
+          const approvedOnly = resourcesData.filter((r: any) => {
+              if (r.description) {
+                  try {
+                      const meta = JSON.parse(r.description);
+                      if (meta && typeof meta === 'object' && 'approval_status' in meta) {
+                          return meta.approval_status === 'approved';
+                      }
+                  } catch {
+                      // non-JSON plain description
+                  }
+              }
+              if (r.approval_status && r.approval_status !== 'approved') {
+                  return false;
+              }
+              return true;
+          });
+
           const urlParams = new URLSearchParams(window.location.search);
           const liveClassId = urlParams.get('liveClassId');
           if (liveClassId) {
-              setResources(resourcesData.filter(r => r.live_class_id === liveClassId));
+              setResources(approvedOnly.filter(r => r.live_class_id === liveClassId));
           } else {
-              setResources(resourcesData);
+              setResources(approvedOnly);
           }
       }
       if (offlineData) setOfflineResourceIds(new Set(offlineData.map(o => o.resource_id)));

@@ -15,12 +15,26 @@ export default async function ParentPage() {
     }
 
     // Find linked students
-    const { data: links } = await supabase
-        .from('parent_student_links')
-        .select('student_id')
-        .eq('parent_id', user.id);
+    let studentIds: string[] = [];
+    try {
+        const { data: links, error: linkErr } = await supabase
+            .from('parent_student_links')
+            .select('student_id')
+            .eq('parent_id', user.id);
 
-    const studentIds = links?.map(l => l.student_id) || [];
+        if (!linkErr && links && links.length > 0) {
+            studentIds = links.map(l => l.student_id);
+        }
+    } catch {
+        // Table may not exist yet
+    }
+
+    // Fallback: check parent's metadata
+    if (studentIds.length === 0 && user.user_metadata?.student_ids) {
+        studentIds = Array.isArray(user.user_metadata.student_ids)
+            ? user.user_metadata.student_ids
+            : [user.user_metadata.student_ids];
+    }
 
     if (studentIds.length === 0) {
         return (

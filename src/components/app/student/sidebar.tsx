@@ -32,6 +32,8 @@ import {
   BrainCircuit,
   Video,
   Lock,
+  Bot,
+  Sparkles,
 } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
@@ -46,6 +48,7 @@ import { GlobalChatDrawer } from '@/components/chat/global-chat-drawer';
 
 const navItems = [
   { href: '/student', icon: LayoutDashboard, label: 'Dashboard' },
+  { href: '/student/ai-tutor', icon: Bot, label: 'AI Tutor' },
   { href: '/student/study-panel', icon: BrainCircuit, label: 'Study Panel' },
   { href: '/student/live-classes', icon: Video, label: 'Live Classes' },
   { href: '/student/community', icon: MessageSquare, label: 'Forums' },

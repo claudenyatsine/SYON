@@ -36,8 +36,13 @@ function ParentSidebar() {
             const { data: { user } } = await supabase.auth.getUser();
 
             if (user) {
-                const { data } = await supabase.from('profiles').select('full_name, avatar_url').eq('id', user.id).single();
+                const { data } = await supabase.from('profiles').select('full_name, avatar_url, role').eq('id', user.id).single();
                 if (data) {
+                    const userRole = data.role || user.user_metadata?.role || 'student';
+                    if (userRole !== 'parent') {
+                        router.push(`/${userRole}`);
+                        return;
+                    }
                     if (data.avatar_url) setAvatarUrl(data.avatar_url);
                     if (data.full_name) {
                         setUserName(data.full_name);

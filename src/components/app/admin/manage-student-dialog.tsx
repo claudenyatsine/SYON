@@ -21,6 +21,7 @@ import {
 } from 'lucide-react';
 import { CurriculumBoardBadge, SubjectLevelBadge } from '@/components/app/subject-badge';
 import { getCurriculumBoard, getSubjectLevel } from '@/utils/subject-utils';
+import { linkParentStudentAction, getLinkedParentForStudentAction } from '@/app/actions/parent-student';
 
 // ─────────────────────────────────────────────
 // Types
@@ -73,19 +74,19 @@ export function ManageStudentDialog({ student, onStudentRemoved }: ManageStudent
     const fetchData = React.useCallback(async () => {
         setLoadingCourses(true);
         try {
-            const [{ data: courses }, { data: enrollments }, { data: parents }, { data: links }] = await Promise.all([
+            const [{ data: courses }, { data: enrollments }, { data: parents }, linkedData] = await Promise.all([
                 supabase.from('subjects').select('id, name, level, category, curriculum_board').order('name'),
                 supabase.from('enrollments').select('id, subject_id, status').eq('student_id', student.id),
-                supabase.from('profiles').select('id, full_name').eq('role', 'Parent').order('full_name'),
-                supabase.from('parent_student_links').select('parent_id').eq('student_id', student.id).maybeSingle(),
+                supabase.from('profiles').select('id, full_name, email').eq('role', 'parent').order('full_name'),
+                getLinkedParentForStudentAction(student.id),
             ]);
             setAllCourses(courses || []);
             setEnrollmentsList(enrollments || []);
             setAllParents(parents || []);
             
-            if (links?.parent_id) {
-                setLinkedParentId(links.parent_id);
-                const p = parents?.find((x: any) => x.id === links.parent_id);
+            if (linkedData?.parentId) {
+                setLinkedParentId(linkedData.parentId);
+                const p = parents?.find((x: any) => x.id === linkedData.parentId);
                 if (p) setParentSearch(p.full_name || '');
             } else {
                 setLinkedParentId(null);
@@ -158,36 +159,53 @@ export function ManageStudentDialog({ student, onStudentRemoved }: ManageStudent
     // ── Link Parent ────────────────────────────────────────────────────────
     const handleLinkParent = async (parentId: string) => {
         setIsLinkingParent(true);
-        // If there's an existing link, we could update it, or delete and insert.
-        // Assuming 1 student has 1 parent here for simplicity (can expand if needed).
-        await supabase.from('parent_student_links').delete().eq('student_id', student.id);
+        const res = await linkParentStudentAction(parentId, student.id);
         
-        if (parentId && parentId !== 'unassigned') {
-            const { error } = await supabase.from('parent_student_links').insert({ parent_id: parentId, student_id: student.id });
-            if (error) {
-                toast({ title: 'Error linking parent', description: error.message, variant: 'destructive' });
-            } else {
-                setLinkedParentId(parentId);
-                toast({ title: 'Parent Linked', description: 'The parent has been successfully assigned to this student.' });
-            }
+        if (res.error) {
+            toast({ title: 'Error linking parent', description: res.error, variant: 'destructive' });
         } else {
-             setLinkedParentId(null);
-             toast({ title: 'Parent Unassigned', description: 'The parent has been removed from this student.' });
+            if (parentId && parentId !== 'unassigned') {
+                setLinkedParentId(parentId);
+                const p = allParents.find(x => x.id === parentId);
+                setParentSearch(p?.full_name || '');
+                toast({ title: 'Parent Linked', description: `${p?.full_name || 'Parent'} has been successfully assigned to this student.` });
+            } else {
+                setLinkedParentId(null);
+                setParentSearch('');
+                toast({ title: 'Parent Unassigned', description: 'The parent has been removed from this student.' });
+            }
         }
         setIsLinkingParent(false);
     };
 
     const handleApplyParentLink = () => {
-        if (!parentSearch.trim()) {
+        const query = parentSearch.trim().toLowerCase();
+        if (!query) {
             handleLinkParent('unassigned');
             return;
         }
-        const parent = allParents.find(p => p.full_name?.toLowerCase() === parentSearch.trim().toLowerCase());
+        
+        // Exact name, exact email, or fuzzy matching
+        const parent = allParents.find(p => {
+            const name = (p.full_name || '').toLowerCase();
+            const email = (p.email || '').toLowerCase();
+            if (name === query || email === query) return true;
+            if (name.includes(query) || query.includes(name)) return true;
+            const nameParts = name.split(/\s+/);
+            return nameParts.some((part: string) => part.length >= 3 && query.includes(part));
+        });
+
         if (parent) {
             handleLinkParent(parent.id);
-            setParentSearch(''); // clear search on success to avoid confusion
+            setParentSearch(parent.full_name || '');
         } else {
-            toast({ title: "Parent not found", description: "Please type the exact name of an existing parent.", variant: "destructive" });
+            toast({ 
+                title: "Parent not found", 
+                description: allParents.length === 0 
+                    ? "No parent accounts exist yet in the system." 
+                    : "Please select a registered parent from the suggestions.", 
+                variant: "destructive" 
+            });
         }
     };
 
@@ -420,24 +438,45 @@ export function ManageStudentDialog({ student, onStudentRemoved }: ManageStudent
                                         disabled={isLinkingParent}
                                         className="w-full bg-background"
                                     />
-                                    {showSuggestions && parentSearch.trim() && (
-                                        <div className="absolute z-10 w-full mt-1 bg-background border rounded-md shadow-lg max-h-40 overflow-y-auto">
+                                    {showSuggestions && (
+                                        <div className="absolute z-10 w-full mt-1 bg-background border rounded-md shadow-lg max-h-48 overflow-y-auto">
                                             {allParents
-                                                .filter(p => p.full_name?.toLowerCase().includes(parentSearch.toLowerCase()))
+                                                .filter(p => {
+                                                    if (!parentSearch.trim()) return true;
+                                                    const q = parentSearch.toLowerCase();
+                                                    const name = (p.full_name || '').toLowerCase();
+                                                    const email = (p.email || '').toLowerCase();
+                                                    return name.includes(q) || email.includes(q) || q.includes(name);
+                                                })
                                                 .map(p => (
                                                 <div 
                                                     key={p.id} 
-                                                    className="px-3 py-2 text-sm cursor-pointer hover:bg-muted"
-                                                    onClick={() => {
+                                                    className="px-3 py-2 text-sm cursor-pointer hover:bg-muted flex items-center justify-between border-b last:border-0"
+                                                    onMouseDown={(e) => {
+                                                        e.preventDefault();
                                                         setParentSearch(p.full_name || '');
                                                         setShowSuggestions(false);
+                                                        handleLinkParent(p.id);
                                                     }}
                                                 >
-                                                    {p.full_name}
+                                                    <div>
+                                                        <div className="font-medium text-foreground">{p.full_name}</div>
+                                                        {p.email && <div className="text-xs text-muted-foreground">{p.email}</div>}
+                                                    </div>
+                                                    <span className="text-[10px] text-primary font-semibold">Click to link</span>
                                                 </div>
                                             ))}
-                                            {allParents.filter(p => p.full_name?.toLowerCase().includes(parentSearch.toLowerCase())).length === 0 && (
-                                                <div className="px-3 py-2 text-sm text-muted-foreground italic">No matches found</div>
+                                            {allParents.length === 0 && (
+                                                <div className="px-3 py-2 text-sm text-muted-foreground italic">No registered parents found</div>
+                                            )}
+                                            {allParents.length > 0 && allParents.filter(p => {
+                                                if (!parentSearch.trim()) return true;
+                                                const q = parentSearch.toLowerCase();
+                                                const name = (p.full_name || '').toLowerCase();
+                                                const email = (p.email || '').toLowerCase();
+                                                return name.includes(q) || email.includes(q) || q.includes(name);
+                                            }).length === 0 && (
+                                                <div className="px-3 py-2 text-sm text-muted-foreground italic">No matches found for "{parentSearch}"</div>
                                             )}
                                         </div>
                                     )}

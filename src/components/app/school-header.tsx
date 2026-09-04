@@ -32,7 +32,7 @@ export function SchoolHeader() {
           action: (
             <ToastAction 
               altText="Join Now" 
-              onClick={() => router.push(`/classroom/${meetingId}?name=${profile?.full_name || 'Student'}&role=student`)}
+              onClick={() => router.push(`/classroom/${meetingId}?name=${profile?.full_name || 'User'}&role=${profile?.role || 'student'}`)}
               className="bg-primary text-primary-foreground hover:bg-primary/90"
             >
               <Video className="w-4 h-4 mr-1" />

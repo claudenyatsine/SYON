@@ -82,7 +82,7 @@ export default function AdminValidationPanel() {
             const { data: resourcesData, error: resourcesError } = await supabase
                 .from('resources')
                 .select(`
-                    id, title, format, type, file_url, created_at, source,
+                    id, title, format, type, file_url, created_at, source, description,
                     tutor:profiles!tutor_id(id, full_name),
                     subject:subjects!subject_id(name)
                 `);
@@ -91,7 +91,17 @@ export default function AdminValidationPanel() {
                 console.warn("Could not fetch resources:", resourcesError.message);
                 setPendingResources([]);
             } else {
-                setPendingResources(resourcesData || []);
+                const pending = (resourcesData || []).filter((r: any) => {
+                    if (r.description) {
+                        try {
+                            const meta = JSON.parse(r.description);
+                            if (meta.approval_status === 'pending_admin_review') return true;
+                            if (meta.approval_status === 'approved' || meta.approval_status === 'rejected') return false;
+                        } catch {}
+                    }
+                    return true;
+                });
+                setPendingResources(pending);
             }
 
         } catch (error: any) {

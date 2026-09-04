@@ -54,13 +54,30 @@ export async function updateSession(request: NextRequest) {
     !request.nextUrl.pathname.startsWith('/reset-password') &&
     !request.nextUrl.pathname.startsWith('/forgot-password') &&
     !request.nextUrl.pathname.startsWith('/classroom') &&
-    !request.nextUrl.pathname.startsWith('/api/agora') &&
+    !request.nextUrl.pathname.startsWith('/api') &&
     request.nextUrl.pathname !== '/'
   ) {
     // no user, potentially respond by redirecting the user to the login page
     const url = request.nextUrl.clone()
     url.pathname = '/login'
     return NextResponse.redirect(url)
+  }
+
+  // Role-based portal protection for authenticated users
+  if (user) {
+    const userRole = user.user_metadata?.role
+    const pathname = request.nextUrl.pathname
+    const portals = ['student', 'tutor', 'parent', 'admin']
+
+    for (const portal of portals) {
+      if (pathname === `/${portal}` || pathname.startsWith(`/${portal}/`)) {
+        if (userRole && userRole !== portal && portals.includes(userRole)) {
+          const url = request.nextUrl.clone()
+          url.pathname = `/${userRole}`
+          return NextResponse.redirect(url)
+        }
+      }
+    }
   }
 
   return supabaseResponse

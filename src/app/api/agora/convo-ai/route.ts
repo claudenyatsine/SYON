@@ -1,12 +1,22 @@
 import { NextResponse } from 'next/server';
 import { RtcTokenBuilder, RtcRole } from 'agora-access-token';
+import { buildAITutorSystemPrompt } from '@/lib/ai-tutor/system-prompts';
 
 // Agora Conversational AI API endpoint (v2)
 // Documentation: https://docs.agora.io/en/conversational-ai/rest-api/join
 
 export async function POST(req: Request) {
   try {
-    const { channelName, uid } = await req.json();
+    const { 
+      channelName, 
+      uid, 
+      subjectName, 
+      studentName, 
+      curriculumBoard, 
+      studentLevel, 
+      topic,
+      voice = 'alloy'
+    } = await req.json();
 
     if (!channelName) {
       return NextResponse.json({ error: 'Missing channelName' }, { status: 400 });
@@ -55,7 +65,17 @@ export async function POST(req: Request) {
 
     const agentName = `AI_Tutor_${channelName.replace(/[^a-zA-Z0-9_]/g, '_')}_${Date.now()}`;
 
-    // 3. Payload for Agora Conversational AI Agent v2 REST API
+    // 3. Build dynamic Socratic curriculum prompt
+    const systemPrompt = buildAITutorSystemPrompt({
+      studentName: studentName || 'Student',
+      curriculumBoard: curriculumBoard || 'ZIMSEC & Cambridge',
+      studentLevel: studentLevel || 'O-Level / A-Level',
+      subjectName: subjectName || 'General Studies',
+      topic: topic,
+      mode: 'socratic'
+    });
+
+    // 4. Payload for Agora Conversational AI Agent v2 REST API
     const payload = {
       name: agentName,
       properties: {
@@ -72,7 +92,7 @@ export async function POST(req: Request) {
           params: {
             key: OPENAI_API_KEY,
             model: 'tts-1',
-            voice: 'alloy',
+            voice: voice,
           },
         },
         llm: {
@@ -81,8 +101,7 @@ export async function POST(req: Request) {
           system_messages: [
             {
               role: 'system',
-              content:
-                'You are an expert AI teaching assistant inside a live online classroom for Dr Max LMS. You should be helpful, concise, and encourage students. If someone asks a question, answer clearly and keep responses brief for natural real-time voice conversation.',
+              content: systemPrompt,
             },
           ],
           params: {

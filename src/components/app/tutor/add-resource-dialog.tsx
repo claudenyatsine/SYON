@@ -31,6 +31,8 @@ export function AddResourceDialog({ tutorId, trigger }: {
     const [title, setTitle] = useState("");
     const [file, setFile] = useState<File | null>(null);
     
+    const [category, setCategory] = useState<'notes' | 'past_paper' | 'powerpoint' | 'voice_note' | 'recording'>('notes');
+    
     const supabase = createClient();
 
     useEffect(() => {
@@ -51,7 +53,19 @@ export function AddResourceDialog({ tutorId, trigger }: {
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files[0]) {
-            setFile(e.target.files[0]);
+            const selectedFile = e.target.files[0];
+            setFile(selectedFile);
+            
+            const ext = selectedFile.name.split('.').pop()?.toLowerCase() || '';
+            if (['ppt', 'pptx'].includes(ext)) {
+                setCategory('powerpoint');
+            } else if (['mp4', 'mov', 'avi', 'mkv', 'webm'].includes(ext)) {
+                setCategory('recording');
+            } else if (['mp3', 'wav', 'm4a', 'aac', 'ogg'].includes(ext)) {
+                setCategory('voice_note');
+            } else if (category !== 'past_paper') {
+                setCategory('notes');
+            }
         }
     };
 
@@ -73,24 +87,50 @@ export function AddResourceDialog({ tutorId, trigger }: {
                 .from('class_resources')
                 .getPublicUrl(filePath);
 
-            const ext = fileExt?.toLowerCase() || '';
-            let resourceType = 'article'; // Default fallback
-            if (ext === 'pdf') resourceType = 'pdf';
-            else if (['doc', 'docx'].includes(ext)) resourceType = 'word';
-            else if (['xls', 'xlsx'].includes(ext)) resourceType = 'excel';
-            else if (['ppt', 'pptx'].includes(ext)) resourceType = 'ppt';
-            else if (['mp4', 'mov', 'avi', 'mkv'].includes(ext)) resourceType = 'video';
-            else if (['mp3', 'wav'].includes(ext)) resourceType = 'mp3';
+            const rawExt = (fileExt?.toLowerCase() || 'pdf').replace(/^\./, '');
+            
+            // Map file extension to Postgres resource_format enum: ('pdf', 'video', 'word', 'excel', 'ppt', 'mp3')
+            let validFormat: 'pdf' | 'video' | 'word' | 'excel' | 'ppt' | 'mp3' = 'pdf';
+            if (['doc', 'docx', 'odt', 'rtf', 'txt'].includes(rawExt)) validFormat = 'word';
+            else if (['xls', 'xlsx', 'csv'].includes(rawExt)) validFormat = 'excel';
+            else if (['ppt', 'pptx'].includes(rawExt)) validFormat = 'ppt';
+            else if (['mp4', 'mov', 'avi', 'mkv', 'webm'].includes(rawExt)) validFormat = 'video';
+            else if (['mp3', 'wav', 'm4a', 'aac', 'ogg'].includes(rawExt)) validFormat = 'mp3';
+            else validFormat = 'pdf';
+
+            // Map to Postgres resource_type enum: ('notes', 'past_paper', 'powerpoint', 'voice_note', 'recording')
+            let validResourceType: 'notes' | 'past_paper' | 'powerpoint' | 'voice_note' | 'recording' = category;
+            if (category === 'past_paper') {
+                validResourceType = 'past_paper';
+            } else if (validFormat === 'ppt') {
+                validResourceType = 'powerpoint';
+            } else if (validFormat === 'video') {
+                validResourceType = 'recording';
+            } else if (validFormat === 'mp3') {
+                validResourceType = 'voice_note';
+            } else {
+                validResourceType = 'notes';
+            }
+
+            const fileSizeFormatted = file.size 
+                ? `${(file.size / (1024 * 1024)).toFixed(1)} MB` 
+                : undefined;
 
             const { error: insertError } = await supabase.from('resources').insert({
                 title: title,
-                format: ext || 'unknown',
-                type: resourceType,
+                format: validFormat,
+                type: validResourceType,
                 file_url: publicUrl,
+                file_size: fileSizeFormatted,
+                size_mb: file.size ? +(file.size / (1024 * 1024)).toFixed(2) : null,
                 subject_id: selectedSubjectId,
                 source: 'tutor_upload',
                 uploaded_by: tutorId,
-                tutor_id: tutorId
+                tutor_id: tutorId,
+                description: JSON.stringify({
+                    approval_status: 'pending_admin_review',
+                    submitted_at: new Date().toISOString()
+                })
             });
 
             if (insertError) throw insertError;
@@ -104,6 +144,7 @@ export function AddResourceDialog({ tutorId, trigger }: {
             setTitle("");
             setFile(null);
             setSelectedSubjectId("");
+            setCategory('notes');
         } catch (err: any) {
             console.error("Failed to upload resource:", err);
             toast({
@@ -160,6 +201,22 @@ export function AddResourceDialog({ tutorId, trigger }: {
                             value={title}
                             onChange={(e) => setTitle(e.target.value)}
                         />
+                    </div>
+                    
+                    <div className="grid gap-2">
+                        <Label>Resource Category</Label>
+                        <Select value={category} onValueChange={(val: any) => setCategory(val)}>
+                            <SelectTrigger>
+                                <SelectValue placeholder="Select type..." />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="notes">Study Notes / Revision Guide</SelectItem>
+                                <SelectItem value="past_paper">Past Exam Paper / Assessment</SelectItem>
+                                <SelectItem value="powerpoint">Presentation / Slides</SelectItem>
+                                <SelectItem value="voice_note">Audio / Voice Note</SelectItem>
+                                <SelectItem value="recording">Recorded Class / Video</SelectItem>
+                            </SelectContent>
+                        </Select>
                     </div>
                     
                     <div className="grid gap-2">

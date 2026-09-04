@@ -674,9 +674,24 @@ export default function StudentSubjectDashboardPage() {
                     >
                       <Video size={12} /> Request 1-on-1 Class
                     </button>
+
+                    <Link 
+                      href="/student/ai-tutor"
+                      className="bg-gold/15 hover:bg-gold/25 text-gold border border-gold/30 px-2.5 py-0.5 rounded-lg text-[11px] font-bold flex items-center gap-1.5 transition-all hover:scale-105"
+                    >
+                      <Sparkles size={12} className="text-gold animate-pulse" /> Ask AI Tutor
+                    </Link>
                   </div>
                 ) : (
-                  <p className="text-xs text-muted-foreground">Personal 1-on-1 Tutoring Hub • {getCurriculumBoard(currentSubject)} Curriculum</p>
+                  <div className="flex items-center gap-3 mt-1 flex-wrap">
+                    <p className="text-xs text-muted-foreground">Personal 1-on-1 Tutoring Hub • {getCurriculumBoard(currentSubject)} Curriculum</p>
+                    <Link 
+                      href="/student/ai-tutor"
+                      className="bg-gold/15 hover:bg-gold/25 text-gold border border-gold/30 px-2.5 py-0.5 rounded-lg text-[11px] font-bold flex items-center gap-1.5 transition-all hover:scale-105"
+                    >
+                      <Sparkles size={12} className="text-gold animate-pulse" /> Ask AI Tutor
+                    </Link>
+                  </div>
                 )}
               </div>
             </div>

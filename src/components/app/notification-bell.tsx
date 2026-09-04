@@ -8,7 +8,7 @@ import { useUser } from '@/components/providers/user-context';
 import { useEffect, useState } from 'react';
 
 export function NotificationBell() {
-  const { user } = useUser();
+  const { user, profile } = useUser();
   const [isAlertVisible, setIsAlertVisible] = useState(false);
 
   useEffect(() => {
@@ -19,6 +19,8 @@ export function NotificationBell() {
   }, [user]);
 
   const hasNotifications = isAlertVisible;
+  const userRole = profile?.role || user?.user_metadata?.role || 'student';
+  const settingsUrl = `/${userRole}/settings?tab=security`;
 
   return (
     <Popover>
@@ -50,7 +52,7 @@ export function NotificationBell() {
                     </div>
                   </div>
                   <Button asChild className="w-full bg-gold/50 dark:bg-gold/50 hover:bg-gold dark:hover:bg-gold/10 text-gold dark:text-gold text-[11px] font-bold py-2 rounded-xl transition-colors h-auto uppercase tracking-wide">
-                    <Link href="/student/settings?tab=security">Setup Password</Link>
+                    <Link href={settingsUrl}>Setup Password</Link>
                   </Button>
                 </div>
              )}

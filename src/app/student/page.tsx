@@ -10,12 +10,23 @@ import {
 } from '@/components/ui/card';
 import { 
   BrainCircuit, Lightbulb, Video, Calendar, Clock, Shield, Search, Bell, Sparkles, 
-  ChevronRight, BookOpen, ShieldAlert, X, MoreVertical, MessageCircle
+  ChevronRight, BookOpen, ShieldAlert, X, MoreVertical, MessageCircle,
+  Bot, Send, Loader2, Copy, Check, ExternalLink, RotateCcw, Volume2
 } from 'lucide-react';
 import Link from 'next/link';
 import { DetailedProgressCard } from "@/components/app/student/dashboard/subject-progress-card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import { cn } from "@/lib/utils";
 import Image from "next/image";
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { SchoolHeader } from '@/components/app/school-header';
@@ -56,26 +67,286 @@ function AiStudyPanel() {
 }
 
 function AiTutorAssistant({ courses }: { courses: any[] }) {
+  const { profile } = useUser();
+  const [query, setQuery] = useState('');
+  const [isOpen, setIsOpen] = useState(false);
+  const [selectedSubject, setSelectedSubject] = useState<string>('all');
+  const [messages, setMessages] = useState<{ role: 'user' | 'assistant'; content: string; time: string }[]>([]);
+  const [isTyping, setIsTyping] = useState(false);
+  const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
+
+  const handleAsk = async (text?: string) => {
+    const q = text || query.trim();
+    if (!q || isTyping) return;
+
+    const userMsg = {
+      role: 'user' as const,
+      content: q,
+      time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+    };
+
+    setMessages(prev => [...prev, userMsg]);
+    setQuery('');
+    setIsOpen(true);
+    setIsTyping(true);
+
+    try {
+      const activeSub = courses.find(c => c.id === selectedSubject || c.name === selectedSubject);
+      const res = await fetch('/api/ai-tutor/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          messages: [...messages, userMsg],
+          context: {
+            studentName: profile?.full_name || 'Student',
+            curriculumBoard: 'ZIMSEC & Cambridge',
+            subjectName: activeSub?.name || 'General Studies',
+            mode: 'socratic',
+          },
+        }),
+      });
+
+      const data = await res.json();
+      setMessages(prev => [
+        ...prev,
+        {
+          role: 'assistant',
+          content: data.reply || 'I am ready to help you with your question!',
+          time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        },
+      ]);
+    } catch (e) {
+      console.error('[AI Tutor Assistant Error]:', e);
+      setMessages(prev => [
+        ...prev,
+        {
+          role: 'assistant',
+          content: 'Sorry, I could not generate an answer right now. Please check your network or try again.',
+          time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        },
+      ]);
+    } finally {
+      setIsTyping(false);
+    }
+  };
+
+  const handleCopy = (idx: number, text: string) => {
+    navigator.clipboard.writeText(text);
+    setCopiedIndex(idx);
+    setTimeout(() => setCopiedIndex(null), 2000);
+  };
+
   return (
-    <motion.div layout className="bg-background backdrop-blur-xl rounded-[1.5rem] p-5 border border-gold/20 shadow-[0_8px_30px_rgb(0,0,0,0.04)] transition-transform duration-300 hover:-translate-y-1">
-      <div className="flex items-center gap-3 mb-3">
-         <div className="bg-gold dark:bg-gold/30 p-2 rounded-xl">
-           <Lightbulb className="w-4 h-4 text-gold dark:text-gold" />
-         </div>
-         <h3 className="font-bold text-sm">AI Tutor Assistant</h3>
-      </div>
-      <p className="text-[13px] text-muted-foreground mb-4">Have a quick question? Your AI tutor is ready to help instantly.</p>
-      <div className="relative">
-        <input 
-          type="text" 
-          placeholder="Ask anything..." 
-          className="w-full bg-muted/80 dark:bg-background/80 border-none rounded-xl py-2.5 pl-4 pr-10 text-sm focus:ring-2 focus:ring-primary outline-none transition-all"
-        />
-        <button className="absolute right-1.5 top-1/2 -translate-y-1/2 bg-primary text-foreground p-1.5 rounded-lg hover:scale-105 transition-transform">
-          <ChevronRight className="w-3.5 h-3.5" />
-        </button>
-      </div>
-    </motion.div>
+    <>
+      <motion.div
+        layout
+        className="bg-background backdrop-blur-xl rounded-[1.5rem] p-5 border border-gold/20 shadow-[0_8px_30px_rgb(0,0,0,0.04)] transition-transform duration-300 hover:-translate-y-1 relative group"
+      >
+        <div className="flex items-center justify-between gap-3 mb-3">
+          <div className="flex items-center gap-3">
+            <div className="bg-gold dark:bg-gold/30 p-2 rounded-xl">
+              <Lightbulb className="w-4 h-4 text-gold dark:text-gold" />
+            </div>
+            <h3 className="font-bold text-sm">AI Tutor Assistant</h3>
+          </div>
+          <Link
+            href="/student/ai-tutor"
+            className="text-[11px] font-semibold text-gold hover:underline inline-flex items-center gap-1 opacity-80 group-hover:opacity-100 transition-opacity"
+          >
+            <span>Full Hub</span>
+            <ExternalLink className="w-3 h-3" />
+          </Link>
+        </div>
+
+        <p className="text-[13px] text-muted-foreground mb-3">
+          Have a quick question? Your AI tutor is ready to help instantly.
+        </p>
+
+        {/* Quick prompt chips */}
+        <div className="flex items-center gap-1.5 flex-wrap mb-3.5">
+          <button
+            onClick={() => handleAsk('Quiz me on 2 exam questions for my courses')}
+            className="px-2.5 py-1 bg-muted hover:bg-muted/80 border border-border rounded-full text-[10px] font-medium text-foreground/ transition-colors"
+          >
+            📝 Exam Quiz
+          </button>
+          <button
+            onClick={() => handleAsk('Explain a key scientific or math concept')}
+            className="px-2.5 py-1 bg-muted hover:bg-muted/80 border border-border rounded-full text-[10px] font-medium text-foreground/ transition-colors"
+          >
+            💡 Explain Concept
+          </button>
+          <button
+            onClick={() => handleAsk('Give me a revision summary for my enrolled subjects')}
+            className="px-2.5 py-1 bg-muted hover:bg-muted/80 border border-border rounded-full text-[10px] font-medium text-foreground/ transition-colors"
+          >
+            ⚡ Revision Summary
+          </button>
+        </div>
+
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            handleAsk();
+          }}
+          className="relative"
+        >
+          <input
+            type="text"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Ask anything..."
+            className="w-full bg-muted/80 dark:bg-background/80 border-none rounded-xl py-2.5 pl-4 pr-10 text-sm focus:ring-2 focus:ring-primary outline-none transition-all"
+          />
+          <button
+            type="submit"
+            disabled={isTyping}
+            className="absolute right-1.5 top-1/2 -translate-y-1/2 bg-primary text-foreground p-1.5 rounded-lg hover:scale-105 transition-transform disabled:opacity-50"
+          >
+            {isTyping ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <ChevronRight className="w-3.5 h-3.5" />}
+          </button>
+        </form>
+      </motion.div>
+
+      {/* Interactive AI Tutor Modal Dialog */}
+      <Dialog open={isOpen} onOpenChange={setIsOpen}>
+        <DialogContent className="sm:max-w-2xl bg-card border-border rounded-[2rem] p-6 shadow-2xl max-h-[85vh] flex flex-col">
+          <DialogHeader className="border-b border-border pb-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-2xl bg-gold/15 border border-gold/30 flex items-center justify-center">
+                  <Bot className="w-5 h-5 text-gold" />
+                </div>
+                <div>
+                  <DialogTitle className="text-base font-bold text-foreground flex items-center gap-2">
+                    Dr Max AI Tutor
+                    <Badge variant="outline" className="text-[10px] border-gold text-gold font-normal">
+                      Socratic Mode
+                    </Badge>
+                  </DialogTitle>
+                  <DialogDescription className="text-xs text-muted-foreground">
+                    ZIMSEC & Cambridge Curriculum-Aligned Assistant
+                  </DialogDescription>
+                </div>
+              </div>
+
+              <Button variant="ghost" size="sm" asChild className="text-xs rounded-xl text-gold hover:bg-gold/10 gap-1.5">
+                <Link href="/student/ai-tutor">
+                  <span>Open Voice & Hub</span>
+                  <ExternalLink className="w-3.5 h-3.5" />
+                </Link>
+              </Button>
+            </div>
+          </DialogHeader>
+
+          {/* Conversation History */}
+          <div className="flex-1 overflow-y-auto p-2 space-y-4 my-2 min-h-[260px] max-h-[400px]">
+            {messages.length === 0 ? (
+              <div className="flex flex-col items-center justify-center py-12 text-center text-muted-foreground space-y-3">
+                <Bot className="w-10 h-10 text-gold/60 animate-bounce" />
+                <p className="text-sm font-medium text-foreground">What would you like to master today?</p>
+                <p className="text-xs max-w-sm">Type any question, paste a problem, or ask for an exam past paper practice test.</p>
+              </div>
+            ) : (
+              messages.map((m, idx) => (
+                <div
+                  key={idx}
+                  className={cn(
+                    'flex items-start gap-3 max-w-[90%]',
+                    m.role === 'user' ? 'ml-auto flex-row-reverse' : 'mr-auto'
+                  )}
+                >
+                  <Avatar className="w-7 h-7 shrink-0 border border-border">
+                    {m.role === 'user' ? (
+                      <>
+                        <AvatarImage src={profile?.avatar_url || ''} />
+                        <AvatarFallback className="bg-primary text-primary-foreground text-xs font-bold">
+                          {profile?.full_name?.charAt(0) || 'U'}
+                        </AvatarFallback>
+                      </>
+                    ) : (
+                      <AvatarFallback className="bg-gold/20 text-gold text-xs font-bold">AI</AvatarFallback>
+                    )}
+                  </Avatar>
+
+                  <div className="space-y-1">
+                    <div
+                      className={cn(
+                        'p-3.5 rounded-2xl text-xs sm:text-sm leading-relaxed whitespace-pre-wrap select-text shadow-sm',
+                        m.role === 'user'
+                          ? 'bg-foreground text-background dark:bg-white dark:text-black rounded-tr-none font-medium'
+                          : 'bg-muted/80 text-foreground border border-border rounded-tl-none'
+                      )}
+                    >
+                      {m.content}
+                    </div>
+                    {m.role === 'assistant' && (
+                      <div className="flex items-center gap-2 px-1 text-[10px] text-muted-foreground">
+                        <span>{m.time}</span>
+                        <span>•</span>
+                        <button
+                          onClick={() => handleCopy(idx, m.content)}
+                          className="hover:text-foreground inline-flex items-center gap-1 transition-colors"
+                        >
+                          {copiedIndex === idx ? (
+                            <>
+                              <Check className="w-3 h-3 text-emerald-500" />
+                              <span>Copied</span>
+                            </>
+                          ) : (
+                            <>
+                              <Copy className="w-3 h-3" />
+                              <span>Copy</span>
+                            </>
+                          )}
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ))
+            )}
+
+            {isTyping && (
+              <div className="flex items-center gap-3 mr-auto">
+                <Avatar className="w-7 h-7 shrink-0 border border-border">
+                  <AvatarFallback className="bg-gold/20 text-gold text-xs font-bold">AI</AvatarFallback>
+                </Avatar>
+                <div className="bg-muted p-3 px-4 rounded-2xl rounded-tl-none border border-border flex items-center gap-2">
+                  <div className="w-1.5 h-1.5 rounded-full bg-gold animate-bounce" />
+                  <div className="w-1.5 h-1.5 rounded-full bg-gold animate-bounce [animation-delay:0.2s]" />
+                  <div className="w-1.5 h-1.5 rounded-full bg-gold animate-bounce [animation-delay:0.4s]" />
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Dialog Input Footer */}
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleAsk();
+            }}
+            className="flex items-center gap-2 pt-3 border-t border-border"
+          >
+            <Input
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Ask a follow-up question..."
+              className="flex-1 bg-muted/60 border-border rounded-xl h-11 text-xs sm:text-sm focus-visible:ring-gold"
+            />
+            <Button
+              type="submit"
+              disabled={!query.trim() || isTyping}
+              className="h-11 px-5 rounded-xl bg-gold text-[#0B0C10] hover:bg-gold/90 font-bold gap-2"
+            >
+              {isTyping ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
+              <span>Send</span>
+            </Button>
+          </form>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 }
 
