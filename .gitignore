@@ -44,3 +44,9 @@ next-env.d.ts
 firebase-debug.log*
 firestore-debug.log*
 ui-debug.log*
+
+# agents and IDE
+.agents/
+.claude/
+agent/
+skills-lock.json

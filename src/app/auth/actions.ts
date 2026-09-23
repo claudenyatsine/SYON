@@ -6,6 +6,16 @@ import { createClient } from '@/utils/supabase/server'
 import { createAdminClient } from '@/utils/supabase/admin'
 
 export async function login(formData: FormData) {
+  const rawUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL || ''
+  const rawAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY || ''
+
+  if (!rawUrl || !rawAnonKey || rawAnonKey.includes('placeholder') || rawUrl.includes('placeholder')) {
+    console.error('[Auth Error] Supabase environment variables are missing or misconfigured in Vercel.')
+    return {
+      error: 'Authentication configuration error: NEXT_PUBLIC_SUPABASE_URL or NEXT_PUBLIC_SUPABASE_ANON_KEY is missing or unconfigured in your Vercel deployment settings.'
+    }
+  }
+
   const supabase = await createClient()
 
   const role = formData.get('role') as string
@@ -17,12 +27,25 @@ export async function login(formData: FormData) {
   const { data, error } = await supabase.auth.signInWithPassword(authData)
 
   if (error) {
+    if (error.message.toLowerCase().includes('invalid api key')) {
+      console.error('[Auth Error] Supabase returned "Invalid API key". Check NEXT_PUBLIC_SUPABASE_ANON_KEY in Vercel project environment variables.')
+      return {
+        error: 'Invalid API key: The Supabase API key (NEXT_PUBLIC_SUPABASE_ANON_KEY) configured in Vercel is invalid or expired. Please verify it in your Supabase Dashboard (Project Settings > API) and update Vercel.'
+      }
+    }
     return { error: error.message }
   }
 
-  // Fetch profile via admin client to avoid any RLS blockages
-  const adminClient = createAdminClient()
-  let { data: profile } = await adminClient
+  // Fetch profile via admin client if available, falling back to authenticated client
+  let adminClient = null
+  try {
+    adminClient = createAdminClient()
+  } catch (adminErr) {
+    console.warn('[Auth Warning] Supabase admin client unavailable, using authenticated client:', adminErr)
+  }
+
+  const dbClient = adminClient || supabase
+  let { data: profile } = await dbClient
     .from('profiles')
     .select('*')
     .eq('id', data.user.id)
@@ -34,7 +57,7 @@ export async function login(formData: FormData) {
   // and is logging into that matching portal, but the database profile defaulted to 'student'
   // or was missing, heal the profile record in the database immediately.
   if (metaRole && role && metaRole === role && profile?.role !== metaRole) {
-    await adminClient.from('profiles').upsert({
+    await dbClient.from('profiles').upsert({
       id: data.user.id,
       email: data.user.email,
       full_name: data.user.user_metadata?.full_name || profile?.full_name || data.user.email?.split('@')[0],
@@ -57,7 +80,7 @@ export async function login(formData: FormData) {
 
   // Ensure profile exists if it was completely missing
   if (!profile) {
-    await adminClient.from('profiles').upsert({
+    await dbClient.from('profiles').upsert({
       id: data.user.id,
       email: data.user.email,
       role: userRole,
@@ -107,7 +130,7 @@ export async function signup(formData: FormData) {
   }
 
   // Immediately ensure the profile record exists with the EXACT chosen role using Admin Client
-  // to prevent DB default triggers or RLS from defaulting the user to 'student'.
+  // or fallback to authenticated client if admin client is unavailable.
   if (data.user) {
     try {
       const adminClient = createAdminClient()
@@ -120,7 +143,19 @@ export async function signup(formData: FormData) {
         updated_at: new Date().toISOString()
       }, { onConflict: 'id' })
     } catch (upsertErr) {
-      console.error('[Signup] Error persisting chosen role to profile:', upsertErr)
+      console.warn('[Signup] Admin client unavailable, trying authenticated client:', upsertErr)
+      try {
+        await supabase.from('profiles').upsert({
+          id: data.user.id,
+          email: email,
+          full_name: fullName || email.split('@')[0],
+          role: role,
+          is_approved: false,
+          updated_at: new Date().toISOString()
+        }, { onConflict: 'id' })
+      } catch (clientUpsertErr) {
+        console.error('[Signup] Error persisting chosen role to profile:', clientUpsertErr)
+      }
     }
   }
 
