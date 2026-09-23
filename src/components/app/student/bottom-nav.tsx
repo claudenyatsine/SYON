@@ -10,6 +10,7 @@ const navItems = [
   { href: '/student/study-panel', icon: BrainCircuit, label: 'Study' },
   { href: '/student/resources', icon: Library, label: 'Resources' },
   { href: '/student/progress', icon: BarChart, label: 'Progress' },
+  { href: '/student/settings', icon: Settings, label: 'Settings' },
 ];
 
 export function BottomNav() {

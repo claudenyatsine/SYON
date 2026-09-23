@@ -34,6 +34,73 @@ function NotificationSettings() {
     );
 }
 
+import { useTheme } from 'next-themes';
+import { Moon, Sun, Monitor } from 'lucide-react';
+
+function AppearanceSettings() {
+    const { theme, setTheme } = useTheme();
+
+    return (
+        <Card>
+            <CardHeader>
+                <CardTitle>Appearance</CardTitle>
+                <CardDescription>Customize the look and feel of your app on this device.</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <button
+                        type="button"
+                        onClick={() => setTheme('dark')}
+                        className={`p-4 rounded-xl border flex flex-col items-center gap-3 transition-all ${
+                            theme === 'dark' 
+                                ? 'border-[#D4AF37] bg-[#D4AF37]/10 text-foreground ring-1 ring-[#D4AF37]' 
+                                : 'border-border bg-card hover:bg-muted/50 text-muted-foreground'
+                        }`}
+                    >
+                        <Moon className="w-6 h-6 text-[#D4AF37]" />
+                        <div className="text-center">
+                            <p className="text-sm font-bold text-foreground">Dark Theme</p>
+                            <p className="text-xs text-muted-foreground">Default sleek dark mode</p>
+                        </div>
+                    </button>
+
+                    <button
+                        type="button"
+                        onClick={() => setTheme('light')}
+                        className={`p-4 rounded-xl border flex flex-col items-center gap-3 transition-all ${
+                            theme === 'light' 
+                                ? 'border-[#D4AF37] bg-[#D4AF37]/10 text-foreground ring-1 ring-[#D4AF37]' 
+                                : 'border-border bg-card hover:bg-muted/50 text-muted-foreground'
+                        }`}
+                    >
+                        <Sun className="w-6 h-6 text-amber-500" />
+                        <div className="text-center">
+                            <p className="text-sm font-bold text-foreground">Light Theme</p>
+                            <p className="text-xs text-muted-foreground">Clean light interface</p>
+                        </div>
+                    </button>
+
+                    <button
+                        type="button"
+                        onClick={() => setTheme('system')}
+                        className={`p-4 rounded-xl border flex flex-col items-center gap-3 transition-all ${
+                            theme === 'system' 
+                                ? 'border-[#D4AF37] bg-[#D4AF37]/10 text-foreground ring-1 ring-[#D4AF37]' 
+                                : 'border-border bg-card hover:bg-muted/50 text-muted-foreground'
+                        }`}
+                    >
+                        <Monitor className="w-6 h-6 text-blue-400" />
+                        <div className="text-center">
+                            <p className="text-sm font-bold text-foreground">System Default</p>
+                            <p className="text-xs text-muted-foreground">Follow OS settings</p>
+                        </div>
+                    </button>
+                </div>
+            </CardContent>
+        </Card>
+    );
+}
+
 function AccountSettings() {
     return (
          <Card>
@@ -64,13 +131,17 @@ export default function TutorSettingsPage() {
                 <p className="text-muted-foreground">Manage your account and preferences.</p>
             </div>
             <Tabs defaultValue="profile">
-                <TabsList className="mb-6">
+                <TabsList className="mb-6 flex-wrap">
                     <TabsTrigger value="profile">Profile</TabsTrigger>
+                    <TabsTrigger value="appearance">Appearance</TabsTrigger>
                     <TabsTrigger value="notifications">Notifications</TabsTrigger>
                     <TabsTrigger value="account">Account</TabsTrigger>
                 </TabsList>
                 <TabsContent value="profile">
                     <ProfileSettings />
+                </TabsContent>
+                <TabsContent value="appearance">
+                    <AppearanceSettings />
                 </TabsContent>
                 <TabsContent value="notifications">
                     <NotificationSettings />
