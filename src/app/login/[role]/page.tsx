@@ -13,6 +13,7 @@ import {
 } from '@/components/ui/dialog';
 import { ArrowLeft, GraduationCap, Briefcase, Shield, UserCog, Eye, Fingerprint, Loader2, KeyRound, Mail, CheckCircle2 } from 'lucide-react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useRouter, useParams, useSearchParams } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
@@ -314,10 +315,47 @@ export default function RoleLoginPage() {
 
       {/* Right Column - Form */}
       <div className="flex items-center justify-center p-6 lg:p-10 bg-background overflow-y-auto">
-        <div className="w-full max-w-md space-y-4">
+        <div className="w-full max-w-md space-y-4 py-4 sm:py-0">
+          {/* Mobile Branding (Visible only on mobile/tablet) */}
+          <div className="flex lg:hidden items-center justify-center gap-2.5 mb-2">
+            <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center p-1 shadow-sm">
+              <Image src="/logo.png" alt="Dr Max Logo" width={24} height={24} className="object-contain" />
+            </div>
+            <h2 className="text-xl font-bold tracking-tight text-foreground">Dr Max</h2>
+          </div>
+
+          {/* Mobile Role Switcher */}
+          <div className="flex lg:hidden flex-col gap-1.5 pb-1">
+            <div className="flex items-center justify-between text-xs text-muted-foreground font-medium px-0.5">
+              <span>Select Role</span>
+              <span className="text-gold font-semibold">{displayRole}</span>
+            </div>
+            <div className="grid grid-cols-4 gap-1.5 bg-muted/60 p-1 rounded-2xl border border-border">
+              {roles.map((r) => {
+                const isSelected = role === r.id;
+                const IconComponent = r.icon;
+                return (
+                  <button
+                    key={r.id}
+                    type="button"
+                    onClick={() => router.push(`/login/${r.id}`)}
+                    className={`flex flex-col items-center justify-center py-2 px-1 rounded-xl transition-all duration-200 gap-1 text-[11px] font-semibold ${
+                      isSelected
+                        ? 'bg-gold text-obsidian shadow-md shadow-gold/20 scale-[1.02]'
+                        : 'text-muted-foreground hover:text-foreground hover:bg-background/40'
+                    }`}
+                  >
+                    <IconComponent className={`w-4 h-4 ${isSelected ? 'text-obsidian' : 'text-muted-foreground'}`} />
+                    <span className="truncate max-w-full">{r.name}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
           <div className="text-center space-y-1">
             <h2 className="text-2xl font-bold text-foreground">Login as {displayRole}</h2>
-            <p className="text-foreground/ text-xs">Enter your credentials to access your account.</p>
+            <p className="text-foreground/70 text-xs">Enter your credentials to access your account.</p>
           </div>
 
           {errorMessage && (
