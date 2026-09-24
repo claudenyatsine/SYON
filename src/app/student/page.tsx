@@ -574,29 +574,25 @@ export default function StudentDashboardPage() {
             ========================================= */}
         <main className="flex flex-col gap-8 h-full pr-2 pb-24 lg:pb-0">
           
-          <div className="flex items-center justify-between sm:hidden mb-2">
-            <div className="flex items-center gap-3">
-              <Avatar className="h-10 w-10 border border-border">
+          <div className="flex items-center justify-between sm:hidden pt-1 pb-2">
+            <div className="flex items-center gap-2.5">
+              <Avatar className="h-9 w-9 border border-border shrink-0">
                 <AvatarImage src={profile?.avatar_url || `https://api.dicebear.com/7.x/avataaars/svg?seed=${userName}`} alt={userName} />
                 <AvatarFallback>{userName[0]?.toUpperCase()}</AvatarFallback>
               </Avatar>
               <div>
-                <p className="text-sm text-muted-foreground leading-none">Good morning,</p>
-                <h1 className="text-lg font-bold">Hi, {userName.split(' ')[0]}</h1>
+                <p className="text-[11px] text-muted-foreground leading-none">Good day,</p>
+                <h1 className="text-base font-bold leading-tight">Hi, {userName.split(' ')[0]}</h1>
               </div>
             </div>
-            <div className="flex items-center gap-2">
-              <Button variant="ghost" size="icon" className="rounded-full bg-secondary/50">
-                <Search className="w-4 h-4 text-muted-foreground" />
-              </Button>
+            <div className="flex items-center gap-1.5">
               <GlobalChatDrawer 
                 trigger={
-                  <Button variant="ghost" size="icon" className="rounded-full bg-secondary/50 relative hover:bg-secondary transition-colors" title="Open Messages">
+                  <Button variant="ghost" size="icon" className="h-9 w-9 rounded-full bg-secondary/40 relative hover:bg-secondary transition-colors" title="Open Messages">
                     <MessageCircle className="w-4 h-4 text-muted-foreground hover:text-foreground" />
                   </Button>
                 } 
               />
-              <NotificationBell />
             </div>
           </div>
 
