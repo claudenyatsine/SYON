@@ -1,4 +1,26 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+  viewportFit: 'cover',
+  themeColor: '#0f0f11',
+};
+
+export const metadata: Metadata = {
+  title: 'Dr Max online school',
+  description: 'The future of personalized digital learning.',
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'black-translucent',
+    title: 'Dr Max',
+  },
+  formatDetection: {
+    telephone: false,
+  },
+};
 import './globals.css';
 import '@/lib/server-polyfill';
 import { Toaster } from '@/components/ui/toaster';
@@ -20,10 +42,7 @@ const spaceGrotesk = Space_Grotesk({
   display: 'swap',
 });
 
-export const metadata: Metadata = {
-  title: 'Dr Max online school',
-  description: 'The future of personalized digital learning.',
-};
+
 
 // NOTE: force-dynamic has been moved to individual route layouts/pages that
 // actually need server-side rendering (tutor, student, admin, classroom).

@@ -3,6 +3,7 @@ import { SidebarProvider, SidebarInset } from '@/components/ui/sidebar';
 import { Suspense } from 'react';
 import { PreviewBanner } from '@/components/app/preview-banner';
 import { BottomNav } from '@/components/app/student/bottom-nav';
+import { StudentMobileHeader } from '@/components/app/student/student-mobile-header';
 import { createClient } from '@/utils/supabase/server';
 import { redirect } from 'next/navigation';
 
@@ -39,8 +40,9 @@ export default async function StudentLayout({
       <StudentSidebar />
       <SidebarInset className="relative">
         <PreviewBanner />
+        <StudentMobileHeader />
         {/* Main Content Area - Add bottom padding on mobile to account for BottomNav */}
-        <main className="flex-1 p-4 pb-28 sm:p-6 sm:pb-6">
+        <main className="flex-1 p-3 pb-24 sm:p-6 sm:pb-6">
           <Suspense>{children}</Suspense>
         </main>
         {/* Mobile Bottom Navigation */}

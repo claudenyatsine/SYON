@@ -2,9 +2,30 @@
 @tailwind components;
 @tailwind utilities;
 
-/* ── Global density: scale every rem-based utility down ── */
+/* ── Global density & Mobile Native Feel ── */
 html {
-  font-size: 11.5px; /* 13px → 11.5px (another ~10% reduction) */
+  font-size: 13.5px;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  overflow-x: hidden;
+}
+
+@media (min-width: 640px) {
+  html {
+    font-size: 12.5px;
+  }
+}
+
+@media (min-width: 1024px) {
+  html {
+    font-size: 11.5px;
+  }
+}
+
+body {
+  overscroll-behavior-y: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 @layer base {

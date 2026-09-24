@@ -51,18 +51,18 @@ export function SchoolHeader() {
 
   return (
     <Card className="border-none shadow-none bg-transparent">
-      <CardContent className="flex items-center justify-between p-0 pb-6">
-        <div className="flex items-center gap-6">
-          <Avatar className="h-16 w-16 border bg-white p-1">
+      <CardContent className="flex items-center justify-between p-0 pb-4 sm:pb-6 gap-3">
+        <div className="flex items-center gap-3 sm:gap-6 min-w-0">
+          <Avatar className="h-10 w-10 sm:h-16 sm:w-16 border bg-white p-1 shrink-0 rounded-xl sm:rounded-2xl shadow-sm">
             <AvatarImage src="/logo.png" alt="Dr Max online school Logo" className="object-contain" />
             <AvatarFallback>{avatarFallback}</AvatarFallback>
           </Avatar>
-          <div>
-            <h2 className="text-2xl font-bold">{schoolName}</h2>
-            <p className="text-muted-foreground italic text-sm">"{schoolMantra}"</p>
+          <div className="min-w-0">
+            <h2 className="text-base sm:text-2xl font-bold truncate leading-tight">{schoolName}</h2>
+            <p className="text-muted-foreground italic text-[11px] sm:text-sm line-clamp-1">"{schoolMantra}"</p>
           </div>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 shrink-0">
           <NotificationBell />
         </div>
       </CardContent>

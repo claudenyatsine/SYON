@@ -17,32 +17,33 @@ export function BottomNav() {
   const pathname = usePathname();
 
   return (
-    <div className="fixed bottom-6 left-4 right-4 z-50 sm:hidden">
-      <nav className="flex items-center justify-between bg-background dark:bg-[#1C1C1C] px-6 py-4 rounded-[2rem] shadow-2xl border border-border dark:border-border">
-        {navItems.map((item) => {
-          const isActive = pathname === item.href;
-          return (
-            <Link 
-              key={item.href} 
-              href={item.href}
-              className="relative flex flex-col items-center justify-center w-12 h-12"
-            >
-              <div
+    <div className="fixed bottom-0 left-0 right-0 z-50 sm:hidden pointer-events-none pb-[env(safe-area-inset-bottom,0px)]">
+      <div className="p-3 pointer-events-auto">
+        <nav className="flex items-center justify-around bg-card/90 dark:bg-[#18181b]/95 backdrop-blur-2xl px-2 py-2 rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.35)] border border-border/80 dark:border-white/10">
+          {navItems.map((item) => {
+            const isActive = pathname === item.href || (item.href !== '/student' && pathname.startsWith(item.href));
+            const Icon = item.icon;
+            return (
+              <Link 
+                key={item.href} 
+                href={item.href}
                 className={cn(
-                  "absolute inset-0 rounded-full transition-all duration-300",
-                  isActive ? "bg-gold scale-100" : "bg-transparent scale-0"
+                  "relative flex flex-col items-center justify-center flex-1 py-1.5 px-1 rounded-xl transition-all duration-200 active:scale-95",
+                  isActive ? "text-gold font-bold" : "text-muted-foreground hover:text-foreground"
                 )}
-              />
-              <item.icon 
-                className={cn(
-                  "w-6 h-6 transition-colors duration-300 relative z-10",
-                  isActive ? "text-background" : "text-foreground/ dark:text-muted-foreground"
-                )} 
-              />
-            </Link>
-          );
-        })}
-      </nav>
+              >
+                <div className={cn(
+                  "p-1 rounded-xl transition-colors duration-200",
+                  isActive ? "bg-gold/15 text-gold" : "text-muted-foreground"
+                )}>
+                  <Icon className="w-5 h-5" />
+                </div>
+                <span className="text-[10px] tracking-tight mt-0.5 font-medium">{item.label}</span>
+              </Link>
+            );
+          })}
+        </nav>
+      </div>
     </div>
   );
 }
